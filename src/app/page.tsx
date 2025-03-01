@@ -8,7 +8,7 @@ import FramerWrapper from "@/components/animation/FramerWrapper";
 export const siteConfig = {
   name: "Sandesh joshi",
   description: "I am a Passionate Graphic Designer",
-  ogImage: "https://sandeshjose01.vercel.app/og-image.png",
+  ogImage: "https://mdTaquiImam.vercel.app/og-image.png",
   url: "https://www.sandeshjoshi.info.np/",
 };
 export default function Home() {

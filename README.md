@@ -2,7 +2,7 @@
 
 A simple and Beautiful Porfolio made with Nextjs and Shadcn Ui.
 
-![Demo](https://dev-to-uploads.s3.amazonaws.com/uploads/articles/u7eq68h0uvs6xqgw3yqe.jpeg)
+![Demo](https://www.sandeshjoshi.info.np/_next/image?url=%2F_next%2Fstatic%2Fmedia%2FportfolioLogo.5f06739d.png&w=1080&q=75)
 
 ## Getting Started
 
