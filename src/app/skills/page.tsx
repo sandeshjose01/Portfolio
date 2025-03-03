@@ -8,7 +8,7 @@ const skillPage = () => {
   const programmingLanguages = [
     {
       name: "Photoshop",
-      icon: "<C:\Users\Biswash\OneDrive\Desktop\portfolio\Sandesh\icon\adobephotoshop.png>",
+      icon: "/icon/adobephotoshop.png>",
     },
     {
       name: "Illustrator",
