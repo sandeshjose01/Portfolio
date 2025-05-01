@@ -8,13 +8,12 @@ const projectsPage = () => {
   // PROJECTS DATA
   const Projects = [
     {
-      title: "Devzone - A community chat app for devs",
-      description: `DevZone is the ultimate chat platform for developers
-to connect, collaborate, and code together. Join the conversation and level up your coding journey.`,
-      tags: ["Zustand", "Supabase", "Shadcn Ui", "Nextjs"],
-      link: "https://devzone-ti.vercel.app/",
+      title: "New Year 2082 BS",
+      description: `New Year Social Media Post 2082`,
+      tags: ["NewYear", "NepaliNewYear2082", "Photoshop", "Illustrator"],
+      link: "https://www.linkedin.com/posts/sanjoshi1_happynewyear2082-leadership-growthmindset-activity-7317287398688669696-jwi-?utm_source=share&utm_medium=member_desktop&rcm=ACoAAEAIaRgB46xLEH58WXwdcGbC3eWaQ-Bo7dY",
       imageLink:
-        "https://scontent.fktm21-2.fna.fbcdn.net/v/t39.30808-6/473381834_459271083906430_5869194846565264125_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=127cfc&_nc_ohc=jfxg_UgDzXYQ7kNvgET91Zk&_nc_oc=Adj9mt_Qvi2LC_c2Dk0iMrRtQjjcPaHlyxo1kd-w233ksAM3trlmYMybWUDaqsQV9qRLGEDfvwLdgUXolIHktzT1&_nc_zt=23&_nc_ht=scontent.fktm21-2.fna&_nc_gid=A11Mb24qGzVmVXyMsAMjR6k&oh=00_AYB0dmieNuPZSnPRojnWlJjfsH7QrBCOoGHiMwUyRCGTOg&oe=67C3C677",
+        "https://media.licdn.com/dms/image/v2/D4D22AQEQ9cVqRN-V6Q/feedshare-shrink_2048_1536/B4DZYw6FNIG4Ao-/0/1744577262820?e=1749081600&v=beta&t=6ulyhT3YHPLdfoU2GjCzHKMllcqkGN8Q-pusZOHKJxY",
     },
     {
       title: "itZmyLink- One Page many Links",
