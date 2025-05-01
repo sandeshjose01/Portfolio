@@ -6,10 +6,10 @@ import FramerWrapper from "./animation/FramerWrapper";
 
 const SocialLinks = () => {
   const links = [
-    { name: "Facebook", link: "https://www.facebook.com/shahina.khatun.1044", icon: <Facebook /> },
-    { name: "Twitter", link: "https://twitter.com/Taquiimam14", icon: <Twitter /> },
-    { name: "Linkedin", link: "https://www.linkedin.com/in/taqui-imam", icon: <Linkedin /> },
-    { name: "External", link: "https://tinyurl.com/MdTaquiImam", icon: <ExternalLink /> },
+    { name: "Facebook", link: "https://www.facebook.com/sandesh.josee", icon: <Facebook /> },
+    { name: "Twitter", link: "https://be.net/sandeshjose", icon: <Twitter /> },
+    { name: "Linkedin", link: "https://www.linkedin.com/in/sanjoshi1", icon: <Linkedin /> },
+    { name: "External", link: "https://www.sandeshjoshi.info.np", icon: <ExternalLink /> },
   ];
   return (
     <>

@@ -30,7 +30,7 @@ const HackerBtn = ({ label }: { label: string }) => {
 
   const handleDownloadResume = () => {
     const resumeUrl =
-      "https://drive.google.com/uc?export=download&id=1FG2YA5c_MaaLMNBz-oz8eis3hDq1oRFj"; // Your Google Drive download URL
+      "https://drive.google.com/uc?export=download&id=14XZF1AHThraCP-TmtMr99-7vIDkbo8RI"; // Your Google Drive download URL
     const link = document.createElement("a");
     link.href = resumeUrl;
     link.download = "SandeshJoshiResume.pdf"; // The name of the file to be downloaded
