@@ -5,80 +5,26 @@ import { LightbulbIcon } from "lucide-react";
 
 import FramerWrapper from "@/components/animation/FramerWrapper";
 const skillPage = () => {
-  const programmingLanguages = [
+  const designingTools = [
     {
-      name: "Photoshop",
-      icon: "/icon/adobephotoshop.png>",
+      name: "Adobe Creative Suite",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Adobe_Creative_Cloud_Logo_2020.svg/512px-Adobe_Creative_Cloud_Logo_2020.svg.png",
     },
     {
-      name: "Illustrator",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg",
+      name: "Adobe Photoshop",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/512px-Adobe_Photoshop_CC_icon.svg.png",
+    },
+    {
+      name: "Adobe Illustrator",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Adobe_Illustrator_CC_icon.svg/512px-Adobe_Illustrator_CC_icon.svg.png",
+    },
+    {
+      name: "Adobe InDesign",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Adobe_InDesign_CC_icon.svg/512px-Adobe_InDesign_CC_icon.svg.png",
     },
     {
       name: "Canva",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg",
-    }
-  ];
-
-  const frameworks = [
-    {
-      name: "React",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg",
-    },
-    {
-      name: "Next.js",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg",
-    },
-    {
-      name: "Vue.js",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vuejs/vuejs-original.svg",
-    },
-    {
-      name: "Svelte",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/svelte/svelte-original.svg",
-    },
-    {
-      name: "Tailwind CSS",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg",
-    },
-    {
-      name: "Bootstrap",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/bootstrap/bootstrap-original.svg",
-    },
-    {
-      name: "Material UI",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/materialui/materialui-original.svg",
-    },
-  ];
-
-  const tools = [
-    {
-      name: "Git",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg",
-    },
-    {
-      name: "GitHub",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg",
-    },
-    {
-      name: "VS Code",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg",
-    },
-    {
-      name: "Docker",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/docker/docker-original.svg",
-    },
-    {
-      name: "Firebase",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/firebase/firebase-plain.svg",
-    },
-    {
-      name: "MongoDB",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg",
-    },
-    {
-      name: "PostgreSQL",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Canva_Logo.svg/512px-Canva_Logo.svg.png",
     },
   ];
 
@@ -93,7 +39,7 @@ const skillPage = () => {
         <Heading>My Technical Experience/Skills.</Heading>
         <FramerWrapper y={0} x={200}>
           <p className="font-poppins text-xl w-full text-primary max-sm:text-lg">
-            Currently I am a Graphic Designer with 2+ year of experience and I have a solid 
+            Currently I am a Graphic Designer with 3+ year of experience and I have a solid 
             understand of Photoshop, Illustrator, Canva & Microsoft Office.
           </p>
         </FramerWrapper>
@@ -102,23 +48,7 @@ const skillPage = () => {
             Designing Tools
           </h1>
           <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
-            <SkillsFooter items={programmingLanguages} />
-          </div>
-        </FramerWrapper>
-        <FramerWrapper className="block w-full" y={100} delay={0.32}>
-          <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
-            Framework/Libraries
-          </h1>
-          <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
-            <SkillsFooter items={frameworks} />
-          </div>
-        </FramerWrapper>
-        <FramerWrapper className="block w-full" y={100} delay={0.34}>
-          <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
-            Tools & Technologies
-          </h1>
-          <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
-            <SkillsFooter items={tools} />
+            <SkillsFooter items={designingTools} />
           </div>
         </FramerWrapper>
       </div>
