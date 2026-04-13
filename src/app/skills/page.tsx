@@ -24,7 +24,7 @@ const skillPage = () => {
     },
     {
       name: "Canva",
-      icon: "https://upload.wikimedia.org/wikipedia/commons/b/bb/Canva_Logo.svg",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/canva/canva-original.svg",
     },
   ];
 
