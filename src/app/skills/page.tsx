@@ -8,23 +8,23 @@ const skillPage = () => {
   const designingTools = [
     {
       name: "Adobe Creative Suite",
-      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a0/Adobe_Creative_Cloud_Logo_2020.svg/512px-Adobe_Creative_Cloud_Logo_2020.svg.png",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg",
     },
     {
       name: "Adobe Photoshop",
-      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Adobe_Photoshop_CC_icon.svg/512px-Adobe_Photoshop_CC_icon.svg.png",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg",
     },
     {
       name: "Adobe Illustrator",
-      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/Adobe_Illustrator_CC_icon.svg/512px-Adobe_Illustrator_CC_icon.svg.png",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg",
     },
     {
       name: "Adobe InDesign",
-      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Adobe_InDesign_CC_icon.svg/512px-Adobe_InDesign_CC_icon.svg.png",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/indesign/indesign-plain.svg",
     },
     {
       name: "Canva",
-      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/bb/Canva_Logo.svg/512px-Canva_Logo.svg.png",
+      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/canva/canva-original.svg",
     },
   ];
 
