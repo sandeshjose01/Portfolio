@@ -8,19 +8,19 @@ const skillPage = () => {
   const designingTools = [
     {
       name: "Adobe Creative Suite",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg",
+      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/creative-cloud.svg",
     },
     {
       name: "Adobe Photoshop",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/photoshop/photoshop-plain.svg",
+      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/photoshop.svg",
     },
     {
       name: "Adobe Illustrator",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon/icons/illustrator/illustrator-plain.svg",
+      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/illustrator.svg",
     },
     {
       name: "Adobe InDesign",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/indesign/indesign-plain.svg",
+      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/indesign.svg",
     },
     {
       name: "Canva",
