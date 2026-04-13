@@ -20,7 +20,7 @@ const skillPage = () => {
     },
     {
       name: "Adobe InDesign",
-      icon: "https://upload.wikimedia.org/wikipedia/commons/4/48/Adobe_InDesign_CC_icon.svg",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/08/Canva_icon_2021.svg/600px-Canva_icon_2021.svg.png",
     },
     {
       name: "Canva",
