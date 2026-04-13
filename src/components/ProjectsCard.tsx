@@ -87,7 +87,31 @@ const ProjectCards: React.FC<ProjectCardProps> = ({ value, num }) => {
                     Zod: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200",
                     "React Hook Form":
                       "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200",
-                  }[tag] ||
+                    "Logo Design":
+                      "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200",
+                    "Branding":
+                      "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
+                    "Social Media":
+                      "bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200",
+                    "Print Design":
+                      "bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-200",
+                    "Photoshop":
+                      "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
+                    "Illustrator":
+                      "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
+                    "Canva":
+                      "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200",
+                    "Freelancing":
+                      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
+                    "Client Work":
+                      "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
+                    "Poster":
+                      "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
+                    "Flyer":
+                      "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
+                    "Personal":
+                      "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
+                    }[tag] ||
                   "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
 
                 return (
