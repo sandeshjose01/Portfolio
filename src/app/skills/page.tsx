@@ -2,36 +2,35 @@ import Heading from "@/components/Heading";
 import SkillsFooter from "@/components/SkillsFotter";
 import { Badge } from "@/components/ui/badge";
 import { LightbulbIcon } from "lucide-react";
-
 import FramerWrapper from "@/components/animation/FramerWrapper";
+
 const skillPage = () => {
   const designingTools = [
     {
       name: "Adobe Creative Suite",
-      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/creative-cloud.svg",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg",
     },
     {
       name: "Adobe Photoshop",
-      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/photoshop.svg",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg",
     },
     {
       name: "Adobe Illustrator",
-      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/illustrator.svg",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg",
     },
     {
       name: "Adobe InDesign",
-      icon: "https://main--cc--adobecom.hlx.page/cc-shared/assets/img/product-icons/svg/indesign.svg",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/4/48/Adobe_InDesign_CC_icon.svg",
     },
     {
       name: "Canva",
-      icon: "https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/canva/canva-original.svg",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/b/bb/Canva_Logo.svg",
     },
   ];
 
   return (
-    // SKILLS PAGE
     <div className="h-full w-full relative flex flex-col items-start gap-5 overflow-hidden">
-      <Badge variant="secondary" className="gap-1.5 py-1 ">
+      <Badge variant="secondary" className="gap-1.5 py-1">
         <LightbulbIcon className="w-4 h-4" />
         My Skills
       </Badge>
@@ -39,7 +38,7 @@ const skillPage = () => {
         <Heading>My Technical Experience/Skills.</Heading>
         <FramerWrapper y={0} x={200}>
           <p className="font-poppins text-xl w-full text-primary max-sm:text-lg">
-            Currently I am a Graphic Designer with 3+ year of experience and I have a solid 
+            Currently I am a Graphic Designer with 3+ year of experience and I have a solid
             understand of Photoshop, Illustrator, Canva & Microsoft Office.
           </p>
         </FramerWrapper>
