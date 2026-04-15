@@ -53,7 +53,7 @@ const ProjectPage = () => {
       id: 1,
       title: "Personal Project",
       description: "Logo Design, Photo Manipulation, Typography Choices.",
-      subcategories: ["Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
+      subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
     },
     {
@@ -94,6 +94,15 @@ const ProjectPage = () => {
   ];
 
   const allProjects = [
+    {
+      title: "Republic Day",
+      description: "An experimental, festive design created as a personal challenge.",
+      tags: ["Social Media Festive Post", "Personal", "Experimental", "Republic Day" ],
+      link: "https://www.behance.net/gallery/227068231/Republic-Day",
+      imageLink: "https://www.behance.net/gallery/227068231/Republic-Day",
+      subcategory: "Cohesive Social Media Posts",
+      category: "Personal Project", 
+    },
     {
       title: "Personal Logo Concept",
       description: "An experimental, fun logo design created as a personal challenge.",
