@@ -1,163 +1,151 @@
 "use client";
+import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { buttonVariants } from "./ui/button";
+import FramerWrapper from "./animation/FramerWrapper";
+import { ArrowUpRight, X, ZoomIn } from "lucide-react";
 import { useState } from "react";
-import Heading from "@/components/Heading";
-import { Badge } from "@/components/ui/badge";
-import { Layers, X, ArrowRight } from "lucide-react";
-import FramerWrapper from "@/components/animation/FramerWrapper";
 import { motion, AnimatePresence } from "framer-motion";
 
-const ProjectPage = () => {
-  const [selectedCategory, setSelectedCategory] = useState<any>(null);
+interface ProjectCardProps {
+  value: {
+    title: string;
+    description: string;
+    tags: string[];
+    link: string;
+    imageLink: string;
+  };
+  num: number;
+}
 
-  const categories = [
-    {
-      id: 1,
-      title: "Personal Project",
-      description: "Showcasing my own work.",
-      subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
-      image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 2,
-      title: "Brand Identity & Logo Design",
-      description: "Creating a recognizable face for businesses.",
-      subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
-      image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 3,
-      title: "Social Media & Digital Marketing",
-      description: "High-engagement content for modern platforms.",
-      subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"],
-      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 4,
-      title: "Print & Large Format Media",
-      description: "Technical knowledge of physical production.",
-      subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"],
-      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 5,
-      title: "Photo Manipulation",
-      description: "Creative, out-of-the-box Photoshop work.",
-      subcategories: ["Surreal Composites", "Cinematic Scenes", "Before & After Edits", "Digital Painting"],
-      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop",
-    }, // <--- FIXED: Added missing comma here
-    {
-      id: 6,
-      title: "UI/UX & Web Design",
-      description: "Designing digital experiences and user navigation.",
-      subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"],
-      image: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop",
-    },
-  ];
+const ProjectCards: React.FC<ProjectCardProps> = ({ value, num }) => {
+  const [isFullScreen, setIsFullScreen] = useState(false);
+
+  // Fixed Tag Styling (No duplicate keys to avoid Vercel build errors)
+  const getTagStyle = (tag: string) => {
+    const styles: Record<string, string> = {
+      Photoshop: "bg-blue-100 text-blue-800 dark:bg-blue-900/40",
+      Illustrator: "bg-orange-100 text-orange-800 dark:bg-orange-900/40",
+      "UI Design": "bg-teal-100 text-teal-800 dark:bg-teal-900/40",
+      Logo: "bg-rose-100 text-rose-800 dark:bg-rose-900/40",
+      Freelancing: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40",
+      Personal: "bg-purple-100 text-purple-800 dark:bg-purple-900/40",
+    };
+    return styles[tag] || "bg-gray-100 text-gray-800 dark:bg-gray-800";
+  };
 
   return (
-    <div className="h-full w-full relative flex flex-col items-start gap-8 pb-20 px-4 md:px-10">
-      <Badge variant="secondary" className="gap-1.5 py-1">
-        <Layers className="w-4 h-4" />
-        My Projects
-      </Badge>
-
-      <div className="flex flex-col gap-3">
-        <Heading>Main Categories</Heading>
-        <p className="font-poppins text-lg w-full text-muted-foreground max-w-2xl">
-          Click on a category to explore sub-categories and specific works.
-        </p>
-      </div>
-
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mt-4">
-        {categories.map((cat, index) => (
-          <FramerWrapper key={cat.id} y={20} delay={index * 0.1}>
-            <div 
-              onClick={() => setSelectedCategory(cat)}
-              className="group cursor-pointer flex flex-col w-full"
-            >
-              <div className="relative aspect-video w-full overflow-hidden border border-gray-200 dark:border-gray-800">
-                <img 
-                  src={cat.image} 
-                  alt={cat.title} 
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-
-              <div className="pt-4 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                   <span className="text-xs font-bold text-blue-600 uppercase tracking-widest">Category {index + 1}</span>
+    <>
+      <FramerWrapper
+        className="w-full relative"
+        y={0}
+        scale={0.95}
+        delay={num * 0.1}
+        duration={0.2}
+      >
+        <div className="group flex flex-col w-full bg-white dark:bg-transparent transition-all duration-300">
+          
+          {/* 1. BIG IMAGE PREVIEW (Sharp corners as requested) */}
+          <div 
+            className="relative aspect-video w-full overflow-hidden border border-gray-200 dark:border-gray-800 cursor-pointer"
+            onClick={() => setIsFullScreen(true)}
+          >
+            <img
+              src={value.imageLink}
+              alt={value.title}
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+            
+            {/* Hover Indicator */}
+            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+                <div className="bg-white/10 backdrop-blur-md p-3 rounded-full border border-white/20">
+                    <ZoomIn className="text-white w-6 h-6" />
                 </div>
-                <h3 className="text-xl font-bold text-primary group-hover:text-blue-600 transition-colors">
-                  {cat.title}
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
-              </div>
             </div>
-          </FramerWrapper>
-        ))}
-      </div>
+          </div>
 
+          {/* 2. PROJECT INFO SECTION (Below Image) */}
+          <div className="pt-4 flex flex-col gap-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xl font-bold text-primary tracking-tight group-hover:text-blue-600 transition-colors">
+                {value.title}
+              </h3>
+              {value.link !== "#" && (
+                <Link 
+                   href={value.link} 
+                   target="_blank" 
+                   className="text-muted-foreground hover:text-blue-600 transition-colors"
+                >
+                  <ArrowUpRight className="h-5 w-5" />
+                </Link>
+              )}
+            </div>
+
+            <p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+              {value.description}
+            </p>
+
+            {/* TAGS SECTION */}
+            <div className="flex flex-wrap gap-2 mt-1">
+              {value.tags.map((tag, index) => (
+                <span
+                  key={index}
+                  className={cn(
+                    "px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-widest rounded-sm border border-transparent",
+                    getTagStyle(tag)
+                  )}
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </FramerWrapper>
+
+      {/* 3. GLASSMORPHISM LIGHTBOX (Matches Category Modal) */}
       <AnimatePresence>
-        {selectedCategory && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
+        {isFullScreen && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+            {/* Background Overlay - Clicking here closes it */}
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={() => setSelectedCategory(null)}
-              className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+              onClick={() => setIsFullScreen(false)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-lg cursor-zoom-out"
             />
 
-            <motion.div 
-              initial={{ scale: 0.9, opacity: 0, y: 20 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.9, opacity: 0, y: 20 }}
-              className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white/10 dark:bg-black/20 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl p-8 md:p-12"
+            {/* Image Content Container */}
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="relative max-w-5xl w-full bg-white/10 backdrop-blur-2xl border border-white/20 p-2 shadow-2xl"
             >
-              <button 
-                onClick={() => setSelectedCategory(null)}
-                className="absolute top-6 right-6 p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors"
+              <button
+                className="absolute -top-12 right-0 text-white hover:text-blue-400 transition-colors"
+                onClick={() => setIsFullScreen(false)}
               >
-                <X className="w-6 h-6" />
+                <X className="w-8 h-8" />
               </button>
-
-              <div className="flex flex-col gap-6">
-                <div className="space-y-2">
-                  <h2 className="text-3xl md:text-4xl font-bold text-white tracking-tight">
-                    {selectedCategory.title}
-                  </h2>
-                  <p className="text-blue-200 font-medium">Sub-categories available:</p>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                  {selectedCategory.subcategories.map((sub: string, i: number) => (
-                    <motion.div 
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.1 }}
-                      key={i} 
-                      className="flex items-center gap-3 p-4 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-colors text-white"
-                    >
-                      <div className="h-2 w-2 bg-blue-400 rounded-full" />
-                      <span className="font-poppins text-sm md:text-base">{sub}</span>
-                    </motion.div>
-                  ))}
-                </div>
-
-                <button 
-                   onClick={() => setSelectedCategory(null)}
-                   className="mt-6 flex items-center gap-2 text-white/60 hover:text-white transition-colors text-sm"
-                >
-                  <ArrowRight className="w-4 h-4 rotate-180" />
-                  Back to My Projects
-                </button>
+              
+              <img
+                src={value.imageLink}
+                alt={value.title}
+                className="w-full h-auto max-h-[80vh] object-contain"
+              />
+              
+              <div className="p-6 text-white">
+                <h2 className="text-2xl font-bold mb-1">{value.title}</h2>
+                <p className="text-white/60 text-sm">{value.description}</p>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 
-export default ProjectPage;
+export default ProjectCards;
