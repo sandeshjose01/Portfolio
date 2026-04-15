@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
-import { Layers, X, ArrowLeft, ExternalLink } from "lucide-react";
+import { Layers, X, ArrowLeft, ExternalLink, Inbox } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
@@ -34,17 +34,69 @@ const ProjectPage = () => {
   }, []);
 
   const categories = [
-    { id: 1, title: "Personal Project", description: "Logo Design, Photo Manipulation, Typography Choices.", subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop" },
-    { id: 2, title: "Brand Identity & Logo Design", description: "Logo Design, Typography Choices, Brand Color Palettes.", subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], image: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1000&auto=format&fit=crop" },
-    { id: 3, title: "UI/UX & Web Design", description: "Website landing pages, mobile app interfaces.", subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], image: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop" },
-    { id: 4, title: "Social Media & Digital Marketing", description: "Instagram grids, ad banners, and posts.", subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"], image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop" },
-    { id: 5, title: "Print & Large Format Media", description: "Flex designs, Calendars, brochures, posters.", subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"], image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop" },
-    { id: 6, title: "Packaging & Canvas Printing", description: "Product labels, boxes and Canvas prints.", subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"], image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000&auto=format&fit=crop" },
+    { 
+      id: 1, 
+      title: "Personal Project", 
+      description: "Logo Design, Photo Manipulation, Typography Choices.", 
+      subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], 
+      image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop" 
+    },
+    { 
+      id: 2, 
+      title: "Brand Identity & Logo Design", 
+      description: "Logo Design, Typography Choices, Brand Color Palettes.",
+      subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], 
+      image: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1000&auto=format&fit=crop" 
+    },
+    { 
+      id: 3, 
+      title: "UI/UX & Web Design", 
+      description: "Website landing pages, mobile app interfaces.", 
+      subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], 
+      image: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop" 
+    },
+    { 
+      id: 4, 
+      title: "Social Media & Digital Marketing", 
+      description: "Instagram grids, ad banners, and posts.",
+      subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"], 
+      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop"
+    },
+    { 
+      id: 5, 
+      title: "Print & Large Format Media", 
+      description: "Flex designs, Calendars, brochures, posters.", 
+      subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"], 
+      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop" 
+    },
+    { 
+      id: 6, 
+      title: "Packaging & Canvas Printing", 
+      description: "Product labels, boxes and Canvas prints.", 
+      subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"], 
+      image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000&auto=format&fit=crop" 
+    },
   ];
 
   const allProjects = [
-    { title: "Republic Day", description: "An experimental, festive design.", tags: ["Social Media", "Festive"], link: "https://www.behance.net/gallery/227068231/Republic-Day", imageLink: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/4fbc15227068231.6839311180b2b.png", subcategory: "Cohesive Social Media Posts", category: "Personal Project" },
-    { title: "Personal Logo", description: "A fun logo design.", tags: ["Logo", "Experimental"], link: "#", imageLink: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop", subcategory: "Logo Design", category: "Personal Project" },
+    {
+      title: "Republic Day", 
+      description: "An experimental, festive design.", 
+      tags: ["Social Media", "Festive", "Republic Day"], 
+      link: "https://www.behance.net/gallery/227068231/Republic-Day", 
+      imageLink: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/4fbc15227068231.6839311180b2b.png", 
+      subcategory: "Cohesive Social Media Posts", 
+      category: "Personal Project" 
+    },
+    { 
+      title: "Buddha Jayanti", 
+      description: "An Experimental Buddha Jayanti Post.", 
+      tags: ["Social Media Post", "Buddha Jayanti", "Festive Post"], 
+      link: "https://www.behance.net/gallery/225648851/Buddha-Jayanti", 
+      imageLink: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/108f27225648851.68217e11dcc90.png", 
+      subcategory: "Cohesive Social Media Posts", 
+      category: "Personal Project" 
+    },
   ];
 
   const filteredProjects = allProjects.filter(p => p.category === selectedCategory?.title && p.subcategory === selectedSubcategory);
@@ -57,10 +109,11 @@ const ProjectPage = () => {
 
       <div className="flex flex-col gap-3">
         <Heading>My Projects</Heading>
-        <p className="font-poppins text-lg text-muted-foreground max-w-2xl">Combine creative intuition and technical skill to build your visual legacy.</p>
+        <p className="font-poppins text-lg text-muted-foreground max-w-2xl">
+          Combine creative intuition and technical skill to build your visual legacy.</p>
       </div>
 
-      {/* CATEGORY GRID - WHITER GLASS */}
+      {/* CATEGORY GRID - WHITER GLASS & REDUCED ROUNDNESS */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
         {categories.map((cat, index) => (
           <FramerWrapper key={cat.id} y={20} delay={index * 0.1}>
@@ -81,7 +134,7 @@ const ProjectPage = () => {
         ))}
       </div>
 
-      {/* MODAL SYSTEM - FROSTED WHITE GLASS */}
+      {/* MODAL SYSTEM */}
       <AnimatePresence>
         {selectedCategory && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6">
@@ -91,7 +144,7 @@ const ProjectPage = () => {
               initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.98, opacity: 0 }}
               className="relative w-full max-w-6xl max-h-[95vh] overflow-y-auto rounded-3xl bg-white/20 border border-white/60 backdrop-blur-3xl shadow-2xl flex flex-col hide-scrollbar"
             >
-              {/* STICKY NAV - WHITER GLASS */}
+              {/* STICKY NAV */}
               <div className="flex justify-between items-center p-6 sticky top-0 z-50 bg-white/40 backdrop-blur-xl border-b border-white/40">
                 {selectedSubcategory ? (
                   <button onClick={() => selectedProject ? setSelectedProject(null) : setSelectedSubcategory(null)} className="flex items-center gap-2 text-slate-800 bg-white/50 px-4 py-2 rounded-xl hover:bg-white/80 transition-all text-sm font-semibold border border-white/60">
@@ -107,16 +160,12 @@ const ProjectPage = () => {
                     /* VIEW 3: FULL PROJECT SHOWCASE */
                     <motion.div key="project" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col">
                       <div className="w-full flex items-center justify-center overflow-hidden bg-white/10">
-                        <img 
-                          src={selectedProject.imageLink} 
-                          className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} 
-                        />
+                        <img src={selectedProject.imageLink} className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} />
                       </div>
-                      
                       <div className="p-8 md:p-12 space-y-6 bg-gradient-to-b from-transparent to-white/40">
                         <div className="flex flex-col md:flex-row justify-between items-end gap-8">
                           <div className="space-y-4 flex-1">
-                            <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter drop-shadow-sm">{selectedProject.title}</h2>
+                            <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter">{selectedProject.title}</h2>
                             <p className="text-slate-700 text-lg leading-relaxed max-w-3xl font-medium">{selectedProject.description}</p>
                             <div className="flex flex-wrap gap-2">{selectedProject.tags.map((t:any) => <span key={t} className="px-4 py-1.5 bg-white/60 rounded-lg text-xs text-slate-600 border border-white uppercase tracking-widest font-bold">{t}</span>)}</div>
                           </div>
@@ -125,21 +174,31 @@ const ProjectPage = () => {
                       </div>
                     </motion.div>
                   ) : selectedSubcategory ? (
-                    /* VIEW 2: MASONRY GALLERY - WHITER CARDS */
-                    <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="columns-1 md:columns-2 gap-4 space-y-4 p-6">
-                      {filteredProjects.map((proj, i) => (
-                        <motion.div 
-                          key={i} 
-                          initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }}
-                          onClick={() => setSelectedProject(proj)} 
-                          className="break-inside-avoid group bg-white/40 border border-white/60 rounded-2xl overflow-hidden cursor-pointer hover:border-blue-400 transition-all shadow-sm"
-                        >
-                          <img src={proj.imageLink} className={`w-full h-auto transition-transform duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-xl' : ''}`} />
-                          <div className="p-6 bg-white/60 backdrop-blur-md border-t border-white/60">
-                            <h3 className="text-xl font-bold text-slate-800">{proj.title}</h3>
+                    /* VIEW 2: MASONRY GALLERY + EMPTY STATE LOGIC */
+                    <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                      {filteredProjects.length > 0 ? (
+                        <div className="columns-1 md:columns-2 gap-4 space-y-4 p-6">
+                          {filteredProjects.map((proj, i) => (
+                            <motion.div key={i} onClick={() => setSelectedProject(proj)} className="break-inside-avoid group bg-white/40 border border-white/60 rounded-2xl overflow-hidden cursor-pointer hover:border-blue-400 transition-all shadow-sm">
+                              <img src={proj.imageLink} className={`w-full h-auto transition-transform duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-xl' : ''}`} />
+                              <div className="p-6 bg-white/60 backdrop-blur-md border-t border-white/60">
+                                <h3 className="text-xl font-bold text-slate-800">{proj.title}</h3>
+                              </div>
+                            </motion.div>
+                          ))}
+                        </div>
+                      ) : (
+                        /* DYNAMIC EMPTY STATE */
+                        <div className="p-20 flex flex-col items-center justify-center text-center space-y-5">
+                          <div className="w-20 h-20 bg-white/40 backdrop-blur-xl rounded-2xl flex items-center justify-center border border-white shadow-sm">
+                            <Inbox className="w-10 h-10 text-slate-400" />
                           </div>
-                        </motion.div>
-                      ))}
+                          <div className="space-y-2">
+                             <h3 className="text-2xl font-bold text-slate-800 tracking-tight">No {selectedSubcategory} added yet.</h3>
+                             <p className="text-slate-500 font-medium max-w-xs mx-auto text-sm">I am currently working on uploading projects to this section. Check back soon!</p>
+                          </div>
+                        </div>
+                      )}
                     </motion.div>
                   ) : (
                     /* VIEW 1: SUBCATEGORY LIST */
