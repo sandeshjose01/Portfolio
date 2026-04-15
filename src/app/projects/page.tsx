@@ -18,8 +18,8 @@ const ProjectPage = () => {
     {
       id: 1,
       title: "Personal Project",
-      description: "Logo Design, Typography Choices, Brand Color Palettes, Corporate Stationery.",
-      subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
+      description: "Logo Design, Photo Manupulation, Typography Choices, Brand Color Palettes, Corporate Stationery.",
+      subcategories: ["Logo Design", "Photo Manupulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
     },
     {
@@ -62,8 +62,8 @@ const ProjectPage = () => {
   // 2. YOUR ACTUAL PROJECTS DATA
   const allProjects = [
     {
-      title: "TechFlow Branding",
-      description: "A complete modern logo and brand identity package for a rising SaaS startup. This project includes corporate stationery, color palettes, and typography rules to maintain consistency across all platforms.",
+      title: "Flora Branding",
+      description: "A complete modern wordmark logo for a fantasy Organic Tea Brand. This project includes corporate stationery, color palettes, and typography rules to maintain consistency across all platforms.",
       tags: ["Logo Design", "Illustrator", "Branding"],
       link: "https://yourlink.com",
       imageLink: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
