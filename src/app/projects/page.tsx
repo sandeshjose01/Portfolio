@@ -5,7 +5,7 @@ import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
 import { Layers, X, ArrowRight, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import ProjectCards from "src/components/ProjectsCard.tsx"; // <-- UPDATE THIS PATH IF NEEDED
+import ProjectCards from "@/components/ProjectCard"; // <-- UPDATE THIS PATH IF NEEDED
 
 const ProjectPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
