@@ -109,7 +109,7 @@ const ProjectPage = () => {
             </div>
           ) : (
             <div className="p-8 border-2 border-dashed rounded-xl flex items-center justify-center text-muted-foreground">
-              No projects uploaded for "{selectedSubcategory}" yet.
+              No projects uploaded for &quot;{selectedSubcategory}&quot; yet.
             </div>
           )}
         </div>
