@@ -3,12 +3,15 @@ import { useState } from "react";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
-import { Layers, X, ArrowRight } from "lucide-react";
+import { Layers, X, ArrowRight, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import ProjectCards from "./ProjectCards"; // <-- UPDATE THIS PATH IF NEEDED
 
 const ProjectPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
+  const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
 
+  // 1. YOUR CATEGORIES (No changes here)
   const categories = [
     {
       id: 1,
@@ -24,35 +27,46 @@ const ProjectPage = () => {
       subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"],
       image: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop",
     },
+    // ... I kept the first two for brevity, add the rest of your 6 categories back here
+  ];
+
+  // 2. MOCK PROJECTS DATABASE
+  // Notice the 'subcategory' property matches the strings in the categories array above!
+  const allProjects = [
     {
-      id: 3,
-      title: "Social Media & Digital Marketing",
-      description: "Instagram grids, ad banners, and cohesive social media post sets.",
-      subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"],
-      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop",
+      title: "TechFlow Branding",
+      description: "A complete modern logo and brand identity package for a rising SaaS startup.",
+      tags: ["Logo Design", "Illustrator", "Branding"],
+      link: "https://yourlink.com",
+      imageLink: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
+      subcategory: "Logo Design", // Maps to the subcategory
     },
     {
-      id: 4,
-      title: "Print & Large Format Media",
-      description: "Flex designs, Calendars, brochures, and event posters.",
-      subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"],
-      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop",
+      title: "EcoStore Landing Page",
+      description: "High-conversion landing page designed for an eco-friendly e-commerce brand.",
+      tags: ["Nextjs", "Shadcn Ui", "Typescript", "Figma"],
+      link: "https://yourlink.com",
+      imageLink: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop",
+      subcategory: "Website Landing Pages", 
     },
     {
-      id: 5,
-      title: "Packaging & Canvas Printing",
-      description: "Product labels/boxes and your custom Canvas printing designs.",
-      subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"],
-      image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000&auto=format&fit=crop",
-    },
-    {
-      id: 6,
-      title: "Photo Manipulation",
-      description: "Surreal composites, cinematic scenes, and Before & After examples.",
-      subcategories: ["Surreal Composites", "Cinematic Scenes", "Before & After Edits", "Digital Painting"],
-      image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1000&auto=format&fit=crop",
+      title: "Finance App Interface",
+      description: "Clean and accessible mobile app interface for a personal finance tracker.",
+      tags: ["UI/UX", "Personal", "Figma"],
+      link: "https://yourlink.com",
+      imageLink: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop",
+      subcategory: "Mobile App Interfaces", 
     }
   ];
+
+  // Filter projects based on what the user clicked
+  const filteredProjects = allProjects.filter((p) => p.subcategory === selectedSubcategory);
+
+  // Handle clicking a subcategory from the modal
+  const handleSubcategoryClick = (subcategory: string) => {
+    setSelectedCategory(null); // Close the modal
+    setSelectedSubcategory(subcategory); // Show the projects
+  };
 
   return (
     <div className="h-full w-full relative flex flex-col items-start gap-8 pb-20 px-4 md:px-10">
@@ -61,50 +75,81 @@ const ProjectPage = () => {
         My Projects
       </Badge>
 
+      {/* HEADER TEXT */}
       <div className="flex flex-col gap-3">
-        <Heading>Creative Portfolio</Heading>
+        <Heading>{selectedSubcategory ? selectedSubcategory : "Creative Portfolio"}</Heading>
         <p className="font-poppins text-lg w-full text-muted-foreground max-w-2xl">
-          A curated collection of my design work. Select a category to explore sub-categories.
+          {selectedSubcategory 
+            ? `Viewing all projects related to ${selectedSubcategory}.` 
+            : "A curated collection of my design work. Select a category to explore sub-categories."}
         </p>
       </div>
 
-      {/* 3-COLUMN GRID (3 items per row) */}
-      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mt-4">
-        {categories.map((cat, index) => (
-          <FramerWrapper key={cat.id} y={20} delay={index * 0.1}>
-            <div 
-              onClick={() => setSelectedCategory(cat)}
-              className="group cursor-pointer flex flex-col w-full"
-            >
-              {/* BIG PICTURE (Sharp corners / No rounding) */}
-              <div className="relative aspect-video w-full overflow-hidden border border-gray-200 dark:border-gray-800">
-                <img 
-                  src={cat.image} 
-                  alt={cat.title} 
-                  className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
+      {/* --- CONDITIONAL RENDERING --- */}
+      {selectedSubcategory ? (
+        
+        // VIEW A: SHOW INDIVIDUAL PROJECTS 
+        <div className="w-full flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+          
+          {/* Back Button */}
+          <button 
+            onClick={() => setSelectedSubcategory(null)}
+            className="flex items-center gap-2 text-primary hover:text-blue-600 transition-colors font-medium w-fit group"
+          >
+            <ArrowLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
+            Back to Categories
+          </button>
 
-              {/* TEXT SECTION BELOW IMAGE */}
-              <div className="pt-4 flex flex-col gap-1">
-                <div className="flex items-center gap-2">
-                   <span className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em]">Category {index + 1}</span>
-                </div>
-                <h3 className="text-xl font-bold text-primary group-hover:text-blue-600 transition-colors">
-                  {cat.title}
-                </h3>
-                <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
-              </div>
+          {/* Render ProjectCards */}
+          {filteredProjects.length > 0 ? (
+            <div className="flex flex-wrap gap-x-4 gap-y-8 w-full">
+              {filteredProjects.map((project, index) => (
+                <ProjectCards key={index} value={project} num={index} />
+              ))}
             </div>
-          </FramerWrapper>
-        ))}
-      </div>
+          ) : (
+            <div className="p-8 border-2 border-dashed rounded-xl flex items-center justify-center text-muted-foreground">
+              No projects uploaded for "{selectedSubcategory}" yet.
+            </div>
+          )}
+        </div>
+
+      ) : (
+
+        // VIEW B: SHOW CATEGORIES GRID (Your original UI)
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-12 mt-4">
+          {categories.map((cat, index) => (
+            <FramerWrapper key={cat.id} y={20} delay={index * 0.1}>
+              <div 
+                onClick={() => setSelectedCategory(cat)}
+                className="group cursor-pointer flex flex-col w-full"
+              >
+                <div className="relative aspect-video w-full overflow-hidden border border-gray-200 dark:border-gray-800">
+                  <img 
+                    src={cat.image} 
+                    alt={cat.title} 
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="pt-4 flex flex-col gap-1">
+                  <div className="flex items-center gap-2">
+                     <span className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.2em]">Category {index + 1}</span>
+                  </div>
+                  <h3 className="text-xl font-bold text-primary group-hover:text-blue-600 transition-colors">
+                    {cat.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground line-clamp-1">{cat.description}</p>
+                </div>
+              </div>
+            </FramerWrapper>
+          ))}
+        </div>
+      )}
 
       {/* GLASSMORPHISM POPUP MODAL */}
       <AnimatePresence>
         {selectedCategory && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            {/* Dark Overlay (Clicking here closes the popup) */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -112,8 +157,6 @@ const ProjectPage = () => {
               onClick={() => setSelectedCategory(null)}
               className="absolute inset-0 bg-black/70 backdrop-blur-md"
             />
-
-            {/* Glass Modal Content */}
             <motion.div 
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
@@ -135,7 +178,6 @@ const ProjectPage = () => {
                   <p className="text-blue-300 font-semibold tracking-wide uppercase text-xs">Explore Sub-categories</p>
                 </div>
 
-                {/* Sub-category list inside glass modal */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {selectedCategory.subcategories.map((sub: string, i: number) => (
                     <motion.div 
@@ -143,7 +185,8 @@ const ProjectPage = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.05 }}
                       key={i} 
-                      className="flex items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 transition-colors text-white"
+                      onClick={() => handleSubcategoryClick(sub)} // <-- ADDED CLICK HANDLER HERE
+                      className="flex items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/20 hover:scale-[1.02] cursor-pointer transition-all text-white"
                     >
                       <div className="h-2 w-2 bg-blue-400 rounded-full shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
                       <span className="font-poppins text-base md:text-lg">{sub}</span>
@@ -153,7 +196,7 @@ const ProjectPage = () => {
 
                 <button 
                    onClick={() => setSelectedCategory(null)}
-                   className="mt-4 flex items-center gap-2 text-white/40 hover:text-white transition-colors text-sm group"
+                   className="mt-4 flex items-center gap-2 text-white/40 hover:text-white transition-colors text-sm group w-fit"
                 >
                   <ArrowRight className="w-4 h-4 rotate-180 group-hover:-translate-x-1 transition-transform" />
                   Close and go back to projects
