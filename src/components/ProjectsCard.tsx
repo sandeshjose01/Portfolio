@@ -1,136 +1,128 @@
-"use client";
-import { cn } from "@/lib/utils";
+import Heading from "@/components/Heading";
+import { Badge } from "@/components/ui/badge";
+import { 
+  Palette, 
+  Megaphone, 
+  Monitor, 
+  BookOpen, 
+  Package, 
+  Video, 
+  Layers, 
+  ArrowRight 
+} from "lucide-react";
+import FramerWrapper from "@/components/animation/FramerWrapper";
 import Link from "next/link";
-import { buttonVariants } from "./ui/button";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import FramerWrapper from "./animation/FramerWrapper";
-import { ArrowUpRight, X, ZoomIn } from "lucide-react";
-import { useState } from "react";
 
-interface ProjectCardProps {
-  value: {
-    title: string;
-    description: string;
-    tags: string[];
-    link: string;
-    imageLink: string;
-  };
-  num: number;
-}
-
-const ProjectCards: React.FC<ProjectCardProps> = ({ value, num }) => {
-  const [isFullScreen, setIsFullScreen] = useState(false);
+const ProjectPage = () => {
+  const categories = [
+    {
+      title: "Visual Identity Design",
+      icon: <Palette className="w-8 h-8 text-blue-500" />,
+      subcategories: ["Logo Design", "Color Systems", "Typography", "Iconography & Graphic Patterns", "Brand Style Guides", "Corporate Stationery"],
+      description: "Crafting unique brand languages and memorable visual identities.",
+      gradient: "from-blue-50 to-indigo-50 dark:from-blue-950/20 dark:to-indigo-950/20"
+    },
+    {
+      title: "Marketing & Advertising Design",
+      icon: <Megaphone className="w-8 h-8 text-orange-500" />,
+      subcategories: ["Social Media Graphics", "Print Collateral", "Large-Format Design", "Digital Advertising", "Presentation Design"],
+      description: "Strategic visual communication that drives engagement and results.",
+      gradient: "from-orange-50 to-red-50 dark:from-orange-950/20 dark:to-red-950/20"
+    },
+    {
+      title: "UI & Digital Design",
+      icon: <Monitor className="w-8 h-8 text-teal-500" />,
+      subcategories: ["Webpage Design", "App Design", "Wireframing", "Game Interfaces", "Interactive Prototyping"],
+      description: "User-centric digital experiences with modern, clean interfaces.",
+      gradient: "from-teal-50 to-emerald-50 dark:from-teal-950/20 dark:to-emerald-950/20"
+    },
+    {
+      title: "Publication Design",
+      icon: <BookOpen className="w-8 h-8 text-purple-500" />,
+      subcategories: ["Magazines", "Book Covers", "Annual Reports", "Newsletters", "Catalogs & Brochures"],
+      description: "Professional layout design for print and digital publications.",
+      gradient: "from-purple-50 to-pink-50 dark:from-purple-950/20 dark:to-pink-950/20"
+    },
+    {
+      title: "Packaging Design",
+      icon: <Package className="w-8 h-8 text-amber-500" />,
+      subcategories: ["Label & Sticker Design", "Container Design", "Inner Packaging", "Outer Packaging", "Mockups & Print-Ready Files"],
+      description: "Product packaging that stands out on the shelf and protects with style.",
+      gradient: "from-amber-50 to-yellow-50 dark:from-amber-950/20 dark:to-yellow-950/20"
+    },
+    {
+      title: "Motion Graphics & Video",
+      icon: <Video className="w-8 h-8 text-rose-500" />,
+      subcategories: ["Video Editing", "2D Animation", "Explainer Videos", "Title Sequences", "Social Media Motion"],
+      description: "Dynamic visuals and cinematic editing to bring stories to life.",
+      gradient: "from-rose-50 to-red-50 dark:from-rose-950/20 dark:to-red-950/20"
+    }
+  ];
 
   return (
-    <>
-      <FramerWrapper
-        className="max-w-[48%] max-lg:max-w-full relative" // Increased width for a "bigger" gallery feel
-        y={0}
-        scale={0.9}
-        delay={num / 4}
-        duration={0.15}
-      >
-        <Card className="group w-full h-full flex flex-col border-0 bg-transparent shadow-none overflow-hidden">
-          {/* LARGE GALLERY IMAGE CONTAINER */}
-          <div
-            className="relative w-full aspect-[16/10] overflow-hidden rounded-xl cursor-pointer shadow-md border dark:border-gray-800"
-            onClick={() => setIsFullScreen(true)}
+    <div className="h-full w-full relative flex flex-col items-start gap-8 pb-20 px-4 md:px-8">
+      <Badge variant="secondary" className="gap-1.5 py-1">
+        <Layers className="w-4 h-4" />
+        Portfolio Categories
+      </Badge>
+
+      <div className="flex flex-col gap-3">
+        <Heading>My Creative Projects.</Heading>
+        <p className="font-poppins text-lg w-full text-muted-foreground max-w-2xl">
+          Explore my work categorized by design discipline. Click a card to see specific projects in that category.
+        </p>
+      </div>
+
+      {/* THE BIG GALLERY GRID */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {categories.map((cat, index) => (
+          <FramerWrapper 
+            key={index} 
+            y={50} 
+            delay={index * 0.1}
+            className="group"
           >
-            <img
-              src={value.imageLink}
-              alt={value.title}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-            />
-            
-            {/* Hover Overlay with Icon */}
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
-               <div className="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30">
-                  <ZoomIn className="text-white w-6 h-6" />
-               </div>
-            </div>
-          </div>
+            <Link href={`/projects/${cat.title.toLowerCase().replace(/&/g, 'and').replace(/ /g, '-')}`} className="block h-full">
+              <div className={`h-full relative overflow-hidden rounded-[2.5rem] border-2 border-white/50 dark:border-white/5 hover:border-primary/30 transition-all duration-500 p-10 flex flex-col gap-8 bg-gradient-to-br ${cat.gradient} shadow-sm hover:shadow-2xl hover:-translate-y-3`}>
+                
+                {/* ICON & TITLE SECTION */}
+                <div className="flex flex-col gap-5">
+                  <div className="p-4 bg-white dark:bg-gray-900 rounded-3xl w-fit shadow-md group-hover:rotate-[10deg] transition-all duration-300">
+                    {cat.icon}
+                  </div>
+                  <div className="space-y-2">
+                    <h2 className="text-2xl md:text-3xl font-bold tracking-tight text-primary leading-tight">
+                      {cat.title}
+                    </h2>
+                    <p className="text-sm text-muted-foreground font-medium italic">
+                      {cat.description}
+                    </p>
+                  </div>
+                </div>
 
-          {/* GALLERY CONTENT - Minimalist style */}
-          <div className="mt-4 px-1 flex flex-col gap-2">
-            <div className="flex items-center justify-between gap-2">
-              <CardTitle className="text-2xl font-bold text-primary tracking-tight">
-                {value.title}
-              </CardTitle>
-              <Link
-                href={value.link}
-                target="_blank"
-                className="text-primary hover:text-blue-600 transition-colors"
-              >
-                <ArrowUpRight className="h-6 w-6" />
-              </Link>
-            </div>
+                {/* SUB-CATEGORIES LIST */}
+                <div className="flex flex-wrap gap-2.5 mt-auto">
+                  {cat.subcategories.map((sub, i) => (
+                    <span 
+                      key={i} 
+                      className="text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 bg-white/60 dark:bg-black/40 backdrop-blur-md rounded-full text-primary/80 border border-white dark:border-white/10"
+                    >
+                      {sub}
+                    </span>
+                  ))}
+                </div>
 
-            <p className="text-base text-muted-foreground leading-relaxed line-clamp-2">
-              {value.description}
-            </p>
-
-            <div className="flex flex-wrap gap-2 mt-1">
-              {value.tags.map((tag: string, index: number) => {
-                const tagStyles: Record<string, string> = {
-                  Nextjs: "bg-teal-100 text-teal-800 dark:bg-teal-900/30",
-                  Freelancing: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30",
-                  "Shadcn Ui": "bg-blue-100 text-blue-800 dark:bg-blue-900/30",
-                  Typescript: "bg-red-100 text-red-800 dark:bg-red-900/30",
-                  "Logo Design": "bg-rose-100 text-rose-800 dark:bg-rose-900/30",
-                  "Branding": "bg-amber-100 text-amber-800 dark:bg-amber-900/30",
-                  "Photoshop": "bg-blue-100 text-blue-800 dark:bg-blue-900/30",
-                  "Illustrator": "bg-orange-100 text-orange-800 dark:bg-orange-900/30",
-                };
-
-                const currentStyle = tagStyles[tag] || "bg-gray-100 text-gray-800 dark:bg-gray-800";
-
-                return (
-                  <span
-                    key={index}
-                    className={`px-3 py-1 rounded-md text-[10px] uppercase tracking-wider font-bold transition-colors duration-200 ${currentStyle}`}
-                  >
-                    {tag}
-                  </span>
-                );
-              })}
-            </div>
-          </div>
-        </Card>
-      </FramerWrapper>
-
-      {/* FULL-SCREEN IMAGE PREVIEW (LIGHTBOX) */}
-      {isFullScreen && (
-        <div
-          className="fixed inset-0 bg-black/95 flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300"
-          onClick={() => setIsFullScreen(false)}
-        >
-          <button
-            className="absolute top-6 right-6 bg-white/10 text-white p-3 rounded-full hover:bg-white/20 transition-all z-[110]"
-            onClick={() => setIsFullScreen(false)}
-          >
-            <X className="w-8 h-8" />
-          </button>
-          
-          <img
-            src={value.imageLink}
-            alt={value.title}
-            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
-          />
-          
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white text-center">
-             <h2 className="text-2xl font-bold">{value.title}</h2>
-             <p className="text-gray-400 mt-2">Click anywhere to close</p>
-          </div>
-        </div>
-      )}
-    </>
+                {/* HOVER ARROW */}
+                <div className="absolute top-10 right-10 opacity-20 group-hover:opacity-100 group-hover:translate-x-2 transition-all duration-300">
+                   <ArrowRight className="w-8 h-8 text-primary" />
+                </div>
+              </div>
+            </Link>
+          </FramerWrapper>
+        ))}
+      </div>
+    </div>
   );
 };
 
-export default ProjectCards;
+export default ProjectPage;
