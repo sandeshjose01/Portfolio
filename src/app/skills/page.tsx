@@ -1,11 +1,12 @@
 import Heading from "@/components/Heading";
-import SkillsFooter from "@/components/SkillsFotter";
+import SkillsFooter from "@/components/SkillsFotter"; // Note: verify if your filename is 'SkillsFotter' or 'SkillsFooter'
 import { Badge } from "@/components/ui/badge";
 import { LightbulbIcon } from "lucide-react";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 
 const skillPage = () => {
-  const graphicdesigningTools = [
+  // Renamed to graphicDesigningTools for clarity
+  const graphicDesigningTools = [
     {
       name: "Adobe Creative Suite",
       icon: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg",
@@ -23,11 +24,12 @@ const skillPage = () => {
       icon: "https://upload.wikimedia.org/wikipedia/commons/4/48/Adobe_InDesign_CC_icon.svg",
     },
     {
-  name: "Canva",
-  icon: "https://img.icons8.com/?size=100&id=iWw83PVcBpLw&format=png&color=000000",
+      name: "Canva",
+      icon: "https://img.icons8.com/?size=100&id=iWw83PVcBpLw&format=png&color=000000",
     },
   ];
-  const videoeditingTools = [
+
+  const videoEditingTools = [
     {
       name: "Adobe Premiere Pro",
       icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Adobe_Premiere_Pro_CC_2026_icon.svg/250px-Adobe_Premiere_Pro_CC_2026_icon.svg.png",
@@ -44,28 +46,38 @@ const skillPage = () => {
         <LightbulbIcon className="w-4 h-4" />
         My Skills
       </Badge>
-      <div className="flex flex-col gap-3">
+
+      <div className="flex flex-col gap-3 w-full">
         <Heading>My Technical Experience/Skills.</Heading>
+        
         <FramerWrapper y={0} x={200}>
           <p className="font-poppins text-xl w-full text-primary max-sm:text-lg">
             Currently I am a Graphic Designer with 3+ year of experience and I have a solid
-            understand of Adobe Photoshop, Adobe Illustrator, Adobe Indesign, Adobe Premiere Pro, Adobe After Effect, Canva 7 Microsoft office.
+            understanding of Adobe Photoshop, Adobe Illustrator, Adobe Indesign, Adobe Premiere Pro, 
+            Adobe After Effect, Canva & Microsoft office.
           </p>
         </FramerWrapper>
+
+        {/* Section 1: Graphic Designing Tools */}
         <FramerWrapper y={100} delay={0.3} className="block w-full">
           <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
             Graphic Designing Tools
           </h1>
           <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
-            <SkillsFooter items={designingTools} />
+            <SkillsFooter items={graphicDesigningTools} />
+          </div>
+        </FramerWrapper>
+
+        {/* Section 2: Video Editing Tools */}
         <FramerWrapper y={100} delay={0.3} className="block w-full">
           <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
             Video Editing Tools
           </h1>
           <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
-            <SkillsFooter items={videoeditingTools} />
+            <SkillsFooter items={videoEditingTools} />
           </div>
         </FramerWrapper>
+        
       </div>
     </div>
   );
