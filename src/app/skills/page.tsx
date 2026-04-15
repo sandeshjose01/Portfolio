@@ -27,7 +27,7 @@ const skillPage = () => {
   icon: "https://img.icons8.com/?size=100&id=iWw83PVcBpLw&format=png&color=000000",
     },
   ];
-  const videoeditingtools = [
+  const videoeditingTools = [
     {
       name: "Adobe Premiere Pro",
       icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Adobe_Premiere_Pro_CC_2026_icon.svg/250px-Adobe_Premiere_Pro_CC_2026_icon.svg.png",
@@ -49,15 +49,21 @@ const skillPage = () => {
         <FramerWrapper y={0} x={200}>
           <p className="font-poppins text-xl w-full text-primary max-sm:text-lg">
             Currently I am a Graphic Designer with 3+ year of experience and I have a solid
-            understand of Photoshop, Illustrator, Canva & Microsoft Office.
+            understand of Adobe Photoshop, Adobe Illustrator, Adobe Indesign, Adobe Premiere Pro, Adobe After Effect, Canva 7 Microsoft office.
           </p>
         </FramerWrapper>
         <FramerWrapper y={100} delay={0.3} className="block w-full">
           <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
-            Designing Tools
+            Graphic Designing Tools
           </h1>
           <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
             <SkillsFooter items={designingTools} />
+        <FramerWrapper y={100} delay={0.3} className="block w-full">
+          <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
+            Video Editing Tools
+          </h1>
+          <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
+            <SkillsFooter items={videoeditingTools} />
           </div>
         </FramerWrapper>
       </div>
