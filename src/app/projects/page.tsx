@@ -99,7 +99,7 @@ const ProjectPage = () => {
       description: "An experimental, festive design created as a personal challenge.",
       tags: ["Social Media Festive Post", "Personal", "Experimental", "Republic Day" ],
       link: "https://www.behance.net/gallery/227068231/Republic-Day",
-      imageLink: "https://www.behance.net/gallery/227068231/Republic-Day",
+      imageLink: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/4fbc15227068231.6839311180b2b.png",
       subcategory: "Cohesive Social Media Posts",
       category: "Personal Project", 
     },
