@@ -18,8 +18,8 @@ const ProjectPage = () => {
     {
       id: 1,
       title: "Personal Project",
-      description: "Logo Design, Photo Manupulation, Typography Choices, Brand Color Palettes, Corporate Stationery.",
-      subcategories: ["Logo Design", "Photo Manupulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
+      description: "Logo Design, Photo Manipulation, Typography Choices, Brand Color Palettes, Corporate Stationery.",
+      subcategories: ["Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
     },
     {
@@ -59,27 +59,43 @@ const ProjectPage = () => {
     }
   ];
 
-  // 2. YOUR ACTUAL PROJECTS DATA
+  // 2. YOUR ACTUAL PROJECTS DATA (Updated to include Category mapping)
   const allProjects = [
     {
-      title: "Flora Branding",
-      description: "A complete modern wordmark logo for a fantasy Organic Tea Brand. This project includes corporate stationery, color palettes, and typography rules to maintain consistency across all platforms.",
+      title: "Personal Logo Concept",
+      description: "An experimental, fun logo design created as a personal challenge. Focusing on sharp typography and vibrant gradients.",
+      tags: ["Logo Design", "Personal", "Experimental"],
+      link: "https://yourlink.com",
+      imageLink: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
+      subcategory: "Logo Design",
+      category: "Personal Project", // <-- Separates it into the Personal category
+    },
+    {
+      title: "Flora Corporate Branding",
+      description: "A complete modern wordmark logo for a fantasy Organic Tea Brand. This project includes corporate stationery, color palettes, and typography rules.",
       tags: ["Logo Design", "Illustrator", "Branding"],
       link: "https://yourlink.com",
       imageLink: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
       subcategory: "Logo Design", 
+      category: "Brand Identity & Logo Design", // <-- Separates it into the Brand Identity category
     },
     {
       title: "EcoStore Landing Page",
-      description: "High-conversion landing page designed for an eco-friendly e-commerce brand. It features seamless UI transitions and accessible color contrast to maximize user retention.",
+      description: "High-conversion landing page designed for an eco-friendly e-commerce brand. It features seamless UI transitions and accessible color contrast.",
       tags: ["UI/UX", "Figma", "Web Design"],
       link: "https://yourlink.com",
       imageLink: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop",
       subcategory: "Website Landing Pages", 
+      category: "UI/UX & Web Design",
     }
   ];
 
-  const filteredProjects = allProjects.filter((p) => p.subcategory === selectedSubcategory);
+  // 3. STRICT FILTERING: Matches BOTH the Category and Subcategory
+  const filteredProjects = allProjects.filter(
+    (p) => 
+      p.category === selectedCategory?.title && 
+      p.subcategory === selectedSubcategory
+  );
 
   // Navigation Handlers
   const handleCloseAll = () => {
@@ -196,7 +212,7 @@ const ProjectPage = () => {
                     className="relative w-full rounded-2xl overflow-hidden border border-white/20 shadow-2xl group select-none pointer-events-none"
                     onContextMenu={(e) => e.preventDefault()} // Disables Right Click
                   >
-                    {/* Watermark Overlay (Optional, makes stealing harder) */}
+                    {/* Watermark Overlay */}
                     <div className="absolute inset-0 z-10 flex items-center justify-center opacity-10 mix-blend-overlay pointer-events-none">
                        <span className="text-4xl md:text-6xl font-bold rotate-[-30deg] tracking-widest uppercase">Protected</span>
                     </div>
@@ -278,7 +294,7 @@ const ProjectPage = () => {
                     </div>
                   ) : (
                     <div className="p-12 border border-dashed border-white/20 rounded-2xl flex items-center justify-center text-white/50 bg-black/20">
-                      No projects uploaded for {selectedSubcategory} yet.
+                      No projects uploaded for {selectedSubcategory} in this category yet.
                     </div>
                   )}
                 </motion.div>
