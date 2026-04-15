@@ -15,50 +15,47 @@ const ProjectPage = () => {
   const categories = [
     {
       id: 1,
-      title: "Brand Identity & Logo Design",
+      title: "Personal Project",
       description: "Logo Design, Typography Choices, Brand Color Palettes, Corporate Stationery.",
       subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
       image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
     },
     {
       id: 2,
+      title: "Brand Identity & Logo Design",
+      description: "Logo Design, Typography Choices, Brand Color Palettes, Corporate Stationery.",
+      subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"],
+      image: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
+    },
+    {
+      id: 3,
       title: "UI/UX & Web Design",
       description: "Website landing pages, mobile app interfaces, and Portfolio designs.",
       subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"],
       image: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop",
     },
-    // ... I kept the first two for brevity, add the rest of your 6 categories back here
-  ];
-
-  // 2. MOCK PROJECTS DATABASE
-  // Notice the 'subcategory' property matches the strings in the categories array above!
-  const allProjects = [
     {
-      title: "TechFlow Branding",
-      description: "A complete modern logo and brand identity package for a rising SaaS startup.",
-      tags: ["Logo Design", "Illustrator", "Branding"],
-      link: "https://yourlink.com",
-      imageLink: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
-      subcategory: "Logo Design", // Maps to the subcategory
+      id: 4,
+      title: "Social Media & Digital Marketing",
+      description: "Instagram grids, ad banners, and cohesive social media post sets.",
+      subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"],
+      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop",
     },
     {
-      title: "EcoStore Landing Page",
-      description: "High-conversion landing page designed for an eco-friendly e-commerce brand.",
-      tags: ["Nextjs", "Shadcn Ui", "Typescript", "Figma"],
-      link: "https://yourlink.com",
-      imageLink: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop",
-      subcategory: "Website Landing Pages", 
+      id: 5,
+      title: "Print & Large Format Media",
+      description: "Flex designs, Calendars, brochures, and event posters.",
+      subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"],
+      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop",
     },
     {
-      title: "Finance App Interface",
-      description: "Clean and accessible mobile app interface for a personal finance tracker.",
-      tags: ["UI/UX", "Personal", "Figma"],
-      link: "https://yourlink.com",
-      imageLink: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop",
-      subcategory: "Mobile App Interfaces", 
+      id: 6,
+      title: "Packaging & Canvas Printing",
+      description: "Product labels/boxes and your custom Canvas printing designs.",
+      subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"],
+      image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000&auto=format&fit=crop",
     }
   ];
-
   // Filter projects based on what the user clicked
   const filteredProjects = allProjects.filter((p) => p.subcategory === selectedSubcategory);
 
