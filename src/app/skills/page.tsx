@@ -5,7 +5,7 @@ import { LightbulbIcon } from "lucide-react";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 
 const skillPage = () => {
-  const designingTools = [
+  const graphicdesigningTools = [
     {
       name: "Adobe Creative Suite",
       icon: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg",
@@ -25,6 +25,16 @@ const skillPage = () => {
     {
   name: "Canva",
   icon: "https://img.icons8.com/?size=100&id=iWw83PVcBpLw&format=png&color=000000",
+    },
+  ];
+  const videoeditingtools = [
+    {
+      name: "Adobe Premiere Pro",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/34/Adobe_Premiere_Pro_CC_2026_icon.svg/250px-Adobe_Premiere_Pro_CC_2026_icon.svg.png",
+    },
+    {
+      name: "Adobe After Effect",
+      icon: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f8/Adobe_After_Effects_CC_2026_icon.svg/250px-Adobe_After_Effects_CC_2026_icon.svg.png",
     },
   ];
 
