@@ -60,7 +60,7 @@ const ProjectPage = () => {
         <p className="font-poppins text-lg text-muted-foreground max-w-2xl">Combine creative intuition and technical skill to build your visual legacy.</p>
       </div>
 
-      {/* CATEGORY GRID - ULTRA GLASSY */}
+      {/* CATEGORY GRID */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
         {categories.map((cat, index) => (
           <FramerWrapper key={cat.id} y={20} delay={index * 0.1}>
@@ -71,7 +71,6 @@ const ProjectPage = () => {
             >
               <img src={cat.image} className={`h-full w-full object-cover transition-all duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-2xl opacity-50' : ''}`} />
               <div className="absolute inset-0 bg-gradient-to-t from-white/40 via-transparent to-transparent opacity-20" />
-              
               <div className="absolute bottom-0 left-0 right-0 p-5 backdrop-blur-2xl bg-white/10 border-t border-white/20">
                 <span className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.3em]">Category 0{index + 1}</span>
                 <h3 className="text-xl font-bold text-slate-900 mt-0.5">{cat.title}</h3>
@@ -81,18 +80,22 @@ const ProjectPage = () => {
         ))}
       </div>
 
-      {/* MODAL SYSTEM - HIGH TRANSPARENCY GLASS */}
+      {/* MODAL SYSTEM WITH LAYOUT ANIMATION */}
       <AnimatePresence>
         {selectedCategory && (
-          <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6">
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={handleCloseAll} className="absolute inset-0 bg-white/5 backdrop-blur-md" />
 
             <motion.div 
-              initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.98, opacity: 0 }}
-              className="relative w-full max-w-6xl max-h-[95vh] overflow-y-auto rounded-3xl bg-white/5 border border-white/30 backdrop-blur-3xl shadow-2xl flex flex-col hide-scrollbar"
+              layout // CRITICAL: This enables the modal height to animate smoothly
+              initial={{ scale: 0.95, opacity: 0 }} 
+              animate={{ scale: 1, opacity: 1 }} 
+              exit={{ scale: 0.95, opacity: 0 }}
+              transition={{ layout: { type: "spring", stiffness: 200, damping: 25 }, opacity: { duration: 0.2 } }}
+              className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-[2rem] bg-white/5 border border-white/30 backdrop-blur-3xl shadow-2xl flex flex-col"
             >
-              {/* STICKY NAV - CRYSTAL GLASS */}
-              <div className="flex justify-between items-center p-6 sticky top-0 z-50 bg-white/10 backdrop-blur-2xl border-b border-white/20">
+              {/* STICKY NAV */}
+              <div className="flex justify-between items-center p-6 bg-white/10 backdrop-blur-2xl border-b border-white/20 z-[60]">
                 {selectedSubcategory ? (
                   <button onClick={() => selectedProject ? setSelectedProject(null) : setSelectedSubcategory(null)} className="flex items-center gap-2 text-slate-800 bg-white/20 px-4 py-2 rounded-xl hover:bg-white/40 transition-all text-sm font-bold border border-white/30">
                     <ArrowLeft className="w-4 h-4" /> Back
@@ -101,32 +104,43 @@ const ProjectPage = () => {
                 <button onClick={handleCloseAll} className="p-2 rounded-xl bg-white/20 hover:bg-red-500/10 text-slate-800 border border-white/30 transition-all"><X className="w-6 h-6" /></button>
               </div>
 
-              <div className="p-0">
+              {/* SCROLLABLE AREA */}
+              <div className="overflow-y-auto flex-1 hide-scrollbar">
                 <AnimatePresence mode="wait">
                   {selectedProject ? (
-                    /* VIEW 3: FULL PROJECT SHOWCASE (EDGE TO EDGE) */
-                    <motion.div key="project" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex flex-col">
+                    <motion.div 
+                      key="project" 
+                      initial={{ opacity: 0, y: 10 }} 
+                      animate={{ opacity: 1, y: 0 }} 
+                      exit={{ opacity: 0, y: -10 }}
+                      className="flex flex-col"
+                    >
                       <div className="w-full bg-white/5 flex items-center justify-center overflow-hidden">
-                        <img src={selectedProject.imageLink} className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} />
+                        <img src={selectedProject.imageLink} className={`w-full h-auto object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} />
                       </div>
                       <div className="p-8 md:p-12 space-y-6 bg-gradient-to-b from-transparent to-white/10">
                         <div className="flex flex-col md:flex-row justify-between items-end gap-8">
                           <div className="space-y-4 flex-1">
                             <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter">{selectedProject.title}</h2>
-                            <p className="text-slate-700 text-lg leading-relaxed max-w-3xl font-semibold">{selectedProject.description}</p>
+                            <p className="text-slate-700 text-lg leading-relaxed font-semibold">{selectedProject.description}</p>
                             <div className="flex flex-wrap gap-2">{selectedProject.tags.map((t:any) => <span key={t} className="px-4 py-1.5 bg-white/30 rounded-lg text-xs text-slate-600 border border-white/40 uppercase tracking-widest font-bold">{t}</span>)}</div>
                           </div>
-                          <Link href={selectedProject.link} target="_blank" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all hover:scale-105 flex items-center gap-3 shrink-0 shadow-lg shadow-blue-500/20">Visit Project <ExternalLink className="w-4 h-4" /></Link>
+                          <Link href={selectedProject.link} target="_blank" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all hover:scale-105 flex items-center gap-3 shrink-0">Visit Project <ExternalLink className="w-4 h-4" /></Link>
                         </div>
                       </div>
                     </motion.div>
                   ) : selectedSubcategory ? (
-                    /* VIEW 2: MASONRY GALLERY */
-                    <motion.div key="list" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                    <motion.div 
+                      key="list" 
+                      initial={{ opacity: 0, scale: 0.98 }} 
+                      animate={{ opacity: 1, scale: 1 }} 
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      className="p-6"
+                    >
                       {filteredProjects.length > 0 ? (
-                        <div className="columns-1 md:columns-2 gap-4 space-y-4 p-6">
+                        <div className="columns-1 md:columns-2 gap-4 space-y-4">
                           {filteredProjects.map((proj, i) => (
-                            <motion.div key={i} onClick={() => setSelectedProject(proj)} className="break-inside-avoid group bg-white/10 border border-white/20 rounded-2xl overflow-hidden cursor-pointer hover:border-blue-400 transition-all shadow-sm">
+                            <motion.div key={i} onClick={() => setSelectedProject(proj)} className="break-inside-avoid group bg-white/10 border border-white/20 rounded-2xl overflow-hidden cursor-pointer hover:border-blue-400 transition-all">
                               <img src={proj.imageLink} className={`w-full h-auto transition-transform duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-xl' : ''}`} />
                               <div className="p-6 bg-white/20 backdrop-blur-2xl border-t border-white/20">
                                 <h3 className="text-xl font-bold text-slate-800">{proj.title}</h3>
@@ -136,23 +150,26 @@ const ProjectPage = () => {
                         </div>
                       ) : (
                         <div className="p-20 flex flex-col items-center justify-center text-center space-y-5">
-                          <div className="w-20 h-20 bg-white/10 backdrop-blur-3xl rounded-2xl flex items-center justify-center border border-white/20 shadow-sm">
-                            <Inbox className="w-10 h-10 text-slate-400" />
-                          </div>
+                          <Inbox className="w-12 h-12 text-slate-300" />
                           <div className="space-y-2">
-                             <h3 className="text-2xl font-bold text-slate-800 tracking-tight leading-tight">No {selectedSubcategory} added yet.</h3>
-                             <p className="text-slate-500 font-bold max-w-xs mx-auto text-sm">Uploading projects soon! Check back later.</p>
+                             <h3 className="text-2xl font-bold text-slate-800 tracking-tight">No {selectedSubcategory} added yet.</h3>
+                             <p className="text-slate-500 font-bold max-w-xs mx-auto text-sm">Working on it! Check back later.</p>
                           </div>
                         </div>
                       )}
                     </motion.div>
                   ) : (
-                    /* VIEW 1: SUBCATEGORY LIST */
-                    <motion.div key="subs" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="p-8 md:p-12 space-y-10">
+                    <motion.div 
+                      key="subs" 
+                      initial={{ opacity: 0, x: 20 }} 
+                      animate={{ opacity: 1, x: 0 }} 
+                      exit={{ opacity: 0, x: -20 }}
+                      className="p-8 md:p-12 space-y-10"
+                    >
                       <h2 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tighter leading-none">{selectedCategory.title}</h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {selectedCategory.subcategories.map((sub: string) => (
-                          <button key={sub} onClick={() => setSelectedSubcategory(sub)} className="flex items-center justify-between p-8 bg-white/5 border border-white/20 hover:bg-white/20 hover:border-blue-300 transition-all group text-left rounded-2xl shadow-sm backdrop-blur-2xl">
+                          <button key={sub} onClick={() => setSelectedSubcategory(sub)} className="flex items-center justify-between p-8 bg-white/5 border border-white/20 hover:bg-white/20 hover:border-blue-300 transition-all group rounded-2xl shadow-sm backdrop-blur-2xl">
                             <span className="text-xl font-bold text-slate-700 group-hover:text-slate-900 transition-colors">{sub}</span>
                             <ArrowLeft className="w-5 h-5 rotate-180 text-blue-500 transition-all group-hover:translate-x-1" />
                           </button>
