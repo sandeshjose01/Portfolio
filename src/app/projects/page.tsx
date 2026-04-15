@@ -5,13 +5,13 @@ import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
 import { Layers, X, ArrowRight, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import ProjectCards from "@/components/ProjectsCard"; // <-- UPDATE THIS PATH IF NEEDED
+import ProjectCards from "@/components/ProjectsCard";
 
 const ProjectPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
 
-  // 1. YOUR CATEGORIES (No changes here)
+  // 1. ALL 6 CATEGORIES
   const categories = [
     {
       id: 1,
@@ -56,6 +56,28 @@ const ProjectPage = () => {
       image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000&auto=format&fit=crop",
     }
   ];
+
+  // 2. YOUR ACTUAL PROJECTS DATA
+  // (You will add your real portfolio projects here later)
+  const allProjects = [
+    {
+      title: "TechFlow Branding",
+      description: "A complete modern logo and brand identity package for a rising SaaS startup.",
+      tags: ["Logo Design", "Illustrator", "Branding"],
+      link: "https://yourlink.com",
+      imageLink: "https://images.unsplash.com/photo-1626785774573-4b799315345d?q=80&w=1000&auto=format&fit=crop",
+      subcategory: "Logo Design", // <-- This connects it to the "Logo Design" subcategory
+    },
+    {
+      title: "EcoStore Landing Page",
+      description: "High-conversion landing page designed for an eco-friendly e-commerce brand.",
+      tags: ["UI/UX", "Figma", "Web Design"],
+      link: "https://yourlink.com",
+      imageLink: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop",
+      subcategory: "Website Landing Pages", // <-- Connects to "Website Landing Pages"
+    }
+  ];
+
   // Filter projects based on what the user clicked
   const filteredProjects = allProjects.filter((p) => p.subcategory === selectedSubcategory);
 
@@ -86,7 +108,7 @@ const ProjectPage = () => {
       {selectedSubcategory ? (
         
         // VIEW A: SHOW INDIVIDUAL PROJECTS 
-        <div className="w-full flex flex-col gap-6 w-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="w-full flex flex-col gap-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
           
           {/* Back Button */}
           <button 
@@ -105,7 +127,7 @@ const ProjectPage = () => {
               ))}
             </div>
           ) : (
-            <div className="p-8 border-2 border-dashed rounded-xl flex items-center justify-center text-muted-foreground">
+            <div className="p-8 border-2 border-dashed rounded-xl flex items-center justify-center text-muted-foreground w-full">
               No projects uploaded for &quot;{selectedSubcategory}&quot; yet.
             </div>
           )}
@@ -182,7 +204,7 @@ const ProjectPage = () => {
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.05 }}
                       key={i} 
-                      onClick={() => handleSubcategoryClick(sub)} // <-- ADDED CLICK HANDLER HERE
+                      onClick={() => handleSubcategoryClick(sub)}
                       className="flex items-center gap-4 p-5 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/20 hover:scale-[1.02] cursor-pointer transition-all text-white"
                     >
                       <div className="h-2 w-2 bg-blue-400 rounded-full shadow-[0_0_8px_rgba(96,165,250,0.8)]" />
