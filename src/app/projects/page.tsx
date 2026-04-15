@@ -278,7 +278,7 @@ const ProjectPage = () => {
                     </div>
                   ) : (
                     <div className="p-12 border border-dashed border-white/20 rounded-2xl flex items-center justify-center text-white/50 bg-black/20">
-                      No projects uploaded for "{selectedSubcategory}" yet.
+                      No projects uploaded for {selectedSubcategory} yet.
                     </div>
                   )}
                 </motion.div>
