@@ -125,7 +125,7 @@ const ProjectPage = () => {
       <div className="flex flex-col gap-3">
         <Heading>My Projects</Heading>
         <p className="font-poppins text-lg w-full text-muted-foreground max-w-2xl">
-          Explore my work where creative intuition meets technical precision.
+          Explore my work to see how we can combine creative intuition and technical skill to build your visual legacy.
         </p>
       </div>
 
