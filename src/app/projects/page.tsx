@@ -173,9 +173,9 @@ const ProjectPage = () => {
       </Badge>
 
       <div className="flex flex-col gap-3">
-        <Heading>Creative Portfolio</Heading>
+        <Heading>My Project</Heading>
         <p className="font-poppins text-lg w-full text-muted-foreground max-w-2xl">
-          A curated collection of my design work. Select a category to explore sub-categories.
+          Explore my work to see how we can combine creative intuition and technical skill to build your visual legacy.
         </p>
       </div>
 
