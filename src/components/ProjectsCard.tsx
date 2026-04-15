@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import FramerWrapper from "./animation/FramerWrapper";
-import { ArrowUpRight, X } from "lucide-react";
+import { ArrowUpRight, X, ZoomIn } from "lucide-react";
 import { useState } from "react";
 
 interface ProjectCardProps {
@@ -30,118 +30,103 @@ const ProjectCards: React.FC<ProjectCardProps> = ({ value, num }) => {
   return (
     <>
       <FramerWrapper
-        className="max-w-[32%] max-lg:max-w-full relative"
+        className="max-w-[48%] max-lg:max-w-full relative" // Increased width for a "bigger" gallery feel
         y={0}
-        scale={0.8}
+        scale={0.9}
         delay={num / 4}
         duration={0.15}
       >
-        <Card
-          className="w-full h-full flex flex-col hover:shadow-xl transition-all duration-300 border-2 overflow-hidden bg-gradient-to-b from-white to-gray-50 dark:from-gray-900 dark:to-gray-800"
-        >
-          {/* Image inside Card */}
+        <Card className="group w-full h-full flex flex-col border-0 bg-transparent shadow-none overflow-hidden">
+          {/* LARGE GALLERY IMAGE CONTAINER */}
           <div
-            className="relative w-full h-64 overflow-hidden cursor-pointer"
+            className="relative w-full aspect-[16/10] overflow-hidden rounded-xl cursor-pointer shadow-md border dark:border-gray-800"
             onClick={() => setIsFullScreen(true)}
           >
             <img
               src={value.imageLink}
               alt={value.title}
-              className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
-            <div className="absolute inset-0 bg-black/10 hover:bg-black/5 transition-colors duration-300" />
+            
+            {/* Hover Overlay with Icon */}
+            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+               <div className="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30">
+                  <ZoomIn className="text-white w-6 h-6" />
+               </div>
+            </div>
           </div>
 
-          <CardHeader className="pb-2">
-            <CardTitle className="text-xl font-bold text-primary tracking-tight">
-              {value.title}
-            </CardTitle>
-          </CardHeader>
+          {/* GALLERY CONTENT - Minimalist style */}
+          <div className="mt-4 px-1 flex flex-col gap-2">
+            <div className="flex items-center justify-between gap-2">
+              <CardTitle className="text-2xl font-bold text-primary tracking-tight">
+                {value.title}
+              </CardTitle>
+              <Link
+                href={value.link}
+                target="_blank"
+                className="text-primary hover:text-blue-600 transition-colors"
+              >
+                <ArrowUpRight className="h-6 w-6" />
+              </Link>
+            </div>
 
-          <CardContent className="flex-grow flex flex-col gap-4 px-4">
-            <p className="text-sm text-muted-foreground leading-relaxed line-clamp-3">
+            <p className="text-base text-muted-foreground leading-relaxed line-clamp-2">
               {value.description}
             </p>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 mt-1">
               {value.tags.map((tag: string, index: number) => {
-                // I removed the duplicate "Freelancing" key here
                 const tagStyles: Record<string, string> = {
-                    Nextjs: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200",
-                    Freelancing: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200",
-                    "Shadcn Ui": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-                    Typescript: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200",
-                    MySQL: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-                    Zustand: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-                    Supabase: "bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200",
-                    Npx: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
-                    Library: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
-                    Zod: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-200",
-                    "React Hook Form": "bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200",
-                    "Logo Design": "bg-rose-100 text-rose-800 dark:bg-rose-900 dark:text-rose-200",
-                    "Branding": "bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-200",
-                    "Social Media": "bg-sky-100 text-sky-800 dark:bg-sky-900 dark:text-sky-200",
-                    "Print Design": "bg-lime-100 text-lime-800 dark:bg-lime-900 dark:text-lime-200",
-                    "Photoshop": "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200",
-                    "Illustrator": "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200",
-                    "Canva": "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-200",
-                    "Client Work": "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200",
-                    "Poster": "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200",
-                    "Flyer": "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200",
-                    "Personal": "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200",
+                  Nextjs: "bg-teal-100 text-teal-800 dark:bg-teal-900/30",
+                  Freelancing: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30",
+                  "Shadcn Ui": "bg-blue-100 text-blue-800 dark:bg-blue-900/30",
+                  Typescript: "bg-red-100 text-red-800 dark:bg-red-900/30",
+                  "Logo Design": "bg-rose-100 text-rose-800 dark:bg-rose-900/30",
+                  "Branding": "bg-amber-100 text-amber-800 dark:bg-amber-900/30",
+                  "Photoshop": "bg-blue-100 text-blue-800 dark:bg-blue-900/30",
+                  "Illustrator": "bg-orange-100 text-orange-800 dark:bg-orange-900/30",
                 };
 
-                const currentStyle = tagStyles[tag] || "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200";
+                const currentStyle = tagStyles[tag] || "bg-gray-100 text-gray-800 dark:bg-gray-800";
 
                 return (
                   <span
                     key={index}
-                    className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium transition-colors duration-200 ${currentStyle}`}
+                    className={`px-3 py-1 rounded-md text-[10px] uppercase tracking-wider font-bold transition-colors duration-200 ${currentStyle}`}
                   >
                     {tag}
                   </span>
                 );
               })}
             </div>
-          </CardContent>
-
-          <CardFooter className="pt-2 px-4 pb-4">
-            <Link
-              href={value.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              className={cn(
-                buttonVariants({
-                  variant: "default",
-                  size: "sm",
-                }),
-                "w-fit transition-all hover:translate-y-[-2px] hover:shadow-md group bg-primary text-white hover:bg-primary/90"
-              )}
-            >
-              Visit Project
-              <ArrowUpRight className="h-4 w-4 ml-1 hidden group-hover:block -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" />
-            </Link>
-          </CardFooter>
+          </div>
         </Card>
       </FramerWrapper>
 
-      {/* Full-Screen Image Preview */}
+      {/* FULL-SCREEN IMAGE PREVIEW (LIGHTBOX) */}
       {isFullScreen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50"
+          className="fixed inset-0 bg-black/95 flex items-center justify-center z-[100] p-4 animate-in fade-in duration-300"
           onClick={() => setIsFullScreen(false)}
         >
           <button
-            className="absolute top-4 right-4 bg-gray-800 text-white p-2 rounded-full hover:bg-gray-600 transition"
+            className="absolute top-6 right-6 bg-white/10 text-white p-3 rounded-full hover:bg-white/20 transition-all z-[110]"
             onClick={() => setIsFullScreen(false)}
           >
-            <X className="w-6 h-6" />
+            <X className="w-8 h-8" />
           </button>
+          
           <img
             src={value.imageLink}
             alt={value.title}
-            className="max-w-full max-h-full object-contain"
+            className="max-w-full max-h-[90vh] object-contain rounded-lg shadow-2xl"
           />
+          
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white text-center">
+             <h2 className="text-2xl font-bold">{value.title}</h2>
+             <p className="text-gray-400 mt-2">Click anywhere to close</p>
+          </div>
         </div>
       )}
     </>
