@@ -90,7 +90,7 @@ const Projects = [
 
 type Project = typeof Projects[0];
 
-const projectsPage = () => {
+const ProjectsPage = () => {
   const [overlayOpen, setOverlayOpen] = useState(false);
   const [overlayAnim, setOverlayAnim] = useState(false);
   const [activeMain, setActiveMain] = useState<string | null>(null);
@@ -417,4 +417,4 @@ const projectsPage = () => {
   );
 };
 
-export default projectsPage;
+export default ProjectsPage;
