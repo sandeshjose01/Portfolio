@@ -38,7 +38,7 @@ const ProjectPage = () => {
       id: 1, title: "Personal Project", 
       description: "Logo Design, Photo Manipulation, Typography Choices.", 
       subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], 
-      image: "img/Personal Project Cover.png" },
+      image: "https://github.com/sandeshjose01/Portfolio/blob/master/img/Personal%20Project%20Cover.png?raw=true" },
     { 
       id: 2, 
       title: "Brand Identity & Logo Design", 
