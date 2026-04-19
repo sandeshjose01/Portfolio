@@ -24,55 +24,41 @@ const Navbar = () => {
   const data = [
     {
       title: 'Home',
-      icon: (
-        <HomeIcon className='h-full w-full ' />
-      ),
+      icon: <HomeIcon className='h-full w-full ' />,
       href: '/',
     },
     {
       title: 'About',
-      icon: (
-        <User className='h-full w-full ' />
-      ),
+      icon: <User className='h-full w-full ' />,
       href: '/about',
     },
     {
       title: 'Skills',
-      icon: (
-        <LightbulbIcon className='h-full w-full ' />
-      ),
+      icon: <LightbulbIcon className='h-full w-full ' />,
       href: '/skills',
     },
     {
       title: 'Education',
-      icon: (
-        <GraduationCap className='h-full w-full ' />
-      ),
+      icon: <GraduationCap className='h-full w-full ' />,
       href: '/education',
     },
     {
       title: 'Projects',
-      icon: (
-        <FolderGit2 className='h-full w-full ' />
-      ),
+      icon: <FolderGit2 className='h-full w-full ' />,
       href: '/projects',
     },
-   
     {
       title: 'Contact me',
-      icon: (
-        <Mail className='h-full w-full ' />
-      ),
+      icon: <Mail className='h-full w-full ' />,
       href: '/contact',
     },
     {
       title: 'More',
-      icon: (
-        <MoreHorizontal className='h-full w-full ' />
-      ),
+      icon: <MoreHorizontal className='h-full w-full ' />,
       href: '/more',
     },
   ];
+  
   const [scrolling, setScrolling] = useState(false);
   const pathname = usePathname();
   
@@ -93,15 +79,14 @@ const Navbar = () => {
   }, []);
 
   return (
-    <div className={`fixed bottom-5 right-0 left-0 px-0 sm:px-5 m-auto w-full sm:w-fit bg-transparent z-[+9999999] ${scrolling ? "hidden":"block"}`}>
+    <div className={`fixed bottom-5 right-0 left-0 px-0 sm:px-5 m-auto w-full sm:w-fit bg-transparent z-[+9999999] transition-opacity duration-300 ${scrolling ? "hidden":"block"}`}>
       
-      {/* ADDED GLASS EFFECT CLASSES HERE */}
-      <Dock className='items-end pb-3 px-3 rounded-full bg-white/40 backdrop-blur-xl border border-white/60 shadow-lg'>
-        
+      {/* EXACT Project Page glass effect applied here */}
+      <Dock className='items-end pb-3 rounded-full bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm'>
         {data.map((item, idx) => (
           <Link href={item.href} key={idx}>
             <DockItem
-              className={cn("aspect-square rounded-full bg-gray-200 dark:bg-neutral-800",pathname === item.href && " bg-gray-100 !border !border-primary-sky")}
+              className={cn("aspect-square rounded-full bg-gray-200 dark:bg-neutral-800", pathname === item.href && " bg-gray-100 !border !border-primary-sky")}
             >
               <DockLabel>{item.title}</DockLabel>
               <DockIcon className={cn(pathname === item.href && "text-[#2f7df4]")}>{item.icon}</DockIcon>
@@ -109,6 +94,7 @@ const Navbar = () => {
           </Link>
         ))}
       </Dock>
+      
     </div>
   );
 };
