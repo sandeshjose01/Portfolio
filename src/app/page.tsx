@@ -6,7 +6,7 @@ import HeroImage from "@/components/HeroImage";
 import GithubBtn from "@/components/animation/GithubBtn";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 // Import the PDF function and the Download icon
-import { downloadATSResume } from "@/lib/generateResume";
+import { downloadATSResume } from "src/lib/generateResume";
 import { Download } from "lucide-react";
 
 export const siteConfig = {
