@@ -3,7 +3,7 @@ import SocialLinks from "@/components/SocialLinks";
 import HeroTexts from "@/components/HeroTexts";
 import HeroImage from "@/components/HeroImage";
 import GithubBtn from "@/components/animation/GithubBtn";
-import DownLoadResumeBtn from "@/components/DownLoadResumeBtn"; // Component is back
+import DownLoadResumeBtn from "@/components/DownLoadResumeBtn"; 
 import FramerWrapper from "@/components/animation/FramerWrapper";
 
 export const siteConfig = {
@@ -18,7 +18,7 @@ export default function Home() {
     <>
       {/* LEFT SIDE  */}
       <FramerWrapper
-        className=" h-full w-auto flex flex-col justify-start gap-4"
+        className="h-full w-auto flex flex-col justify-start gap-4"
         y={0}
         x={-100}
       >
@@ -26,7 +26,8 @@ export default function Home() {
         <div className="h-fit w-full p-4 flex gap-4">
           <SocialLinks />
         </div>
-        {/* The Animated Button Component */}
+        
+        {/* This component handles the animation and the PDF logic */}
         <DownLoadResumeBtn />
       </FramerWrapper>
 
