@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react";
 import { Download } from "lucide-react";
 import { Button } from "../ui/button";
+// 1. Import the generator function directly here
+import { downloadATSResume } from "@/lib/generateResume";
 
 const HackerBtn = ({ label }: { label: string }) => {
   const [displayText, setDisplayText] = useState(label);
@@ -25,18 +27,12 @@ const HackerBtn = ({ label }: { label: string }) => {
 
   const startScrambling = () => {
     scramble(label);
-    setTimeout(() => console.log("Submitted"), label.length * 50);
   };
 
-  const handleDownloadResume = () => {
-    const resumeUrl =
-      "https://drive.google.com/uc?export=download&id=14XZF1AHThraCP-TmtMr99-7vIDkbo8RI"; // Your Google Drive download URL
-    const link = document.createElement("a");
-    link.href = resumeUrl;
-    link.download = "SandeshJoshiResume.pdf"; // The name of the file to be downloaded
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  // 2. Updated click handler: No more Google Drive link!
+  const handleDownloadClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    downloadATSResume(); // This triggers your professional PDF generator
   };
 
   useEffect(() => {
@@ -46,11 +42,11 @@ const HackerBtn = ({ label }: { label: string }) => {
   return (
     <Button
       size={"lg"}
-      className="text-base px-5 py-6"
+      className="text-base px-5 py-6 font-bold"
       onMouseEnter={startScrambling}
-      onClick={handleDownloadResume}
+      onClick={handleDownloadClick} // Trigger the new generator
     >
-      <Download className="mx-1" />
+      <Download className="mx-1 h-5 w-5" />
       {displayText}
     </Button>
   );
