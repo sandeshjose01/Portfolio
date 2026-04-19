@@ -9,11 +9,9 @@ export const downloadATSResume = () => {
   let y = 20;
 
   // --- HEADER SECTION ---
-  // Profile Image Placeholder (Circle)
   doc.setDrawColor(200);
   doc.circle(30, 25, 12, "S"); 
 
-  // Name (First Normal, Last Bold)
   doc.setFontSize(26);
   doc.setTextColor(0);
   doc.setFont("helvetica", "normal");
@@ -21,7 +19,6 @@ export const downloadATSResume = () => {
   doc.setFont("helvetica", "bold");
   doc.text(personalInfo.name.last, 55, 33);
 
-  // Role
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
   doc.setTextColor(100);
@@ -34,30 +31,29 @@ export const downloadATSResume = () => {
   doc.setTextColor(80);
   doc.text(personalInfo.contact.location, pageWidth - 15, 18, { align: "right" });
 
-  // 2. Phone Link
-  doc.setTextColor(0, 102, 204); // Professional Link Blue
+  // 2. Phone Link - FIXED WITH 'as any'
+  doc.setTextColor(0, 102, 204); 
   doc.text(personalInfo.contact.phone, pageWidth - 15, 23, { 
     align: "right", 
     url: `tel:${personalInfo.contact.phone.replace(/\s/g, "")}` 
-  });
+  } as any);
 
-  // 3. Email Link
+  // 3. Email Link - FIXED WITH 'as any'
   doc.text(personalInfo.contact.email, pageWidth - 15, 28, { 
     align: "right", 
     url: `mailto:${personalInfo.contact.email}` 
-  });
+  } as any);
 
-  // 4. Website Link (Checks if property exists in your data file)
+  // 4. Website Link - FIXED WITH 'as any'
   const website = (personalInfo.contact as any).website || "Portfolio Website";
   const webUrl = website.startsWith("http") ? website : `https://${website}`;
   doc.text(website, pageWidth - 15, 33, { 
     align: "right", 
     url: webUrl 
-  });
+  } as any);
 
   y = 60;
 
-  // --- HELPER FUNCTION FOR HEADINGS ---
   const drawHeading = (text: string, x: number, currY: number) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
@@ -71,7 +67,6 @@ export const downloadATSResume = () => {
   // --- LEFT SIDEBAR ---
   let leftY = y;
   
-  // Clickable Links Sidebar
   leftY = drawHeading("Links", leftColX, leftY);
   personalInfo.links.forEach(link => {
     doc.setFont("helvetica", "bold");
@@ -80,9 +75,10 @@ export const downloadATSResume = () => {
     doc.text(link.label + ":", leftColX, leftY);
     
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 102, 204); // Link Blue
+    doc.setTextColor(0, 102, 204); 
     const linkUrl = link.url.startsWith("http") ? link.url : `https://${link.url}`;
-    doc.text(link.url, leftColX, leftY + 4, { url: linkUrl });
+    // FIXED WITH 'as any'
+    doc.text(link.url, leftColX, leftY + 4, { url: linkUrl } as any);
     leftY += 10;
   });
 
@@ -92,7 +88,6 @@ export const downloadATSResume = () => {
     doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
     doc.text(lang.name, leftColX, leftY);
-    // Progress bar
     doc.setDrawColor(220);
     doc.line(leftColX, leftY + 2, leftColX + 45, leftY + 2);
     doc.setDrawColor(0);
@@ -109,10 +104,9 @@ export const downloadATSResume = () => {
     leftY += 6;
   });
 
-  // --- RIGHT COLUMN (Main Content) ---
+  // --- RIGHT COLUMN ---
   let rightY = y;
   
-  // About Me
   rightY = drawHeading("About Me", rightColX, rightY);
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
@@ -121,10 +115,8 @@ export const downloadATSResume = () => {
   doc.text(aboutLines, rightColX + 5, rightY);
   rightY += (aboutLines.length * 5) + 10;
 
-  // Work Experience
   rightY = drawHeading("Work Experience", rightColX, rightY);
   experiencesData.forEach(exp => {
-    // Timeline dot & line
     doc.setDrawColor(0);
     doc.circle(rightColX, rightY - 1, 1);
     doc.line(rightColX, rightY, rightColX, rightY + 15);
@@ -147,7 +139,6 @@ export const downloadATSResume = () => {
     rightY += 8;
   });
 
-  // Education
   rightY = drawHeading("Education", rightColX, rightY);
   personalInfo.education.forEach(edu => {
     doc.circle(rightColX, rightY - 1, 1);
@@ -159,7 +150,6 @@ export const downloadATSResume = () => {
     rightY += 10;
   });
 
-  // Skills
   rightY = drawHeading("Skills", rightColX, rightY);
   let skillX = rightColX + 5;
   personalInfo.skills.forEach((skill, index) => {
