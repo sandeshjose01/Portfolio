@@ -116,7 +116,7 @@ const ExperiencePage = () => {
       {/* FOOTER LINK */}
       <div className="w-full flex justify-center mt-12">
         <a 
-          href="https://www.linkedin.com/in/sandeshjoshi/details/recommendations/" 
+          href="https://www.linkedin.com/in/sanjoshi1/details/recommendations/" 
           target="_blank" 
           rel="noopener noreferrer"
           className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-600 transition-all"
