@@ -81,8 +81,8 @@ const Navbar = () => {
   return (
     <div className={`fixed bottom-5 right-0 left-0 px-0 sm:px-5 m-auto w-full sm:w-fit bg-transparent z-[+9999999] transition-opacity duration-300 ${scrolling ? "hidden":"block"}`}>
       
-      {/* EXACT Project Page glass effect applied here */}
-      <Dock className='items-end pb-3 rounded-full bg-white/40 backdrop-blur-xl border border-white/60 shadow-sm'>
+      {/* ADDED '!' TO FORCE THE OVERRIDE */}
+      <Dock className='items-end pb-3 rounded-full !bg-white/40 !backdrop-blur-xl border !border-white/60 shadow-md'>
         {data.map((item, idx) => (
           <Link href={item.href} key={idx}>
             <DockItem
