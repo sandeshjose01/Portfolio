@@ -6,7 +6,6 @@ export const downloadATSResume = () => {
   const pageWidth = doc.internal.pageSize.getWidth();
   const leftColX = 15;
   const rightColX = 75;
-  const sidebarWidth = 50;
   let y = 20;
 
   // --- HEADER SECTION ---
@@ -16,6 +15,7 @@ export const downloadATSResume = () => {
 
   // Name (First Normal, Last Bold)
   doc.setFontSize(26);
+  doc.setTextColor(0);
   doc.setFont("helvetica", "normal");
   doc.text(personalInfo.name.first, 55, 23);
   doc.setFont("helvetica", "bold");
@@ -27,35 +27,62 @@ export const downloadATSResume = () => {
   doc.setTextColor(100);
   doc.text(personalInfo.role, 55, 40, { charSpace: 1 });
 
-  // Contact Info (Top Right)
-  doc.setTextColor(80);
+  // --- CLICKABLE CONTACT INFO (Top Right) ---
   doc.setFontSize(8);
+  
+  // 1. Location (Static)
+  doc.setTextColor(80);
   doc.text(personalInfo.contact.location, pageWidth - 15, 18, { align: "right" });
-  doc.text(personalInfo.contact.phone, pageWidth - 15, 23, { align: "right" });
-  doc.text(personalInfo.contact.email, pageWidth - 15, 28, { align: "right" });
+
+  // 2. Phone Link
+  doc.setTextColor(0, 102, 204); // Professional Link Blue
+  doc.text(personalInfo.contact.phone, pageWidth - 15, 23, { 
+    align: "right", 
+    url: `tel:${personalInfo.contact.phone.replace(/\s/g, "")}` 
+  });
+
+  // 3. Email Link
+  doc.text(personalInfo.contact.email, pageWidth - 15, 28, { 
+    align: "right", 
+    url: `mailto:${personalInfo.contact.email}` 
+  });
+
+  // 4. Website Link (Checks if property exists in your data file)
+  const website = (personalInfo.contact as any).website || "Portfolio Website";
+  const webUrl = website.startsWith("http") ? website : `https://${website}`;
+  doc.text(website, pageWidth - 15, 33, { 
+    align: "right", 
+    url: webUrl 
+  });
 
   y = 60;
 
-  // --- LEFT SIDEBAR ---
-  let leftY = y;
+  // --- HELPER FUNCTION FOR HEADINGS ---
   const drawHeading = (text: string, x: number, currY: number) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
     doc.setTextColor(0);
     doc.text(text.toUpperCase(), x, currY);
     doc.setLineWidth(0.3);
-    doc.line(x, currY + 2, x + (text === "ABOUT ME" || text === "WORK EXPERIENCE" || text === "EDUCATION" || text === "SKILLS" ? 120 : 45), currY + 2);
+    doc.line(x, currY + 2, x + (x > 50 ? 120 : 45), currY + 2);
     return currY + 10;
   };
 
+  // --- LEFT SIDEBAR ---
+  let leftY = y;
+  
+  // Clickable Links Sidebar
   leftY = drawHeading("Links", leftColX, leftY);
   personalInfo.links.forEach(link => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
+    doc.setTextColor(0);
     doc.text(link.label + ":", leftColX, leftY);
+    
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(100);
-    doc.text(link.url, leftColX, leftY + 4);
+    doc.setTextColor(0, 102, 204); // Link Blue
+    const linkUrl = link.url.startsWith("http") ? link.url : `https://${link.url}`;
+    doc.text(link.url, leftColX, leftY + 4, { url: linkUrl });
     leftY += 10;
   });
 
@@ -77,6 +104,7 @@ export const downloadATSResume = () => {
   leftY = drawHeading("Hobbies", leftColX, leftY);
   personalInfo.hobbies.forEach(hobby => {
     doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
     doc.text("• " + hobby, leftColX, leftY);
     leftY += 6;
   });
@@ -96,10 +124,10 @@ export const downloadATSResume = () => {
   // Work Experience
   rightY = drawHeading("Work Experience", rightColX, rightY);
   experiencesData.forEach(exp => {
-    // Timeline dot
+    // Timeline dot & line
     doc.setDrawColor(0);
     doc.circle(rightColX, rightY - 1, 1);
-    doc.line(rightColX, rightY, rightColX, rightY + 20); // Vertical line
+    doc.line(rightColX, rightY, rightColX, rightY + 15);
 
     doc.setFont("helvetica", "bold");
     doc.setFontSize(9);
@@ -131,11 +159,14 @@ export const downloadATSResume = () => {
     rightY += 10;
   });
 
-  // Skills (Grid layout)
+  // Skills
   rightY = drawHeading("Skills", rightColX, rightY);
   let skillX = rightColX + 5;
   personalInfo.skills.forEach((skill, index) => {
+    doc.setFontSize(9);
+    doc.setTextColor(80);
     doc.text(skill, skillX, rightY);
+    doc.setDrawColor(200);
     doc.line(skillX, rightY + 2, skillX + 40, rightY + 2);
     if ((index + 1) % 2 === 0) {
       rightY += 10;
