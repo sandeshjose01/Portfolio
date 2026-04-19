@@ -1,6 +1,5 @@
-"use client"
+"use client";
 import { cn } from "@/lib/utils";
-
 
 import {
   Briefcase,
@@ -10,7 +9,6 @@ import {
   LightbulbIcon,
   Mail,
   MoreHorizontal,
- 
   User,
 } from 'lucide-react';
 
@@ -76,7 +74,7 @@ const Navbar = () => {
     },
   ];
   const [scrolling, setScrolling] = useState(false);
-  const pathname = usePathname()
+  const pathname = usePathname();
   
   useEffect(() => {
     const handleScroll = () => {
@@ -94,23 +92,23 @@ const Navbar = () => {
     };
   }, []);
 
-
   return (
-
     <div className={`fixed bottom-5 right-0 left-0 px-0 sm:px-5 m-auto w-full sm:w-fit bg-transparent z-[+9999999] ${scrolling ? "hidden":"block"}`}>
-    <Dock className='items-end pb-3 rounded-full'>
-      {data.map((item, idx) => (
-        <Link href={item.href} key={idx}>
-
-        <DockItem
-          className={cn("aspect-square rounded-full bg-gray-200 dark:bg-neutral-800",pathname === item.href && " bg-gray-100 !border !border-primary-sky")}
-          >
-          <DockLabel >{item.title}</DockLabel>
-          <DockIcon className={cn(pathname === item.href && "text-[#2f7df4]")}>{item.icon}</DockIcon>
-        </DockItem>
+      
+      {/* ADDED GLASS EFFECT CLASSES HERE */}
+      <Dock className='items-end pb-3 px-3 rounded-full bg-white/40 backdrop-blur-xl border border-white/60 shadow-lg'>
+        
+        {data.map((item, idx) => (
+          <Link href={item.href} key={idx}>
+            <DockItem
+              className={cn("aspect-square rounded-full bg-gray-200 dark:bg-neutral-800",pathname === item.href && " bg-gray-100 !border !border-primary-sky")}
+            >
+              <DockLabel>{item.title}</DockLabel>
+              <DockIcon className={cn(pathname === item.href && "text-[#2f7df4]")}>{item.icon}</DockIcon>
+            </DockItem>
           </Link>
-      ))}
-    </Dock>
+        ))}
+      </Dock>
     </div>
   );
 };
