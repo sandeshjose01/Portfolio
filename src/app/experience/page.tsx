@@ -31,7 +31,7 @@ const ExperiencePage = () => {
 
       <div className="w-full flex flex-col gap-8 mt-4">
         {experiencesData.map((exp, index) => (
-          <FramerWrapper key={exp.id} y={30} delay={index * 0.15}>
+          <FramerWrapper key={index} y={30} delay={index * 0.15}>
             <motion.div className="group relative flex flex-col md:flex-row gap-6 w-full bg-white/40 rounded-3xl p-6 md:p-8 border border-white/60 shadow-sm backdrop-blur-xl transition-all hover:border-blue-300">
               
               {/* LOGO / ICON BOX */}
