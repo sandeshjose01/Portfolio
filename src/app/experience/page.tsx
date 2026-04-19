@@ -5,8 +5,8 @@ import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
 import { Briefcase, Calendar, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image"; // Import Next.js Image component
 
-// IMPORT DATA FROM THE NEW FILE
 import { experiencesData } from "./experiences";
 
 const ExperiencePage = () => {
@@ -20,13 +20,57 @@ const ExperiencePage = () => {
 
   return (
     <div className="h-full w-full relative flex flex-col items-start gap-8 pb-32 px-4 md:px-10 max-w-6xl mx-auto">
-       {/* ... the rest of your UI code stays exactly as it was ... */}
-       {/* Use experiencesData.map instead of experiences.map */}
-       {experiencesData.map((exp, index) => (
+      <div className="flex flex-col gap-3 mt-10 w-full">
+        <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
+          <Briefcase className="w-4 h-4" /> Professional Experience
+        </Badge>
+        <Heading>My Experience</Heading>
+      </div>
+
+      <div className="w-full flex flex-col gap-8 mt-4">
+        {experiencesData.map((exp, index) => (
           <FramerWrapper key={exp.id} y={30} delay={index * 0.15}>
-             {/* ... card code ... */}
+            <motion.div className="group relative flex flex-col md:flex-row gap-6 w-full bg-white/40 rounded-3xl p-6 md:p-8 border border-white/60 shadow-sm backdrop-blur-xl">
+              
+              {/* LOGO / ICON BOX */}
+              <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-2xl bg-white border border-white shadow-sm overflow-hidden">
+                {exp.logo ? (
+                  <img 
+                    src={exp.logo} 
+                    alt={`${exp.company} logo`} 
+                    className="w-full h-full object-contain p-2" 
+                  />
+                ) : (
+                  renderIcon(exp.iconType)
+                )}
+              </div>
+
+              <div className="flex flex-col flex-1 gap-4">
+                <div className="flex flex-col md:flex-row md:justify-between md:items-start gap-2">
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold text-slate-900">{exp.role}</h3>
+                    <h4 className="text-lg font-semibold text-blue-600">{exp.company}</h4>
+                  </div>
+                  <div className="flex flex-col items-start md:items-end gap-2">
+                    <div className="flex items-center gap-1.5 text-sm font-bold text-slate-700 bg-white/60 px-3 py-1 rounded-lg border border-white shadow-sm">
+                      <Calendar className="w-4 h-4 text-blue-500" /> {exp.duration}
+                    </div>
+                  </div>
+                </div>
+                
+                <ul className="space-y-3">
+                  {exp.description.map((point, i) => (
+                    <li key={i} className="flex items-start gap-3 text-slate-700 font-medium text-base">
+                      <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2.5 shrink-0"></span>
+                      {point}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </motion.div>
           </FramerWrapper>
-       ))}
+        ))}
+      </div>
     </div>
   );
 };
