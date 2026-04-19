@@ -3,11 +3,11 @@ import React from "react";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, Calendar, Building2 } from "lucide-react";
+import { Briefcase, Calendar, Building2, Quote } from "lucide-react";
 import { motion } from "framer-motion";
-import Image from "next/image"; // Import Next.js Image component
 
-import { experiencesData } from "./experiences";
+// Import both experiences and recommendations from your data file
+import { experiencesData, recommendations } from "./experiences";
 
 const ExperiencePage = () => {
   const renderIcon = (type: string) => {
@@ -20,6 +20,8 @@ const ExperiencePage = () => {
 
   return (
     <div className="h-full w-full relative flex flex-col items-start gap-8 pb-32 px-4 md:px-10 max-w-6xl mx-auto">
+      
+      {/* --- EXPERIENCE SECTION --- */}
       <div className="flex flex-col gap-3 mt-10 w-full">
         <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
           <Briefcase className="w-4 h-4" /> Professional Experience
@@ -30,7 +32,7 @@ const ExperiencePage = () => {
       <div className="w-full flex flex-col gap-8 mt-4">
         {experiencesData.map((exp, index) => (
           <FramerWrapper key={exp.id} y={30} delay={index * 0.15}>
-            <motion.div className="group relative flex flex-col md:flex-row gap-6 w-full bg-white/40 rounded-3xl p-6 md:p-8 border border-white/60 shadow-sm backdrop-blur-xl">
+            <motion.div className="group relative flex flex-col md:flex-row gap-6 w-full bg-white/40 rounded-3xl p-6 md:p-8 border border-white/60 shadow-sm backdrop-blur-xl transition-all hover:border-blue-300">
               
               {/* LOGO / ICON BOX */}
               <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-2xl bg-white border border-white shadow-sm overflow-hidden">
@@ -71,8 +73,18 @@ const ExperiencePage = () => {
           </FramerWrapper>
         ))}
       </div>
-    </div>
-  );
-};
 
-export default ExperiencePage;
+      {/* --- RECOMMENDATIONS SECTION --- */}
+      <div className="flex flex-col gap-3 mt-24 w-full">
+        <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
+          <Quote className="w-4 h-4" /> Recommendations
+        </Badge>
+        <Heading>What People Say</Heading>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-4">
+        {recommendations && recommendations.map((rec, index) => (
+          <FramerWrapper key={rec.id} y={30} delay={0.2 + index * 0.1}>
+            <motion.div 
+              whileHover={{ y: -5 }}
+              className="relative p-8 rounded-3xl bg-white/40 border border-white/60 shadow-sm
