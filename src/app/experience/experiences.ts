@@ -50,3 +50,19 @@ export const experiencesData = [
     ]
   }
 ];
+export const recommendations = [
+  {
+    id: 1,
+    name: "John Doe",
+    designation: "Product Manager at TechCorp",
+    image: "/recommenders/john.png", // Optional: put image in public folder
+    text: "Sandesh is an exceptional designer. His eye for detail and ability to translate complex requirements into intuitive UI is remarkable. He helped us increase our conversion by 25%."
+  },
+  {
+    id: 2,
+    name: "Sarah Smith",
+    designation: "Founder of Creative Agency",
+    image: "/recommenders/sarah.png",
+    text: "Working with Sandesh was a breeze. He delivered a complete brand identity that perfectly captured our vision. Highly recommended for any high-level design projects."
+  }
+];
