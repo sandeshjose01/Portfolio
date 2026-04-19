@@ -1,90 +1,149 @@
 import jsPDF from "jspdf";
-import { experiencesData } from "@/app/experience/experiences"; 
+import { experiencesData, personalInfo } from "@/app/experience/experiences";
 
-export const downloadATSResume = (e?: React.MouseEvent) => {
-  // Prevent any default link behavior (Stops the 2nd download)
-  if (e) {
-    e.preventDefault();
-    e.stopPropagation();
-  }
-
-  // Check if data exists to prevent blank page
-  if (!experiencesData || experiencesData.length === 0) {
-    console.error("No experience data found!");
-    return;
-  }
-
+export const downloadATSResume = () => {
   const doc = new jsPDF({ format: "a4", unit: "mm" });
-  let y = 20; 
-  const margin = 20;
   const pageWidth = doc.internal.pageSize.getWidth();
-  const maxLineWidth = pageWidth - margin * 2;
+  const leftColX = 15;
+  const rightColX = 75;
+  const sidebarWidth = 50;
+  let y = 20;
 
-  // --- Header ---
-  doc.setFont("helvetica", "bold");
-  doc.setFontSize(22);
-  doc.text("SANDESH JOSHI", margin, y);
-  
-  y += 8;
-  doc.setFontSize(11);
+  // --- HEADER SECTION ---
+  // Profile Image Placeholder (Circle)
+  doc.setDrawColor(200);
+  doc.circle(30, 25, 12, "S"); 
+
+  // Name (First Normal, Last Bold)
+  doc.setFontSize(26);
   doc.setFont("helvetica", "normal");
-  doc.text("Graphic Designer & UI/UX Specialist", margin, y);
-  
-  y += 6;
-  doc.setFontSize(10);
-  doc.setTextColor(100, 100, 100);
-  doc.text("sandeshjoshi.info.np | Kathmandu, Nepal", margin, y);
-  
-  y += 12;
-
-  // --- Section Heading ---
-  doc.setTextColor(0, 0, 0);
+  doc.text(personalInfo.name.first, 55, 23);
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(13);
-  doc.text("PROFESSIONAL EXPERIENCE", margin, y);
-  y += 2;
-  doc.line(margin, y, pageWidth - margin, y);
-  y += 8;
+  doc.text(personalInfo.name.last, 55, 33);
 
-  // --- Experience Loop ---
-  experiencesData.forEach((exp) => {
-    // Page break logic
-    if (y > 260) {
-      doc.addPage();
-      y = 20;
-    }
+  // Role
+  doc.setFontSize(10);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(100);
+  doc.text(personalInfo.role, 55, 40, { charSpace: 1 });
 
-    // Role
+  // Contact Info (Top Right)
+  doc.setTextColor(80);
+  doc.setFontSize(8);
+  doc.text(personalInfo.contact.location, pageWidth - 15, 18, { align: "right" });
+  doc.text(personalInfo.contact.phone, pageWidth - 15, 23, { align: "right" });
+  doc.text(personalInfo.contact.email, pageWidth - 15, 28, { align: "right" });
+
+  y = 60;
+
+  // --- LEFT SIDEBAR ---
+  let leftY = y;
+  const drawHeading = (text: string, x: number, currY: number) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
-    doc.text(exp.role.toUpperCase(), margin, y);
-    
-    // Duration
-    doc.setFont("helvetica", "normal");
-    doc.text(exp.duration, pageWidth - margin, y, { align: "right" });
-    
-    y += 5;
+    doc.setTextColor(0);
+    doc.text(text.toUpperCase(), x, currY);
+    doc.setLineWidth(0.3);
+    doc.line(x, currY + 2, x + (text === "ABOUT ME" || text === "WORK EXPERIENCE" || text === "EDUCATION" || text === "SKILLS" ? 120 : 45), currY + 2);
+    return currY + 10;
+  };
 
-    // Company
+  leftY = drawHeading("Links", leftColX, leftY);
+  personalInfo.links.forEach(link => {
     doc.setFont("helvetica", "bold");
-    doc.setTextColor(50, 50, 50);
-    doc.text(`${exp.company} | ${exp.location}`, margin, y);
-    
-    y += 6;
-
-    // Bullet Points
+    doc.setFontSize(9);
+    doc.text(link.label + ":", leftColX, leftY);
     doc.setFont("helvetica", "normal");
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    
-    exp.description.forEach((point) => {
-      const lines = doc.splitTextToSize(`• ${point}`, maxLineWidth);
-      doc.text(lines, margin, y);
-      y += (lines.length * 5);
-    });
-
-    y += 6; // Space between jobs
+    doc.setTextColor(100);
+    doc.text(link.url, leftColX, leftY + 4);
+    leftY += 10;
   });
 
-  doc.save("Sandesh_Joshi_Resume_ATS.pdf");
+  leftY += 5;
+  leftY = drawHeading("Languages", leftColX, leftY);
+  personalInfo.languages.forEach(lang => {
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
+    doc.text(lang.name, leftColX, leftY);
+    // Progress bar
+    doc.setDrawColor(220);
+    doc.line(leftColX, leftY + 2, leftColX + 45, leftY + 2);
+    doc.setDrawColor(0);
+    doc.line(leftColX, leftY + 2, leftColX + (45 * (lang.level / 100)), leftY + 2);
+    leftY += 8;
+  });
+
+  leftY += 5;
+  leftY = drawHeading("Hobbies", leftColX, leftY);
+  personalInfo.hobbies.forEach(hobby => {
+    doc.setFont("helvetica", "normal");
+    doc.text("• " + hobby, leftColX, leftY);
+    leftY += 6;
+  });
+
+  // --- RIGHT COLUMN (Main Content) ---
+  let rightY = y;
+  
+  // About Me
+  rightY = drawHeading("About Me", rightColX, rightY);
+  doc.setFontSize(9);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(80);
+  const aboutLines = doc.splitTextToSize(personalInfo.aboutMe, 120);
+  doc.text(aboutLines, rightColX + 5, rightY);
+  rightY += (aboutLines.length * 5) + 10;
+
+  // Work Experience
+  rightY = drawHeading("Work Experience", rightColX, rightY);
+  experiencesData.forEach(exp => {
+    // Timeline dot
+    doc.setDrawColor(0);
+    doc.circle(rightColX, rightY - 1, 1);
+    doc.line(rightColX, rightY, rightColX, rightY + 20); // Vertical line
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.setTextColor(0);
+    doc.text(`${exp.role.toUpperCase()} | ${exp.duration}`, rightColX + 5, rightY);
+    
+    rightY += 5;
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
+    doc.text(exp.company.toUpperCase() + ", " + exp.location, rightColX + 5, rightY);
+    
+    rightY += 5;
+    exp.description.forEach(bullet => {
+      doc.text("• " + bullet, rightColX + 7, rightY);
+      rightY += 4;
+    });
+    rightY += 8;
+  });
+
+  // Education
+  rightY = drawHeading("Education", rightColX, rightY);
+  personalInfo.education.forEach(edu => {
+    doc.circle(rightColX, rightY - 1, 1);
+    doc.setFont("helvetica", "bold");
+    doc.text(`${edu.degree.toUpperCase()} | ${edu.year}`, rightColX + 5, rightY);
+    rightY += 5;
+    doc.setFont("helvetica", "normal");
+    doc.text(edu.school.toUpperCase(), rightColX + 5, rightY);
+    rightY += 10;
+  });
+
+  // Skills (Grid layout)
+  rightY = drawHeading("Skills", rightColX, rightY);
+  let skillX = rightColX + 5;
+  personalInfo.skills.forEach((skill, index) => {
+    doc.text(skill, skillX, rightY);
+    doc.line(skillX, rightY + 2, skillX + 40, rightY + 2);
+    if ((index + 1) % 2 === 0) {
+      rightY += 10;
+      skillX = rightColX + 5;
+    } else {
+      skillX += 60;
+    }
+  });
+
+  doc.save(`${personalInfo.name.first}_${personalInfo.name.last}_Resume.pdf`);
 };
