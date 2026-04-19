@@ -30,21 +30,19 @@ const ExperiencePage = () => {
       </div>
 
       <div className="w-full flex flex-col gap-8 mt-4">
-        {/* FIXED: Changed exp.id to index */}
-        {experiencesData && experiencesData.map((exp, index) => (
+        {experiencesData && experiencesData.map((exp: any, index: number) => (
           <FramerWrapper key={index} y={30} delay={index * 0.15}>
             <motion.div className="group relative flex flex-col md:flex-row gap-6 w-full bg-white/40 rounded-3xl p-6 md:p-8 border border-white/60 shadow-sm backdrop-blur-xl transition-all hover:border-blue-300">
               
               <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-2xl bg-white border border-white shadow-sm overflow-hidden">
-                {/* @ts-ignore */}
                 {exp.logo ? (
                   <img 
-                    src={(exp as any).logo} 
+                    src={exp.logo} 
                     alt={`${exp.company} logo`} 
                     className="w-full h-full object-contain p-2" 
                   />
                 ) : (
-                  renderIcon((exp as any).iconType)
+                  renderIcon(exp.iconType)
                 )}
               </div>
 
@@ -62,7 +60,7 @@ const ExperiencePage = () => {
                 </div>
                 
                 <ul className="space-y-3">
-                  {exp.description.map((point, i) => (
+                  {exp.description.map((point: string, i: number) => (
                     <li key={i} className="flex items-start gap-3 text-slate-700 font-medium text-base">
                       <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2.5 shrink-0"></span>
                       {point}
@@ -84,8 +82,7 @@ const ExperiencePage = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-4">
-        {/* FIXED: Changed rec.id to index */}
-        {recommendations && recommendations.map((rec, index) => (
+        {recommendations && recommendations.map((rec: any, index: number) => (
           <FramerWrapper key={index} y={30} delay={0.2 + index * 0.1}>
             <motion.div 
               whileHover={{ y: -5 }}
@@ -93,8 +90,9 @@ const ExperiencePage = () => {
             >
               <Quote className="absolute top-6 right-8 w-10 h-10 text-blue-500/10" />
               
+              {/* FIXED: Using &quot; instead of literal " to satisfy build rules */}
               <p className="text-slate-700 italic leading-relaxed z-10 text-base">
-                "{rec.text}"
+                &quot;{rec.text}&quot;
               </p>
 
               <div className="flex items-center gap-4 mt-auto pt-4">
