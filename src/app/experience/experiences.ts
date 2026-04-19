@@ -83,17 +83,21 @@ export const experiencesData: Experience[] = [
 // --- 3. RECOMMENDATIONS (Updates Experience Page) ---
 export const recommendations: Recommendation[] = [
   {
+    id: 1,
+    name: "Ram Bhandari",
+    designation: "Founder CEO at KARYA TECHNOLOGY | DMI Pro 9 | Google Educator Level 1 & 2 | Prompt Engineering",
+    image: "",
+    text: "I had the opportunity to work closely with Sandesh Joshi during my tenure as Chief Digital Officer at Himalayan Cordyceps, where he was responsible for executing creative ideation into impactful visual outputs." 
+    "Sandesh demonstrated strong proficiency in Adobe Creative Cloud tools, particularly Illustrator and Photoshop, consistently delivering high-quality creatives that aligned with our premium brand positioning. His ability to transform conceptual ideas into visually compelling designs played a crucial role in enhancing our digital presence and marketing effectiveness."
+    "Beyond his technical skills, Sandesh showed a keen understanding of branding and visual storytelling. He was detail-oriented, responsive to feedback, and committed to maintaining consistency across all creative assets." 
+    "I would confidently recommend Sandesh to any organization looking for a creative professional who combines design expertise with a clear understanding of business and brand objectives."
+  },
+  {
     id: 2,
     name: "John Doe",
     designation: "Product Manager at TechCorp",
     image: "", 
     text: "Sandesh is an exceptional designer. His eye for detail and ability to translate complex requirements into intuitive UI is remarkable. He helped us increase our conversion by 25%."
-  },
-  {
-    id: 1,
-    name: "Ram Bhandari",
-    designation: "Founder CEO at KARYA TECHNOLOGY | DMI Pro 9 | Google Educator Level 1 & 2 | Prompt Engineering",
-    image: "",
-    text: "I had the opportunity to work closely with Sandesh Joshi during my tenure as Chief Digital Officer at Himalayan Cordyceps, where he was responsible for executing creative ideation into impactful visual outputs. Sandesh demonstrated strong proficiency in Adobe Creative Cloud tools, particularly Illustrator and Photoshop, consistently delivering high-quality creatives that aligned with our premium brand positioning. His ability to transform conceptual ideas into visually compelling designs played a crucial role in enhancing our digital presence and marketing effectiveness. Beyond his technical skills, Sandesh showed a keen understanding of branding and visual storytelling. He was detail-oriented, responsive to feedback, and committed to maintaining consistency across all creative assets. I would confidently recommend Sandesh to any organization looking for a creative professional who combines design expertise with a clear understanding of business and brand objectives."
+    
   }
 ];
