@@ -21,7 +21,7 @@ export interface Recommendation {
 // --- 1. PERSONAL INFORMATION (Updates your Name & PDF Header) ---
 export const personalInfo = {
   name: { first: "SANDESH", last: "JOSHI" },
-  profileImage: "@src/app/favicon.svg",
+  profileImage: "@public/profile.png",
   role: "CREATIVE GRAPHIC DESIGNER & VIDEO EDITOR",
   contact: {
     location: "Changunarayan-2, Bhaktapur, Nepal",
