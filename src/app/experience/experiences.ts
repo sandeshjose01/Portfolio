@@ -30,7 +30,7 @@ export const personalInfo = {
   },
     aboutMe: "Experienced Graphic Designer with a background in UI/UX and brand identity. Proven track record in implementing and managing design systems in various professional settings. Strong analytical skills with a keen eye for detail.",
   links: [
-    { label: "LinkedIn", url: "linkedin.com/in/sandeshjoshi" },
+    { label: "LinkedIn", url: "linkedin.com/in/sanjoshi1" },
     { label: "Website", url: "sandeshjoshi.info.np" }
   ],
   languages: [
