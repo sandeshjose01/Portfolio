@@ -4,7 +4,7 @@ import React from "react";
 import { buttonVariants } from "./ui/button";
 import { motion } from "framer-motion";
 // CHECK THIS LINE BELOW:
-import { downloadATSResume } from "@/lib/generateResume"; 
+import { downloadATSResume } from "@/lib/generateResume";
 
 const DownLoadResumeBtn = () => {
   return (
