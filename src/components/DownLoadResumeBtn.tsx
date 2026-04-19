@@ -1,28 +1,20 @@
-import { cn } from "@/lib/utils";
-import { Download } from "lucide-react";
-import React from "react";
-import { buttonVariants } from "./ui/button";
-import { motion } from "framer-motion";
-// CHECK THIS LINE BELOW:
-import { downloadATSResume } from "@/lib/generateResume";
+import React from 'react'
+import HackerBtn from './animation/HackerBtn'
+import { downloadATSResume } from "@/lib/generateResume"; // Logic from Step 2
 
-const DownLoadResumeBtn = () => {
+function DownLoadResumeBtn() {
   return (
-    <div className="px-4">
-      <motion.button
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-        onClick={downloadATSResume}
-        className={cn(
-          buttonVariants({ variant: "default", size: "lg" }),
-          "flex gap-2 font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-500/20"
-        )}
-      >
-        <Download className="h-5 w-5" />
-        Download CV
-      </motion.button>
+    <div className="h-fit w-full mt-2 py-2 px-4">
+      {/* 
+         We wrap the HackerBtn in a div with onClick. 
+         This keeps the exact animation and look of the HackerBtn 
+         but triggers the download when clicked.
+      */}
+      <div onClick={downloadATSResume} className="cursor-pointer w-fit">
+        <HackerBtn label='Download Resume' />
+      </div>
     </div>
-  );
-};
+  )
+}
 
 export default DownLoadResumeBtn;
