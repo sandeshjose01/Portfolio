@@ -3,7 +3,7 @@ import React from "react";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, Download, MapPin, Calendar, Building2 } from "lucide-react";
+import { Briefcase, MapPin, Calendar, Building2 } from "lucide-react";
 import { motion } from "framer-motion";
 
 const ExperiencePage = () => {
@@ -52,27 +52,15 @@ const ExperiencePage = () => {
   return (
     <div className="h-full w-full relative flex flex-col items-start gap-8 pb-32 px-4 md:px-10 select-none max-w-6xl mx-auto">
       
-      {/* HEADER SECTION */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end w-full gap-6 mt-10">
-        <div className="flex flex-col gap-3">
-          <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
-            <Briefcase className="w-4 h-4" /> Professional Experience
-          </Badge>
-          <Heading>My Experience</Heading>
-          <p className="font-poppins text-lg text-muted-foreground max-w-2xl">
-            A reverse-chronological timeline of my professional journey, highlighting my roles, responsibilities, and achievements.
-          </p>
-        </div>
-
-        {/* ATS-FRIENDLY DOWNLOAD BUTTON */}
-        <a 
-          href="/Sandesh_Joshi_Resume.pdf" // Ensure you put this PDF in your "public" folder
-          download="Sandesh_Joshi_Resume.pdf"
-          className="group flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-xl font-bold hover:bg-blue-700 hover:shadow-lg hover:shadow-blue-500/30 transition-all active:scale-95"
-        >
-          <Download className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
-          Download CV (PDF)
-        </a>
+      {/* HEADER SECTION - BUTTON REMOVED */}
+      <div className="flex flex-col gap-3 mt-10 w-full">
+        <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
+          <Briefcase className="w-4 h-4" /> Professional Experience
+        </Badge>
+        <Heading>My Experience</Heading>
+        <p className="font-poppins text-lg text-muted-foreground max-w-2xl">
+          A reverse-chronological timeline of my professional journey, highlighting my roles, responsibilities, and achievements.
+        </p>
       </div>
 
       {/* EXPERIENCE BOXES (GLASS EFFECT) */}
