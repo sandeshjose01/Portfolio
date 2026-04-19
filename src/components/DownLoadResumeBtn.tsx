@@ -1,16 +1,15 @@
 import React from 'react'
 import HackerBtn from './animation/HackerBtn'
-import { downloadATSResume } from "@/lib/generateResume"; // Logic from Step 2
+import { downloadATSResume } from "@/lib/generateResume";
 
 function DownLoadResumeBtn() {
   return (
     <div className="h-fit w-full mt-2 py-2 px-4">
-      {/* 
-         We wrap the HackerBtn in a div with onClick. 
-         This keeps the exact animation and look of the HackerBtn 
-         but triggers the download when clicked.
-      */}
-      <div onClick={downloadATSResume} className="cursor-pointer w-fit">
+      {/* Passing the event 'e' to the function */}
+      <div 
+        onClick={(e) => downloadATSResume(e)} 
+        className="cursor-pointer w-fit"
+      >
         <HackerBtn label='Download Resume' />
       </div>
     </div>
