@@ -38,7 +38,7 @@ export const personalInfo = {
     { name: "English", level: 90 },
     { name: "Nepali", level: 100 },
   ],
-  hobbies: ["Design Research", "Photography", "Stargazing", "Watching Anime", "Research New Graphic Trend" ],
+  hobbies: ["Designing", "Playing Game", "Watching Anime", "Research & Learn New Graphic Trend", "Creating Cool Graphics", "Photography" ],
   education: [
     {
       degree: "Bachelor of Business Studies",
