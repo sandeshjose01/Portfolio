@@ -171,7 +171,7 @@ export const recommendations: Recommendation[] = [
     id: 1,
     name: "Ram Bhandari",
     designation: "Founder CEO at KARYA TECHNOLOGY",
-    image: "",
+    image: "https://media.licdn.com/dms/image/v2/D5603AQGqpR1PCuPhQg/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1666509025640?e=1778716800&v=beta&t=Cod06O6yhVzqg9JdewwK88G1uKNueUdjrMJLX9Uwc78",
     text: `I had the opportunity to work closely with Sandesh Joshi during my tenure as Chief Digital Officer at 
           Himalayan Cordyceps, where he was responsible for executing creative ideation into impactful visual 
           outputs.
