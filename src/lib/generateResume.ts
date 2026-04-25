@@ -12,178 +12,199 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
 };
 
 export const downloadATSResume = async () => {
+  // Safe Area Margins for A4 (Bleed protection)
   const doc = new jsPDF({ format: "a4", unit: "mm" });
-  const pageWidth = doc.internal.pageSize.getWidth();
-  const pageHeight = doc.internal.pageSize.getHeight();
+  const pageWidth = 210;
+  const pageHeight = 297;
+  const margin = 12; // Standard printer safe area
   
-  const leftColX = 15;
-  const dividerX = 72; // The vertical line position
+  const leftColX = margin;
+  const dividerX = 72; 
   const rightColX = 78;
-  const margin = 15;
-  
-  let leftY = 80; 
-  let rightY = 80;
+  const colWidthLeft = dividerX - leftColX - 5;
+  const colWidthRight = pageWidth - rightColX - margin;
 
-  // --- 1. HEADER SECTION (Profile & Name Unified) ---
-  // Profile Image (Circle)
+  let y = 15; // Starting top position
+
+  // --- HELPER: PAGE BREAK HANDLER ---
+  const checkNewPage = (currentY: number, needed: number) => {
+    if (currentY + needed > pageHeight - margin) {
+      doc.addPage();
+      // Draw Divider on new page
+      doc.setDrawColor(220);
+      doc.line(dividerX, margin, dividerX, pageHeight - margin);
+      return margin + 5; // Reset Y
+    }
+    return currentY;
+  };
+
+  // --- 1. HEADER SECTION (Unified Profile & Name) ---
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
     doc.saveGraphicsState();
-    doc.circle(35, 35, 20, "f");
+    doc.circle(leftColX + 20, y + 20, 20, "f");
     doc.clip();
-    doc.addImage(img, "PNG", 15, 15, 40, 40);
+    doc.addImage(img, "PNG", leftColX, y, 40, 40);
     doc.restoreGraphicsState();
-  } catch (error) {
+  } catch (e) {
     doc.setDrawColor(200);
-    doc.circle(35, 35, 20, "S");
+    doc.circle(leftColX + 20, y + 20, 20, "S");
   }
 
-  // Name & Title (Positioned next to profile)
-  doc.setTextColor(40, 40, 40);
+  // Name (Using standard spacing for Edge compatibility)
   doc.setFont("helvetica", "bold");
-  doc.setFontSize(30);
-  
-  // STRICTOR FONT MATCHING: 
-  // We use horizontal scaling (0.8) and negative char spacing to mimic the Condensed Bold font in the image
-  const nameFirst = personalInfo.name.first.toUpperCase();
-  const nameLast = personalInfo.name.last.toUpperCase();
-  
-  doc.text(nameFirst, 60, 32, { charSpace: -0.5, horizontalScale: 0.85 } as any);
-  doc.text(nameLast, 60, 43, { charSpace: -0.5, horizontalScale: 0.85 } as any);
+  doc.setTextColor(30);
+  doc.setFontSize(28);
+  doc.text(personalInfo.name.first.toUpperCase(), 60, y + 18);
+  doc.text(personalInfo.name.last.toUpperCase(), 60, y + 28);
 
   doc.setFontSize(9);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(120);
-  doc.text(personalInfo.role.toUpperCase(), 60, 50, { charSpace: 1.2 });
+  doc.setTextColor(100);
+  doc.text(personalInfo.role.toUpperCase(), 60, y + 35);
 
-  // Header Contact Details (Top Right)
+  // Contact Info (Top Right)
   doc.setFontSize(8);
+  let contactY = y + 5;
+  const addContact = (txt: string, url?: string) => {
+    doc.text(txt, pageWidth - margin, contactY, { align: "right" });
+    if (url) doc.link(pageWidth - 60, contactY - 3, 50, 5, { url });
+    contactY += 5;
+  };
   doc.setTextColor(80);
-  let contactY = 18;
-  const drawHeaderContact = (text: string, y: number, url?: string) => {
-    doc.text(text, pageWidth - 15, y, { align: "right" });
-    if (url) doc.link(pageWidth - 65, y - 3, 50, 5, { url });
-  };
+  addContact(personalInfo.contact.location);
+  addContact(personalInfo.contact.phone, `tel:${personalInfo.contact.phone}`);
+  doc.setTextColor(0, 100, 200);
+  addContact(personalInfo.contact.email, `mailto:${personalInfo.contact.email}`);
+  addContact(personalInfo.contact.website, `https://${personalInfo.contact.website}`);
 
-  drawHeaderContact(personalInfo.contact.location, contactY);
-  drawHeaderContact(personalInfo.contact.phone, contactY + 5, `tel:${personalInfo.contact.phone}`);
-  doc.setTextColor(0, 100, 200); // Clickable Blue
-  drawHeaderContact(personalInfo.contact.email, contactY + 10, `mailto:${personalInfo.contact.email}`);
-  drawHeaderContact(personalInfo.contact.website, contactY + 15, `https://${personalInfo.contact.website}`);
+  y = 65; // Move Y below header
 
-  // --- 2. VERTICAL SEPARATOR LINE ---
-  doc.setDrawColor(200);
-  doc.setLineWidth(0.2);
-  doc.line(dividerX, 70, dividerX, pageHeight - 15);
+  // --- 2. VERTICAL DIVIDER ---
+  doc.setDrawColor(220);
+  doc.line(dividerX, y, dividerX, pageHeight - margin);
 
-  // --- 3. HELPER FUNCTIONS ---
-  const drawSectionHeading = (text: string, x: number, y: number, colWidth: number) => {
+  // --- 3. DRAWING HELPERS ---
+  const drawHeading = (text: string, x: number, currY: number, w: number) => {
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(11);
+    doc.setFontSize(10);
     doc.setTextColor(40);
-    doc.text(text.toUpperCase(), x, y, { horizontalScale: 0.9 } as any);
-    doc.setLineWidth(0.4);
-    doc.line(x, y + 2, x + colWidth, y + 2);
-    return y + 10;
+    doc.text(text.toUpperCase(), x, currY);
+    doc.setDrawColor(40);
+    doc.setLineWidth(0.3);
+    doc.line(x, currY + 2, x + w, currY + 2);
+    return currY + 10;
   };
 
-  const drawHangingIndent = (text: string, x: number, y: number, width: number, isSidebar: boolean) => {
+  // Fixed Bullet function (Draws a circle to avoid % encoding errors)
+  const drawBulletItem = (text: string, x: number, currY: number, w: number) => {
+    doc.setDrawColor(100);
+    doc.circle(x + 1, currY - 1, 0.6, "S"); // Vector circle
+    doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
-    doc.setTextColor(isSidebar ? 80 : 60);
-    const bullet = "○";
-    doc.text(bullet, x, y);
-    const lines = doc.splitTextToSize(text, width);
-    // Aligning text with text, not bullet
-    doc.text(lines, x + 4, y, { lineHeightFactor: 1.3 });
-    return y + (lines.length * 4.5) + 2;
+    doc.setTextColor(70);
+    const lines = doc.splitTextToSize(text, w - 5);
+    doc.text(lines, x + 5, currY);
+    return currY + (lines.length * 4.5) + 2;
   };
 
-  // --- 4. LEFT COLUMN (About, Links, Hobbies) ---
-  leftY = drawSectionHeading("About Me", leftColX, leftY, 45);
-  doc.setFont("helvetica", "normal");
+  // --- 4. LEFT COLUMN (About -> Links -> Hobbies) ---
+  let leftY = y + 5;
+  
+  // About Me
+  leftY = drawHeading("About Me", leftColX, leftY, colWidthLeft);
   doc.setFontSize(8.5);
   doc.setTextColor(80);
-  const aboutLines = doc.splitTextToSize(personalInfo.aboutMe, 50);
-  doc.text(aboutLines, leftColX, leftY, { lineHeightFactor: 1.4 });
-  leftY += (aboutLines.length * 5) + 12;
+  const abt = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
+  doc.text(abt, leftColX, leftY, { lineHeightFactor: 1.3 });
+  leftY += (abt.length * 4.5) + 10;
 
-  leftY = drawSectionHeading("Links", leftColX, leftY, 45);
+  // Links (Exactly below About Me)
+  leftY = drawHeading("Links", leftColX, leftY, colWidthLeft);
   personalInfo.links.forEach(link => {
     doc.setFont("helvetica", "bold"); doc.setTextColor(40);
     doc.text(link.label + ":", leftColX, leftY);
     doc.setFont("helvetica", "normal"); doc.setTextColor(0, 100, 200);
-    doc.text(link.url, leftColX, leftY + 4.5);
-    doc.link(leftColX, leftY, 45, 7, { url: `https://${link.url}` });
-    leftY += 12;
+    doc.text(link.url, leftColX, leftY + 4);
+    doc.link(leftColX, leftY, colWidthLeft, 6, { url: `https://${link.url}` });
+    leftY += 10;
   });
 
-  leftY = drawSectionHeading("Hobbies", leftColX, leftY, 45);
+  // Hobbies
+  leftY = drawHeading("Hobbies", leftColX, leftY, colWidthLeft);
   personalInfo.hobbies.forEach(hobby => {
-    leftY = drawHangingIndent(hobby.toUpperCase(), leftColX, leftY, 40, true);
+    leftY = drawBulletItem(hobby.toUpperCase(), leftColX, leftY, colWidthLeft);
   });
 
-  // --- 5. RIGHT COLUMN (Experience, Education, Skills) ---
-  rightY = drawSectionHeading("Work Experience", rightColX, rightY, 115);
+  // --- 5. RIGHT COLUMN (Experience -> Education -> Skills) ---
+  let rightY = y + 5;
+
+  rightY = drawHeading("Work Experience", rightColX, rightY, colWidthRight);
+  
   experiencesData.forEach(exp => {
+    rightY = checkNewPage(rightY, 15);
     doc.setFont("helvetica", "bold");
     doc.setFontSize(10);
     doc.setTextColor(40);
-    doc.text(exp.company.toUpperCase(), rightColX, rightY, { horizontalScale: 0.85 } as any);
+    doc.text(exp.company.toUpperCase(), rightColX, rightY);
     doc.setFontSize(8);
     doc.setFont("helvetica", "normal");
     doc.setTextColor(120);
-    doc.text(exp.location, pageWidth - 15, rightY, { align: "right" });
+    doc.text(exp.location, pageWidth - margin, rightY, { align: "right" });
     rightY += 6;
 
     exp.roles.forEach(role => {
+      rightY = checkNewPage(rightY, 15);
       doc.setFont("helvetica", "bold");
-      doc.setFontSize(9.5);
+      doc.setFontSize(9);
       doc.setTextColor(60);
       doc.text(role.title, rightColX + 5, rightY);
-      doc.setFontSize(8.5);
+      doc.setFontSize(8);
       doc.setFont("helvetica", "normal");
-      doc.text(`${role.startDate} - ${role.endDate}`, pageWidth - 15, rightY, { align: "right" });
-      rightY += 4.5;
+      doc.text(`${role.startDate} - ${role.endDate}`, pageWidth - margin, rightY, { align: "right" });
+      rightY += 4;
 
-      doc.setFontSize(7.5);
       doc.setTextColor(0, 100, 200);
       doc.text(role.workType.toUpperCase(), rightColX + 5, rightY);
       rightY += 5;
 
       role.description.forEach(desc => {
-        rightY = drawHangingIndent(desc, rightColX + 5, rightY, 105, false);
+        const dLines = doc.splitTextToSize(desc, colWidthRight - 10);
+        rightY = checkNewPage(rightY, dLines.length * 5);
+        rightY = drawBulletItem(desc, rightColX + 5, rightY, colWidthRight - 5);
       });
-      rightY += 4;
+      rightY += 3;
     });
   });
 
-  // Check for page break before Education
-  if (rightY > 230) { doc.addPage(); rightY = 20; }
-
-  rightY = drawSectionHeading("Education", rightColX, rightY, 115);
+  // Education
+  rightY = checkNewPage(rightY, 20);
+  rightY = drawHeading("Education", rightColX, rightY, colWidthRight);
   personalInfo.education.forEach(edu => {
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(9.5);
-    doc.text(edu.school.toUpperCase(), rightColX, rightY, { horizontalScale: 0.9 } as any);
+    doc.setFontSize(9);
+    doc.setTextColor(40);
+    doc.text(edu.school.toUpperCase(), rightColX, rightY);
     doc.setFont("helvetica", "normal");
-    doc.text(edu.year, pageWidth - 15, rightY, { align: "right" });
+    doc.text(edu.year, pageWidth - margin, rightY, { align: "right" });
     rightY += 5;
-    doc.setFontSize(8.5);
-    doc.setTextColor(80);
     doc.text(edu.degree, rightColX, rightY);
     rightY += 8;
   });
 
-  rightY = drawSectionHeading("Skills", rightColX, rightY, 115);
+  // Skills
+  rightY = checkNewPage(rightY, 20);
+  rightY = drawHeading("Skills", rightColX, rightY, colWidthRight);
   let skillX = rightColX;
   personalInfo.skills.forEach((skill, i) => {
     doc.setFontSize(8.5);
     doc.setTextColor(60);
-    doc.text(skill.toUpperCase(), skillX, rightY, { horizontalScale: 0.9 } as any);
-    doc.setDrawColor(220);
+    doc.text(skill.toUpperCase(), skillX, rightY);
+    doc.setDrawColor(230);
     doc.line(skillX, rightY + 2, skillX + 50, rightY + 2);
-    if (i % 2 === 0) { skillX += 60; } else { skillX = rightColX; rightY += 10; }
+    if (i % 2 === 0) { skillX += 58; } 
+    else { skillX = rightColX; rightY += 10; }
   });
 
   doc.save(`${personalInfo.name.first}_${personalInfo.name.last}_Resume.pdf`);
