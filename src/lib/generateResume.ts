@@ -1,7 +1,8 @@
 import jsPDF from "jspdf";
 import { experiencesData, personalInfo } from "@/app/experience/experiences";
 
-// 1. PLACE YOUR BASE64 STRING HERE (Convert BebasNeue.ttf to Base64 online)
+// --- FONT CONFIGURATION ---
+// Paste your Bebas Neue SemiRounded Base64 string here
 const fontBase64 = "YOUR_BASE64_STRING_HERE"; 
 
 const loadImage = (url: string): Promise<HTMLImageElement> => {
@@ -17,18 +18,17 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
 export const downloadATSResume = async () => {
   const doc = new jsPDF({ format: "a4", unit: "mm" });
   
-  // Register Custom Font if Base64 is provided, otherwise fallback to Helvetica Bold
+  // Font Registration
+  let titleFont = "helvetica";
   if (fontBase64 !== "YOUR_BASE64_STRING_HERE") {
     doc.addFileToVFS("BebasNeue.ttf", fontBase64);
     doc.addFont("BebasNeue.ttf", "BebasNeue", "normal");
-    var titleFont = "BebasNeue";
-  } else {
-    var titleFont = "helvetica"; // Fallback
+    titleFont = "BebasNeue";
   }
 
   const pageWidth = 210;
   const pageHeight = 297;
-  const margin = 12; // Bleed/Safe Area
+  const margin = 12; // A4 Bleed Point / Safe Zone
   const dividerX = 72; 
   const leftColX = margin;
   const rightColX = dividerX + 6;
@@ -41,7 +41,6 @@ export const downloadATSResume = async () => {
   const checkPageBreak = (currentY: number, needed: number) => {
     if (currentY + needed > pageHeight - margin) {
       doc.addPage();
-      // Redraw the divider line on new page
       doc.setDrawColor(220);
       doc.line(dividerX, margin, dividerX, pageHeight - margin);
       return margin + 10;
@@ -49,7 +48,7 @@ export const downloadATSResume = async () => {
     return currentY;
   };
 
-  // --- HEADER: UNIFIED PROFILE & NAME ---
+  // --- HEADER SECTION ---
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
@@ -63,7 +62,6 @@ export const downloadATSResume = async () => {
     doc.circle(leftColX + 20, y + 15, 20, "S");
   }
 
-  // Name & Title
   doc.setFont(titleFont, "bold");
   doc.setTextColor(30);
   doc.setFontSize(32);
@@ -75,7 +73,7 @@ export const downloadATSResume = async () => {
   doc.setTextColor(100);
   doc.text(personalInfo.role.toUpperCase(), 60, y + 31);
 
-  // Top Right Contact (Clickable)
+  // Top Right Contact Info
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   let contactY = y;
@@ -92,12 +90,10 @@ export const downloadATSResume = async () => {
   addContact(personalInfo.contact.website, `https://${personalInfo.contact.website}`);
 
   y = 65;
-
-  // Vertical Divider Line
   doc.setDrawColor(220);
   doc.line(dividerX, y, dividerX, pageHeight - margin);
 
-  // --- DRAWING HELPERS ---
+  // --- HELPERS ---
   const drawHeading = (text: string, x: number, currY: number, w: number) => {
     doc.setFont(titleFont, "bold");
     doc.setFontSize(13);
@@ -109,7 +105,6 @@ export const downloadATSResume = async () => {
     return currY + 10;
   };
 
-  // Fixed Bullet: Draws vector circle to avoid Microsoft Edge font errors (%)
   const drawBulletItem = (text: string, x: number, currY: number, w: number) => {
     doc.setDrawColor(80);
     doc.circle(x + 1, currY - 1, 0.7, "S"); 
@@ -117,40 +112,49 @@ export const downloadATSResume = async () => {
     doc.setFontSize(8.5);
     doc.setTextColor(70);
     const lines = doc.splitTextToSize(text, w - 6);
+    // Even alignment: text wrapped stays 6mm away from the margin (under the text, not bullet)
     doc.text(lines, x + 6, currY, { lineHeightFactor: 1.3 });
     return currY + (lines.length * 4.5) + 2;
   };
 
-  // --- LEFT COLUMN ---
+  // --- LEFT COLUMN (SIDEBAR) ---
   let leftY = y + 5;
 
-  // About Me
+  // ABOUT ME
   leftY = drawHeading("About Me", leftColX, leftY, colWidthLeft);
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8.5);
   doc.setTextColor(80);
   const abt = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
   doc.text(abt, leftColX, leftY, { lineHeightFactor: 1.4 });
-  leftY += (abt.length * 5) + 10;
+  
+  // Exactly one line down (approx 6mm gap) to start the next section
+  leftY += (abt.length * 5) + 6;
 
-  // Links (Exactly below About Me)
+  // LINKS (Evenly aligned below About Me)
   leftY = drawHeading("Links", leftColX, leftY, colWidthLeft);
   personalInfo.links.forEach(link => {
-    doc.setFont("helvetica", "bold"); doc.setTextColor(40);
+    doc.setFont("helvetica", "bold"); 
+    doc.setFontSize(8.5); // Small size matching About text
+    doc.setTextColor(40);
     doc.text(link.label + ":", leftColX, leftY);
-    doc.setFont("helvetica", "normal"); doc.setTextColor(0, 100, 200);
+    
+    doc.setFont("helvetica", "normal"); 
+    doc.setFontSize(8.5); // Small size matching About text
+    doc.setTextColor(0, 100, 200);
     doc.text(link.url, leftColX, leftY + 4.5);
+    
     doc.link(leftColX, leftY, colWidthLeft, 8, { url: `https://${link.url}` });
-    leftY += 12;
+    leftY += 12; // Spacing for even alignment
   });
 
-  // Hobbies
+  // HOBBIES
   leftY = drawHeading("Hobbies", leftColX, leftY, colWidthLeft);
   personalInfo.hobbies.forEach(hobby => {
     leftY = drawBulletItem(hobby.toUpperCase(), leftColX, leftY, colWidthLeft);
   });
 
-  // --- RIGHT COLUMN ---
+  // --- RIGHT COLUMN (CONTENT) ---
   let rightY = y + 5;
 
   rightY = drawHeading("Work Experience", rightColX, rightY, colWidthRight);
@@ -183,9 +187,8 @@ export const downloadATSResume = async () => {
       rightY += 5;
 
       role.description.forEach(desc => {
-        const dLines = doc.splitTextToSize(desc, colWidthRight - 10);
-        rightY = checkPageBreak(rightY, dLines.length * 5);
         rightY = drawBulletItem(desc, rightColX + 5, rightY, colWidthRight - 5);
+        rightY = checkPageBreak(rightY, 0);
       });
       rightY += 3;
     });
