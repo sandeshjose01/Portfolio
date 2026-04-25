@@ -52,91 +52,115 @@ export const personalInfo = {
 
 // --- 2. WORK EXPERIENCE (Updates Experience Page & PDF) ---
 export const experiencesData: Experience[] = [
-   {
-    id: 6, // Added ID to fix the build error
-    role: "Creative Graphic Designer",
+  export const experiencesData = [
+  {
+    id: 5,
     company: "Himalayan Cordyceps",
-    logo: "", 
-    duration: "MAY 2025 - APR 2026",
-    location: "BOUDHA, KATHMANDU",
-    description: [
-      "Edited VOX Style Documentary Video using tools like Adobe Premier Pro, Adobe After Effects.",
-      "Designed Banners for Different Events.",
-      "Designed Social Media Post Using AI, Photo Manupulation, Creative Idea and tools like Adobe Photohop, Adobe Illustrator."
-    ],
-    iconType: "briefcase"
+    logo: "https://ui-avatars.com/api/?name=HC&background=2563eb&color=fff", // Put your image link here
+    location: "Boudha, Kathmandu",
+    // Group all roles you had in this specific company here:
+    roles: [
+      {
+        title: "Creative Graphic Designer",
+        workType: "On-site", // Remote, On-site, Hybrid
+        startDate: "May 2025", // Use "Month Year" format for accurate calculation
+        endDate: "Apr 2026",   // Use "Present" if currently working here
+        description: [
+          "Edited VOX Style Documentary Video using tools like Adobe Premier Pro, Adobe After Effects.",
+          "Designed Banners for Different Events.",
+          "Designed Social Media Post Using AI, Photo Manipulation, Creative Idea and tools like Adobe Photohop, Adobe Illustrator."
+        ]
+      },
+      // --- EXAMPLE OF A PREVIOUS ROLE IN THE SAME COMPANY ---
+      // (Remove or edit this if you didn't have a previous role here)
+      {
+        title: "Graphic Designer",
+        workType: "On-site",
+        startDate: "APR 2025", 
+        endDate: "May 2025",
+        description: [
+          "Designed Social Media Post as per the Company Guidlance and the Color Scheme",
+          "Manupulated Photo as per the need."
+        ]
+      }
+    ]
+  },
+  // Add other companies here...
   },
   {
-    id: 5, // Added ID to fix the build error
-    role: "Graphic Designer",
-    company: "Himalayan Cordyceps",
-    logo: "", 
-    duration: "APR 2025 - MAY 2025",
-    location: "BOUDHA, KATHMANDU",
-    description: [
-      "Designed Social Media Post as per the Company Guidlance and the Color Scheme",
-      "Manupulated Photo as per the need."
-    ],
-    iconType: "briefcase"
-  },
-  {
-    id: 4, // Added ID to fix the build error
-    role: "Graphic Designer",
+    id: 4,
     company: "Everest Canvas",
-    logo: "", 
-    duration: "JAN 2024 - APR 2025",
+    logo: "https://ui-avatars.com/api/?name=HC&background=2563eb&color=fff", // Put your image link here
     location: "CHARDOBATO NAYA THIMI, BHAKTAPUR",
-    description: [
-      "Designed Multiple Types Canvas available in Market.",
-      "Manipulated Clients Photo like Changing Background, Background Blur, Turning Ordinary Photo into Professional Shoot Photo.",
-      "Restored Old Small Photo into High Quality Photo which can be printed in Anysize which made clients happy.",
-      "Designed Different Kinds of Banned like Sliding Banner, Standee Banners, Event Banner, Shop Board Banner, 3D Board, Acrylic Light Board"
-    ],
-    iconType: "briefcase"
-  },
-  {
-    id: 3, // Added ID to fix the build error
-    role: "Client Services Executive",
-    company: "Catalyst Advertising Pvt. Ltd",
-    logo: "", 
-    duration: "APR 2023 - JAN 2024",
+    // Group all roles you had in this specific company here:
+    roles: [
+      {
+        title: "Graphic Designer",
+        workType: "On-site", // Remote, On-site, Hybrid
+        startDate: "JAN 2025", // Use "Month Year" format for accurate calculation
+        endDate: "Apr 2025",   // Use "Present" if currently working here
+        description: [
+          "Designed Multiple Types Canvas available in Market.",
+          "Manipulated Clients Photo like Changing Background, Background Blur, Turning Ordinary Photo into Professional Shoot Photo.",
+          "Restored Old Small Photo into High Quality Photo which can be printed in Anysize which made clients happy.",
+          "Designed Different Kinds of Banned like Sliding Banner, Standee Banners, Event Banner, Shop Board Banner, 3D Board, Acrylic Light Board"
+        ]
+      },
+      {
+    id: 3,
+    company: "Catalyst Advertising Pvt. Ltd.",
+    logo: "https://ui-avatars.com/api/?name=HC&background=2563eb&color=fff", // Put your image link here
     location: "KHUMALTAR HEIGHT, LALITPUR",
-    description: [
-      "Built and nurtured strong client relationships, ensuring exceptional service and satisfaction.",
-      "Acted as a trusted advisor, proactively identifying and resolving client needs.",
-      "Effectively communicated with clients across all channels, fostering a positive and collaborative environment.",
-    ],
-    iconType: "briefcase"
-  },
-  {
-    id: 2, // Added ID to fix the build error
-    role: "Graphic Designer",
+    // Group all roles you had in this specific company here:
+    roles: [
+      {
+        title: "Client Services Executive",
+        workType: "On-site", // Remote, On-site, Hybrid
+        startDate: "APR 2023", // Use "Month Year" format for accurate calculation
+        endDate: "JAN 2024",   // Use "Present" if currently working here
+        description: [
+          "Built and nurtured strong client relationships, ensuring exceptional service and satisfaction.",
+          "Acted as a trusted advisor, proactively identifying and resolving client needs.",
+          "Effectively communicated with clients across all channels, fostering a positive and collaborative environment.",
+        ]
+      },
+      {
+    id: 2,
     company: "Arya Digital Production",
-    logo: "", 
-    duration: "JAN 2023 - APR 2023",
+    logo: "https://ui-avatars.com/api/?name=HC&background=2563eb&color=fff", // Put your image link here
     location: "NEW BANESHWOR, KATHMANDU",
-    description: [
-      "Design Social Media Post for all the local clients.",
-      "Design Printing Media Like ID Card, Banner, Stickers and other Other Necessary Printing Media.",
-      "Re-designed Logo of Arya Digital Production.",
-      "Designed Logo for local clients as per their need and Design Guideline."
-    ],
-    iconType: "briefcase"
-  },
-  {
-    id: 1, // Added ID to fix the build error
-    role: "Graphic Designer",
+    // Group all roles you had in this specific company here:
+    roles: [
+      {
+        title: "Graphic Designer",
+        workType: "On-site", // Remote, On-site, Hybrid
+        startDate: "JAN 2023", // Use "Month Year" format for accurate calculation
+        endDate: "APR 2023",   // Use "Present" if currently working here
+        description: [
+          "Design Social Media Post for all the local clients.",
+          "Design Printing Media Like ID Card, Banner, Stickers and other Other Necessary Printing Media.",
+          "Re-designed Logo of Arya Digital Production.",
+          "Designed Logo for local clients as per their need and Design Guideline."
+         ]
+      },
+        {
+    id: 1,
     company: "Swastik Design & Printing Suppliers",
-    logo: "",
-    duration: "JAN 2021 - JAN 2023",
-    location: "CHYASAL, KATHMANDU",
-    description: [
-      "Design all kinds of printing material",
-      "Designed high-quality print materials for corporate events including flex designs, brochures, ID Card, Books and Books Cover.",
-      "Designed product packaging implementing company's guidance."
-    ],
-    iconType: "building"
-  }
+    logo: "https://ui-avatars.com/api/?name=HC&background=2563eb&color=fff", // Put your image link here
+    location: "CHARDOBATO NAYA THIMI, BHAKTAPUR",
+    // Group all roles you had in this specific company here:
+    roles: [
+      {
+        title: "Graphic Designer",
+        workType: "On-site", // Remote, On-site, Hybrid
+        startDate: "JAN 2021", // Use "Month Year" format for accurate calculation
+        endDate: "JAN 2023",   // Use "Present" if currently working here
+        description: [
+         "Design all kinds of printing material",
+         "Designed high-quality print materials for corporate events including flex designs, brochures, ID Card, Books and Books Cover.",
+         "Designed product packaging implementing company's guidance."
+        ]
+      }
 ];
 
 // --- 3. RECOMMENDATIONS (Updates Experience Page) ---
