@@ -1,9 +1,7 @@
 import jsPDF from "jspdf";
 import { experiencesData, personalInfo } from "@/app/experience/experiences";
 
-// 1. Convert your 'Bebas Neue Cyrillic' TTF file to Base64 and paste it here.
-const fontBase64 = "YOUR_BASE64_STRING_HERE"; 
-
+// Helper to load image
 const loadImage = (url: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -14,35 +12,48 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   });
 };
 
+// Helper to fetch external font and convert to Base64
+const getFontBase64 = async (url: string): Promise<string> => {
+  const response = await fetch(url);
+  const blob = await response.blob();
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result as string);
+    reader.readAsDataURL(blob);
+  });
+};
+
 export const downloadATSResume = async () => {
-  const doc = new jsPDF({ format: "a4", unit: "mm", compress: true });
+  const doc = new jsPDF({ format: "a4", unit: "mm" });
   
   // --- FONT REGISTRATION ---
-  let titleFont = "helvetica"; // Fallback
-  let canUseCustomFont = false;
-
-  if (fontBase64 && fontBase64.length > 100) {
-    try {
-      doc.addFileToVFS("BebasNeueCyr.ttf", fontBase64);
-      doc.addFont("BebasNeueCyr.ttf", "BebasNeue", "normal");
-      titleFont = "BebasNeue";
-      canUseCustomFont = true;
-    } catch (e) {
-      console.error("Font loading failed");
-    }
+  let titleFont = "helvetica"; // Default fallback
+  try {
+    const fontUrl = "https://font-public.canva.com/YACkoP2nN4w/0/Bebas_Neue_Cyrillic.a69cba0d15813f7a63ac.0a82c965900d100f33f178d4d17a5118.woff2";
+    const base64Font = await getFontBase64(fontUrl);
+    // Strip the data:application/font-woff2;base64, part
+    const cleanBase64 = base64Font.split(',')[1];
+    
+    doc.addFileToVFS("BebasNeue.woff2", cleanBase64);
+    doc.addFont("BebasNeue.woff2", "Bebas", "normal");
+    titleFont = "Bebas";
+  } catch (error) {
+    console.error("Font loading failed, using Helvetica Bold as fallback");
+    titleFont = "helvetica";
   }
 
   const pageWidth = 210;
   const pageHeight = 297;
-  const margin = 12; // Bleed point / Safe Zone
+  const margin = 12; // A4 Bleed / Safe Zone
   const dividerX = 72; 
   const leftColX = margin;
   const rightColX = dividerX + 6;
   const colWidthLeft = dividerX - leftColX - 5;
   const colWidthRight = pageWidth - rightColX - margin;
   
-  // Standard gap for sidebar sections
+  // Spacing constants for even alignment
   const sectionGap = 10; 
+  const bodyFontSize = 8.5;
 
   let y = margin + 5;
 
@@ -57,7 +68,7 @@ export const downloadATSResume = async () => {
     return currentY;
   };
 
-  // --- HEADER SECTION ---
+  // --- HEADER: UNIFIED PROFILE & NAME ---
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
@@ -72,17 +83,17 @@ export const downloadATSResume = async () => {
   }
 
   // Name & Title (Using Bebas Neue)
-  doc.setFont(titleFont, "normal");
+  doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
   doc.setTextColor(30);
-  doc.setFontSize(34);
+  doc.setFontSize(36);
   doc.text(personalInfo.name.first.toUpperCase(), 60, y + 12);
-  doc.text(personalInfo.name.last.toUpperCase(), 60, y + 24);
+  doc.text(personalInfo.name.last.toUpperCase(), 60, y + 25);
 
   doc.setFontSize(11);
   doc.setTextColor(100);
-  doc.text(personalInfo.role.toUpperCase(), 60, y + 32);
+  doc.text(personalInfo.role.toUpperCase(), 60, y + 33);
 
-  // Top Right Contact
+  // Top Right Contact (Clickable)
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   let contactY = y;
@@ -99,12 +110,13 @@ export const downloadATSResume = async () => {
   addContact(personalInfo.contact.website, `https://${personalInfo.contact.website}`);
 
   y = 65;
+  // Vertical Divider
   doc.setDrawColor(220);
   doc.line(dividerX, y, dividerX, pageHeight - margin);
 
   // --- DRAWING HELPERS ---
   const drawHeading = (text: string, x: number, currY: number, w: number) => {
-    doc.setFont(titleFont, "normal");
+    doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
     doc.setFontSize(14);
     doc.setTextColor(40);
     doc.text(text.toUpperCase(), x, currY);
@@ -114,15 +126,15 @@ export const downloadATSResume = async () => {
     return currY + 10;
   };
 
+  // Fixed Bullet: Using vector circle to solve Edge character rendering bugs (%)
   const drawBulletItem = (text: string, x: number, currY: number, w: number) => {
-    // Vector circles for Edge compatibility
     doc.setDrawColor(100);
     doc.circle(x + 1, currY - 1, 0.6, "S"); 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(8.5);
+    doc.setFontSize(bodyFontSize);
     doc.setTextColor(70);
     const lines = doc.splitTextToSize(text, w - 6);
-    // Indent text so it never wraps under the bullet
+    // Indent text away from the circle bullet
     doc.text(lines, x + 6, currY, { lineHeightFactor: 1.3 });
     return currY + (lines.length * 4.5) + 2;
   };
@@ -133,18 +145,18 @@ export const downloadATSResume = async () => {
   // About Me
   leftY = drawHeading("About Me", leftColX, leftY, colWidthLeft);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(8.5);
+  doc.setFontSize(bodyFontSize);
   doc.setTextColor(80);
-  const abt = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
-  doc.text(abt, leftColX, leftY, { lineHeightFactor: 1.4 });
+  const abtLines = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
+  doc.text(abtLines, leftColX, leftY, { lineHeightFactor: 1.4 });
   
-  // FIXED GAP: Standardizes height calculation
-  leftY += (abt.length * 4.2) + sectionGap;
+  // Gap calculation: Exactly one line down + gap
+  leftY += (abtLines.length * 4.5) + sectionGap;
 
-  // Links (Size matches About Me)
+  // Links (Size matches About text)
   leftY = drawHeading("Links", leftColX, leftY, colWidthLeft);
   personalInfo.links.forEach(link => {
-    doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); doc.setTextColor(40);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(bodyFontSize); doc.setTextColor(40);
     doc.text(link.label + ":", leftColX, leftY);
     doc.setFont("helvetica", "normal"); doc.setTextColor(0, 100, 200);
     doc.text(link.url, leftColX, leftY + 4);
@@ -152,7 +164,7 @@ export const downloadATSResume = async () => {
     leftY += 11;
   });
 
-  leftY += sectionGap - 6;
+  leftY += sectionGap - 5;
 
   // Hobbies
   leftY = drawHeading("Hobbies", leftColX, leftY, colWidthLeft);
@@ -160,17 +172,16 @@ export const downloadATSResume = async () => {
     leftY = drawBulletItem(hobby.toUpperCase(), leftColX, leftY, colWidthLeft);
   });
 
-  // --- RIGHT COLUMN (CONTENT) ---
+  // --- RIGHT COLUMN ---
   let rightY = y + 5;
 
   rightY = drawHeading("Work Experience", rightColX, rightY, colWidthRight);
   experiencesData.forEach(exp => {
     rightY = checkPageBreak(rightY, 15);
-    doc.setFont(titleFont, "normal");
+    doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
     doc.setFontSize(12);
     doc.setTextColor(30);
     doc.text(exp.company.toUpperCase(), rightColX, rightY);
-    
     doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(120);
     doc.text(exp.location, pageWidth - margin, rightY, { align: "right" });
     rightY += 6;
@@ -179,7 +190,6 @@ export const downloadATSResume = async () => {
       rightY = checkPageBreak(rightY, 15);
       doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(60);
       doc.text(role.title, rightColX + 5, rightY);
-      
       doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
       doc.text(`${role.startDate} - ${role.endDate}`, pageWidth - margin, rightY, { align: "right" });
       rightY += 4.5;
