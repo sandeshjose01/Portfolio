@@ -51,8 +51,7 @@ export const personalInfo = {
 };
 
 // --- 2. WORK EXPERIENCE (Updates Experience Page & PDF) ---
-export const experiencesData: Experience[] = [
-  export const experiencesData = [
+export const experiencesData = [
   {
     id: 5,
     company: "Himalayan Cordyceps",
