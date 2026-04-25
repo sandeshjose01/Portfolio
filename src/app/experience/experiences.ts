@@ -52,30 +52,88 @@ export const personalInfo = {
 
 // --- 2. WORK EXPERIENCE (Updates Experience Page & PDF) ---
 export const experiencesData: Experience[] = [
-  {
-    id: 2, // Added ID to fix the build error
+   {
+    id: 6, // Added ID to fix the build error
     role: "Creative Graphic Designer",
     company: "Himalayan Cordyceps",
     logo: "", 
-    duration: "JAN 2022 - PRESENT",
-    location: "REMOTE",
+    duration: "MAY 2025 - APR 2026",
+    location: "BOUDHA, KATHMANDU",
     description: [
-      "Led the design of 15+ comprehensive brand identity packages, resulting in a 30% increase in client engagement.",
-      "Collaborated with the development team to design intuitive UI/UX for web and mobile applications using Figma.",
-      "Managed multiple social media campaigns, designing cohesive grids and ad banners."
+      "Edited VOX Style Documentary Video using tools like Adobe Premier Pro, Adobe After Effects.",
+      "Designed Banners for Different Events.",
+      "Designed Social Media Post Using AI, Photo Manupulation, Creative Idea and tools like Adobe Photohop, Adobe Illustrator."
+    ],
+    iconType: "briefcase"
+  },
+  {
+    id: 5, // Added ID to fix the build error
+    role: "Graphic Designer",
+    company: "Himalayan Cordyceps",
+    logo: "", 
+    duration: "APR 2025 - MAY 2025",
+    location: "BOUDHA, KATHMANDU",
+    description: [
+      "Designed Social Media Post as per the Company Guidlance and the Color Scheme",
+      "Manupulated Photo as per the need."
+    ],
+    iconType: "briefcase"
+  },
+  {
+    id: 4, // Added ID to fix the build error
+    role: "Graphic Designer",
+    company: "Everest Canvas",
+    logo: "", 
+    duration: "JAN 2024 - APR 2025",
+    location: "CHARDOBATO NAYA THIMI, BHAKTAPUR",
+    description: [
+      "Designed Multiple Types Canvas available in Market.",
+      "Manipulated Clients Photo like Changing Background, Background Blur, Turning Ordinary Photo into Professional Shoot Photo.",
+      "Restored Old Small Photo into High Quality Photo which can be printed in Anysize which made clients happy.",
+      "Designed Different Kinds of Banned like Sliding Banner, Standee Banners, Event Banner, Shop Board Banner, 3D Board, Acrylic Light Board"
+    ],
+    iconType: "briefcase"
+  },
+  {
+    id: 3, // Added ID to fix the build error
+    role: "Client Services Executive",
+    company: "Catalyst Advertising Pvt. Ltd",
+    logo: "", 
+    duration: "APR 2023 - JAN 2024",
+    location: "KHUMALTAR HEIGHT, LALITPUR",
+    description: [
+      "Built and nurtured strong client relationships, ensuring exceptional service and satisfaction.",
+      "Acted as a trusted advisor, proactively identifying and resolving client needs.",
+      "Effectively communicated with clients across all channels, fostering a positive and collaborative environment.",
+    ],
+    iconType: "briefcase"
+  },
+  {
+    id: 2, // Added ID to fix the build error
+    role: "Graphic Designer",
+    company: "Arya Digital Production",
+    logo: "", 
+    duration: "JAN 2023 - APR 2023",
+    location: "NEW BANESHWOR, KATHMANDU",
+    description: [
+      "Design Social Media Post for all the local clients.",
+      "Design Printing Media Like ID Card, Banner, Stickers and other Other Necessary Printing Media.",
+      "Re-designed Logo of Arya Digital Production.",
+      "Designed Logo for local clients as per their need and Design Guideline."
     ],
     iconType: "briefcase"
   },
   {
     id: 1, // Added ID to fix the build error
     role: "Graphic Designer",
-    company: "Himalayan Cordyceps",
+    company: "Swastik Design & Printing Suppliers",
     logo: "",
-    duration: "MAR 2019 - DEC 2021",
-    location: "KATHMANDU, NEPAL",
+    duration: "JAN 2021 - JAN 2023",
+    location: "CHYASAL, KATHMANDU",
     description: [
-      "Designed high-quality print materials for 50+ corporate events including flex designs and brochures.",
-      "Implemented design systems for retail brand growth and product packaging."
+      "Design all kinds of printing material"
+      "Designed high-quality print materials for corporate events including flex designs, brochures, ID Card, Books and Books Cover.",
+      "Designed product packaging implementing company's guidance."
     ],
     iconType: "building"
   }
