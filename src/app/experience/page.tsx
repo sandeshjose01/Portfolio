@@ -11,25 +11,26 @@ const ExperiencePage = () => {
   // Helper to calculate months/years automatically
   const calculateDuration = (start: string, end: string) => {
     const parseDate = (str: string) => {
-        const normalized = str.toLowerCase();
-        if (normalized === "present") return new Date();
-        // Standardize date parsing
-        return new Date(str);
+      const normalized = str.toLowerCase();
+      if (normalized === "present") return new Date();
+      return new Date(str);
     };
-    
+
     const startDate = parseDate(start);
     const endDate = parseDate(end);
-    
-    // Calculate total months
-    const totalMonths = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth()) + 1;
-    
+
+    const totalMonths =
+      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
+      (endDate.getMonth() - startDate.getMonth()) +
+      1;
+
     const years = Math.floor(totalMonths / 12);
     const months = totalMonths % 12;
-    
+
     const result = [];
     if (years > 0) result.push(`${years} yr${years > 1 ? "s" : ""}`);
     if (months > 0) result.push(`${months} mo${months > 1 ? "s" : ""}`);
-    
+
     return result.join(" ") || "1 mo";
   };
 
@@ -58,18 +59,16 @@ const ExperiencePage = () => {
                 )}
               </div>
 
-              {/* Roles and Timeline (LinkedIn Style) */}
+              {/* Roles and Timeline */}
               <div className="flex flex-col flex-1">
                 <h3 className="text-2xl font-bold text-slate-900">{exp.company}</h3>
                 <div className="flex items-center gap-2 text-slate-500 text-sm font-medium mb-4">
                   <MapPin className="w-3.5 h-3.5" /> {exp.location}
                 </div>
 
-                {/* Vertical Timeline for Roles */}
                 <div className="flex flex-col gap-8 relative border-l-2 border-slate-200 ml-2 pl-6">
                   {exp.roles.map((role, idx) => (
                     <div key={idx} className="relative">
-                      {/* Timeline Dot */}
                       <span className="absolute -left-[31px] top-1.5 w-[14px] h-[14px] rounded-full bg-slate-300 group-hover:bg-blue-500 transition-colors border-2 border-white shadow-sm"></span>
                       
                       <h4 className="text-xl font-bold text-slate-800">{role.title}</h4>
@@ -95,7 +94,7 @@ const ExperiencePage = () => {
         ))}
       </div>
 
-     {/* --- RECOMMENDATIONS SECTION --- */}
+      {/* --- BIG RECOMMENDATIONS SECTION --- */}
       <div className="flex flex-col gap-3 mt-24 w-full">
         <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
           <Quote className="w-4 h-4" /> Recommendations
@@ -110,15 +109,12 @@ const ExperiencePage = () => {
               whileHover={{ y: -5 }}
               className="relative p-8 md:p-12 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 w-full"
             >
-              {/* Large Stylized Quote Icon */}
               <Quote className="absolute top-8 right-10 w-16 h-16 text-blue-500/5" />
               
-              {/* The Recommendation Text - Made bigger and more readable */}
               <p className="text-slate-700 italic leading-relaxed z-10 text-lg md:text-xl font-medium">
                 &quot;{rec.text}&quot;
               </p>
 
-              {/* Author Profile Section */}
               <div className="flex items-center gap-5 mt-4 pt-6 border-t border-white/50">
                 <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 border-4 border-white shadow-md overflow-hidden shrink-0 flex items-center justify-center">
                    {rec.image ? (
@@ -128,12 +124,8 @@ const ExperiencePage = () => {
                    )}
                 </div>
                 <div className="flex flex-col">
-                  <h4 className="font-bold text-slate-900 text-xl leading-tight">
-                    {rec.name}
-                  </h4>
-                  <p className="text-sm text-blue-600 font-bold uppercase tracking-wide mt-1">
-                    {rec.designation}
-                  </p>
+                  <h4 className="font-bold text-slate-900 text-xl leading-tight">{rec.name}</h4>
+                  <p className="text-sm text-blue-600 font-bold uppercase tracking-wide mt-1">{rec.designation}</p>
                 </div>
               </div>
             </motion.div>
@@ -149,7 +141,13 @@ const ExperiencePage = () => {
           rel="noopener noreferrer"
           className="group flex items-center gap-3 px-6 py-3 rounded-full bg-white/50 border border-white/80 text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-white transition-all shadow-sm"
         >
-          View all recommendations on LinkedIn
+          View more recommendations on LinkedIn
           <span className="group-hover:translate-x-1 transition-transform">→</span>
         </a>
       </div>
+
+    </div>
+  );
+};
+
+export default ExperiencePage;
