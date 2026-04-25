@@ -85,7 +85,6 @@ export const experiencesData = [
     ]
   },
   // Add other companies here...
-  },
   {
     id: 4,
     company: "Everest Canvas",
