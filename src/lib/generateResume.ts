@@ -19,12 +19,10 @@ export const downloadATSResume = async () => {
   const rightColX = 75;
   let y = 20;
 
-  // --- 1. HANDLE PROFILE IMAGE (Now with proper loading) ---
+  // --- 1. HANDLE PROFILE IMAGE ---
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
-    
-    // Position: x=18, y=13, size=24x24mm
     doc.addImage(img, "PNG", 18, 13, 24, 24);
   } catch (error) {
     console.error("Profile image failed to load, drawing fallback circle.", error);
@@ -45,7 +43,7 @@ export const downloadATSResume = async () => {
   doc.setTextColor(100);
   doc.text(personalInfo.role, 55, 40, { charSpace: 1 });
 
-  // --- CONTACT INFO (Clickable) ---
+  // --- CONTACT INFO ---
   doc.setFontSize(8);
   doc.setTextColor(80);
   doc.text(personalInfo.contact.location, pageWidth - 15, 18, { align: "right" });
@@ -80,6 +78,8 @@ export const downloadATSResume = async () => {
 
   // --- SIDEBAR (Links, Languages, Hobbies) ---
   let leftY = y;
+  
+  // Links
   leftY = drawHeading("Links", leftColX, leftY);
   personalInfo.links.forEach(link => {
     doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(0);
@@ -87,9 +87,10 @@ export const downloadATSResume = async () => {
     doc.setFont("helvetica", "normal"); doc.setTextColor(0, 102, 204);
     const linkUrl = link.url.startsWith("http") ? link.url : `https://${link.url}`;
     doc.text(link.url, leftColX, leftY + 4, { url: linkUrl } as any);
-    leftY += 10;
+    leftY += 12;
   });
 
+  // Languages
   leftY += 5;
   leftY = drawHeading("Languages", leftColX, leftY);
   personalInfo.languages.forEach(lang => {
@@ -100,25 +101,40 @@ export const downloadATSResume = async () => {
     leftY += 8;
   });
 
+  // Hobbies (UPDATED WITH TEXT WRAPPING)
   leftY += 5;
   leftY = drawHeading("Hobbies", leftColX, leftY);
+  const maxHobbyWidth = 45; // Matches the sidebar width
+
   personalInfo.hobbies.forEach(hobby => {
-    doc.setFont("helvetica", "normal"); doc.setTextColor(100);
-    doc.text("• " + hobby, leftColX, leftY);
-    leftY += 6;
+    doc.setFont("helvetica", "normal"); 
+    doc.setTextColor(100);
+    doc.setFontSize(9);
+
+    // Split long hobby names into multiple lines
+    const wrappedHobby = doc.splitTextToSize("• " + hobby, maxHobbyWidth);
+    
+    wrappedHobby.forEach((line: string) => {
+      doc.text(line, leftColX, leftY);
+      leftY += 5; // Move down for every line of text
+    });
+    leftY += 1; // Slight gap between different hobbies
   });
 
   // --- MAIN CONTENT ---
   let rightY = y;
+  
+  // About Me
   rightY = drawHeading("About Me", rightColX, rightY);
   doc.setFontSize(8); doc.setFont("helvetica", "normal"); doc.setTextColor(80);
   const aboutLines = doc.splitTextToSize(personalInfo.aboutMe, 120);
   doc.text(aboutLines, rightColX + 5, rightY);
   rightY += (aboutLines.length * 4.5) + 10;
 
+  // Work Experience
   rightY = drawHeading("Work Experience", rightColX, rightY);
   experiencesData.forEach(exp => {
-    doc.setDrawColor(0); doc.circle(rightColX, rightY - 1, 1); doc.line(rightColX, rightY, rightColX, rightY + 12);
+    doc.setDrawColor(0); doc.circle(rightColX, rightY - 1, 1); 
     doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(0);
     doc.text(`${exp.role.toUpperCase()} | ${exp.duration}`, rightColX + 5, rightY);
     rightY += 4.5;
@@ -132,6 +148,7 @@ export const downloadATSResume = async () => {
     rightY += 6;
   });
 
+  // Education
   rightY = drawHeading("Education", rightColX, rightY);
   personalInfo.education.forEach(edu => {
     doc.circle(rightColX, rightY - 1, 1); doc.setFont("helvetica", "bold");
@@ -141,6 +158,7 @@ export const downloadATSResume = async () => {
     rightY += 8;
   });
 
+  // Skills
   rightY = drawHeading("Skills", rightColX, rightY);
   let skillX = rightColX + 5;
   personalInfo.skills.forEach((skill, index) => {
