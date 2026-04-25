@@ -29,7 +29,7 @@ export const personalInfo = {
     email: "info@sandeshjoshi.info.np",
     website: "www.sandeshjoshi.info.np"
   },
-    aboutMe: "Hello, It's me Sandesh Joshi your next Creative Graphic Designer with over 5+ years of experience. I have much experience in designing Social Media Posts (Facebook post, Business Page Cover), Photo Manipulation & Printing (Business cards, Letterheads, Logos, Book Cover, Signature Logos, Flyers and so on). I use Adobe Illustrator and Adobe Photoshop to design the graphics for you. Not only that, but I will provide high-quality work which satisfies all my clients. I have completed many projects with customer's satisfaction. Furthermore. If you have work related to my skills, then contact me.",
+    aboutMe: "Hello, It's me Sandesh Joshi your next Creative Graphic Designer and Video Editor with over 5+ years of experience. I have much experience in designing Social Media Posts (Facebook post, Business Page Cover), Photo Manipulation & Printing (Business cards, Letterheads, Logos, Book Cover, Signature Logos, Flyers and so on). I use Adobe Photoshop, Adobe Illustrator and Adobe Indesign to design the graphics for you. I also Have experience in Video Editing (VOX Style Documentary Video, Marketing Video, Advertising Video). Not only that, but I will provide high-quality work which satisfies all my clients. I have completed many projects with customer's satisfaction. Furthermore. If you have work related to my skills, then contact me.",
   links: [
     { label: "LinkedIn", url: "linkedin.com/in/sanjoshi1" },
     { label: "Website", url: "sandeshjoshi.info.np" }
