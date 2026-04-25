@@ -94,7 +94,7 @@ const ExperiencePage = () => {
         ))}
       </div>
 
-      {/* --- BIG RECOMMENDATIONS SECTION --- */}
+      {/* --- RECOMMENDATIONS SECTION --- */}
       <div className="flex flex-col gap-3 mt-24 w-full">
         <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
           <Quote className="w-4 h-4" /> Recommendations
@@ -102,30 +102,32 @@ const ExperiencePage = () => {
         <Heading>What People Say</Heading>
       </div>
 
-      <div className="flex flex-col gap-8 w-full mt-4">
+      {/* Use a 2-column grid that allows heights to grow based on content */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-4 items-start">
         {recommendations && recommendations.map((rec: any, index: number) => (
           <FramerWrapper key={index} y={30} delay={0.2 + index * 0.1}>
             <motion.div 
               whileHover={{ y: -5 }}
-              className="relative p-8 md:p-12 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 w-full"
+              className="relative p-8 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 h-full"
             >
-              <Quote className="absolute top-8 right-10 w-16 h-16 text-blue-500/5" />
+              <Quote className="absolute top-6 right-8 w-12 h-12 text-blue-500/10" />
               
-              <p className="text-slate-700 italic leading-relaxed z-10 text-lg md:text-xl font-medium">
+              {/* No line-clamping here, text will flow naturally */}
+              <p className="text-slate-700 italic leading-relaxed z-10 text-base">
                 &quot;{rec.text}&quot;
               </p>
 
-              <div className="flex items-center gap-5 mt-4 pt-6 border-t border-white/50">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 border-4 border-white shadow-md overflow-hidden shrink-0 flex items-center justify-center">
+              <div className="flex items-center gap-4 mt-auto pt-6 border-t border-white/40">
+                <div className="w-12 h-12 rounded-full bg-blue-100 border-2 border-white overflow-hidden shrink-0 flex items-center justify-center shadow-sm">
                    {rec.image ? (
                      <img src={rec.image} alt={rec.name} className="w-full h-full object-cover" />
                    ) : (
-                     <span className="font-bold text-blue-600 text-xl">{rec.name.charAt(0)}</span>
+                     <span className="font-bold text-blue-600">{rec.name.charAt(0)}</span>
                    )}
                 </div>
-                <div className="flex flex-col">
-                  <h4 className="font-bold text-slate-900 text-xl leading-tight">{rec.name}</h4>
-                  <p className="text-sm text-blue-600 font-bold uppercase tracking-wide mt-1">{rec.designation}</p>
+                <div>
+                  <h4 className="font-bold text-slate-900 leading-tight text-base">{rec.name}</h4>
+                  <p className="text-[11px] text-blue-600 font-bold uppercase tracking-wider mt-1">{rec.designation}</p>
                 </div>
               </div>
             </motion.div>
@@ -139,7 +141,7 @@ const ExperiencePage = () => {
           href="https://www.linkedin.com/in/sanjoshi1/details/recommendations/" 
           target="_blank" 
           rel="noopener noreferrer"
-          className="group flex items-center gap-3 px-6 py-3 rounded-full bg-white/50 border border-white/80 text-sm font-bold text-slate-600 hover:text-blue-600 hover:bg-white transition-all shadow-sm"
+          className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-600 transition-all"
         >
           View more recommendations on LinkedIn
           <span className="group-hover:translate-x-1 transition-transform">→</span>
