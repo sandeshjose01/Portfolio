@@ -14,8 +14,7 @@ import { buttonVariants } from "@/components/ui/button";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 
 const morePage = () => {
-  const morelink = [
-    
+  const morelink = any[] = [];
   ];
 
   return (
