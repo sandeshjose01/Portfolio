@@ -3,9 +3,6 @@ import { Badge } from "@/components/ui/badge";
 import { ExternalLink, PackagePlus } from "lucide-react";
 import {
   Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Link from "next/link";
@@ -15,36 +12,34 @@ import FramerWrapper from "@/components/animation/FramerWrapper";
 
 const MorePage = () => {
   // 1. DATA WITH BENTO GRID SPANS
-  // We add 'bentoClass' to define how much space each card takes up
   const morelink = [
     {
       title: "Vercel",
       description: "Develop, preview, and ship. The frontend cloud.",
       link: "https://vercel.com",
-      bentoClass: "md:col-span-2 md:row-span-2", // Makes this card large
+      bentoClass: "md:col-span-2 md:row-span-2", 
     },
     {
       title: "Tailwind CSS",
       description: "Rapidly build modern websites without leaving your HTML.",
       link: "https://tailwindcss.com",
-      bentoClass: "md:col-span-1 md:row-span-1", // Standard size
+      bentoClass: "md:col-span-1 md:row-span-1", 
     },
     {
       title: "Next.js",
       description: "The React Framework for the Web.",
       link: "https://nextjs.org",
-      bentoClass: "md:col-span-1 md:row-span-1", // Standard size
+      bentoClass: "md:col-span-1 md:row-span-1", 
     },
     {
       title: "Framer Motion",
       description: "A production-ready motion library for React.",
       link: "https://www.framer.com/motion/",
-      bentoClass: "md:col-span-3 md:row-span-1", // Wide card spanning the bottom
+      bentoClass: "md:col-span-3 md:row-span-1", 
     },
   ];
 
   return (
-    // Added a subtle decorative background blob so the glass effect is visible
     <div className="h-full w-full relative flex flex-col items-start gap-5 overflow-hidden p-4">
       
       {/* Decorative Background for Glassmorphism */}
@@ -60,8 +55,7 @@ const MorePage = () => {
         <Heading>More</Heading>
       </div>
 
-      {/* 2. BENTO GRID LAYOUT */}
-      {/* grid-auto-rows keeps the height of standard rows consistent */}
+      {/* BENTO GRID LAYOUT */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 w-full py-4 auto-rows-[minmax(280px,auto)]">
         {morelink.map((value, indx) => {
           
@@ -71,21 +65,20 @@ const MorePage = () => {
           return (
             <FramerWrapper 
               key={indx} 
-              className={cn("w-full h-full", value.bentoClass)} // Apply bento spans here
+              className={cn("w-full h-full", value.bentoClass)} 
               y={0} 
               scale={0.8} 
               delay={indx / 4} 
               duration={0.15}
             >
-              {/* 3. GLASSMORPHISM STYLING */}
               <Card 
                 className={cn(
                   "w-full h-full flex flex-col overflow-hidden group transition-all duration-500",
-                  "border border-white/20 dark:border-white/10", // Subtle glass border
-                  "bg-white/10 dark:bg-black/20", // Transparent background
-                  "backdrop-blur-xl", // The frosted glass blur effect
-                  "shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)]", // Soft shadow
-                  "hover:bg-white/20 dark:hover:bg-white/5 hover:border-white/30" // Hover highlight
+                  "border border-white/20 dark:border-white/10", 
+                  "bg-white/10 dark:bg-black/20", 
+                  "backdrop-blur-xl", 
+                  "shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.1)]", 
+                  "hover:bg-white/20 dark:hover:bg-white/5 hover:border-white/30" 
                 )}
               >
                 
@@ -97,7 +90,6 @@ const MorePage = () => {
                     className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
-                  {/* Subtle overlay gradient over the image to blend it into the glass */}
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent pointer-events-none" />
                 </div>
 
@@ -114,7 +106,8 @@ const MorePage = () => {
                       target="_blank"
                       rel="noopener noreferrer"
                       className={cn(
-                        buttonVariants({ variant: "secondary", size: "lg" }),
+                        // ERROR FIXED HERE: Changed "secondary" to "default"
+                        buttonVariants({ variant: "default", size: "lg" }),
                         "w-full gap-3 bg-white/20 hover:bg-white/30 dark:bg-white/10 dark:hover:bg-white/20 backdrop-blur-md border border-white/10 transition-colors"
                       )}
                     >
