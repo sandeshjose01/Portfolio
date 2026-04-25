@@ -131,7 +131,7 @@ export const experiencesData: Experience[] = [
     duration: "JAN 2021 - JAN 2023",
     location: "CHYASAL, KATHMANDU",
     description: [
-      "Design all kinds of printing material"
+      "Design all kinds of printing material",
       "Designed high-quality print materials for corporate events including flex designs, brochures, ID Card, Books and Books Cover.",
       "Designed product packaging implementing company's guidance."
     ],
