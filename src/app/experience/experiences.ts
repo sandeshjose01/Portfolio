@@ -60,7 +60,7 @@ export const experiencesData: Experience[] = [
   {
     id: 5,
     company: "Himalayan Cordyceps",
-    logo: "https://ui-avatars.com/api/?name=HC&background=2563eb&color=fff",
+    logo: "https://media.licdn.com/dms/image/v2/D4D0BAQFTwu2XUmO6lQ/company-logo_200_200/company-logo_200_200/0/1737017992684/himalayan_cordyceps_logo?e=1778716800&v=beta&t=PmRAEkk-CUKYo1lydvZ60xA1dumW_qiZ07JA4B4aeQs",
     location: "Boudha, Kathmandu",
     roles: [
       {
