@@ -15,204 +15,194 @@ export const downloadATSResume = async () => {
   const doc = new jsPDF({ format: "a4", unit: "mm" });
   const pageWidth = doc.internal.pageSize.getWidth();
   const pageHeight = doc.internal.pageSize.getHeight();
-  const leftColX = 15;
-  const rightColX = 75;
-  const margin = 15;
-  let y = 20;
+  
+  const sidebarWidth = 70;
+  const mainColX = 80;
+  const margin = 10;
+  let leftY = 85; // Starting Y for sidebar content
+  let rightY = 60; // Starting Y for main content
 
-  // --- HELPER: PAGE BREAK CHECKER ---
-  const checkPageBreak = (currentY: number, neededSpace: number) => {
-    if (currentY + neededSpace > pageHeight - margin) {
-      doc.addPage();
-      return 20; // Reset Y to top of new page
+  // --- 1. BACKGROUNDS ---
+  // Dark Sidebar
+  doc.setFillColor(45, 45, 45); // Dark Slate Gray
+  doc.rect(0, 0, sidebarWidth, pageHeight, "F");
+
+  // "Glass" Effect Decorative Dots (Simulating website background)
+  doc.setDrawColor(255, 255, 255);
+  doc.setGState(new (doc as any).GState({ opacity: 0.1 }));
+  for (let i = 0; i < 20; i++) {
+    for (let j = 0; j < 50; j++) {
+      doc.circle(i * 4, j * 6, 0.2, "S");
     }
-    return currentY;
-  };
+  }
+  doc.setGState(new (doc as any).GState({ opacity: 1.0 }));
 
-  // --- 1. HEADER SECTION (Larger Profile & Better Alignment) ---
+  // --- 2. CIRCULAR PROFILE IMAGE ---
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
-    // Profile image slightly larger (30x30)
-    doc.addImage(img, "PNG", 15, 15, 30, 30);
+    // Draw circular profile
+    doc.saveGraphicsState();
+    doc.circle(sidebarWidth / 2, 35, 20, "f");
+    doc.clip();
+    doc.addImage(img, "PNG", (sidebarWidth / 2) - 20, 15, 40, 40);
+    doc.restoreGraphicsState();
   } catch (error) {
-    doc.setDrawColor(200);
-    doc.circle(30, 30, 15, "S"); 
+    doc.setDrawColor(255);
+    doc.circle(sidebarWidth / 2, 35, 20, "S");
   }
 
-  // Name and Role
-  doc.setFontSize(28);
-  doc.setTextColor(0);
-  doc.setFont("helvetica", "normal");
-  doc.text(personalInfo.name.first, 52, 28);
+  // --- 3. NAME & HEADER (Main Area) ---
+  doc.setFontSize(32);
+  doc.setTextColor(45, 45, 45);
   doc.setFont("helvetica", "bold");
-  doc.text(personalInfo.name.last, 52, 38);
+  doc.text(personalInfo.name.first.toUpperCase(), mainColX, 25);
+  doc.text(personalInfo.name.last.toUpperCase(), mainColX, 36);
 
   doc.setFontSize(10);
   doc.setFont("helvetica", "normal");
-  doc.setTextColor(80);
-  doc.text(personalInfo.role, 52, 45, { charSpace: 0.5 });
-
-  // Contact Header (Top Right)
-  doc.setFontSize(8);
   doc.setTextColor(100);
-  let contactY = 18;
-  doc.text(personalInfo.contact.location, pageWidth - 15, contactY, { align: "right" });
-  doc.setTextColor(0, 102, 204); 
-  doc.text(personalInfo.contact.phone, pageWidth - 15, contactY + 5, { align: "right" });
-  doc.text(personalInfo.contact.email, pageWidth - 15, contactY + 10, { align: "right" });
-  doc.text(personalInfo.contact.website, pageWidth - 15, contactY + 15, { align: "right" });
+  doc.text(personalInfo.role.toUpperCase(), mainColX, 43, { charSpace: 1 });
 
-  y = 60;
+  // Top Right Contact Icons/Info
+  doc.setFontSize(8);
+  doc.setTextColor(80);
+  let contactY = 20;
+  const drawContact = (text: string, iconY: number, url?: string) => {
+    doc.text(text, pageWidth - margin, iconY, { align: "right" });
+    if (url) {
+        doc.link(pageWidth - 60, iconY - 3, 50, 5, { url });
+    }
+  };
+  drawContact(personalInfo.contact.location, contactY);
+  drawContact(personalInfo.contact.phone, contactY + 5, `tel:${personalInfo.contact.phone}`);
+  doc.setTextColor(0, 102, 204);
+  drawContact(personalInfo.contact.email, contactY + 10, `mailto:${personalInfo.contact.email}`);
+  drawContact(personalInfo.contact.website, contactY + 15, `https://${personalInfo.contact.website}`);
 
-  // --- HELPER FOR HEADINGS ---
-  const drawHeading = (text: string, x: number, currY: number) => {
-    const spaceCheck = checkPageBreak(currY, 15);
+  // --- 4. SIDEBAR SECTIONS (White Text) ---
+  const drawSidebarHeading = (text: string, currY: number) => {
     doc.setFont("helvetica", "bold");
     doc.setFontSize(11);
-    doc.setTextColor(0);
-    doc.text(text.toUpperCase(), x, spaceCheck);
-    doc.setLineWidth(0.4);
-    doc.setDrawColor(0);
-    doc.line(x, spaceCheck + 2, x + (x > 50 ? 120 : 45), spaceCheck + 2);
-    return spaceCheck + 10;
+    doc.setTextColor(255, 255, 255);
+    doc.text(text.toUpperCase(), margin, currY);
+    doc.setDrawColor(255, 255, 255);
+    doc.setLineWidth(0.3);
+    doc.line(margin, currY + 2, sidebarWidth - margin, currY + 2);
+    return currY + 10;
   };
 
-  // --- MAIN CONTENT (Right Column First to determine height) ---
-  let rightY = y;
-  
-  // ABOUT ME (Increased size and improved line height)
-  rightY = drawHeading("About Me", rightColX, rightY);
-  doc.setFontSize(9.5); // Increased from 8
-  doc.setFont("helvetica", "normal"); 
-  doc.setTextColor(60);
-  const aboutLines = doc.splitTextToSize(personalInfo.aboutMe, 115);
-  doc.text(aboutLines, rightColX + 5, rightY, { lineHeightFactor: 1.4 });
-  rightY += (aboutLines.length * 5) + 12;
+  const drawBulletText = (text: string, x: number, currY: number, width: number, color: number[]) => {
+    doc.setFontSize(8.5);
+    doc.setTextColor(color[0], color[1], color[2]);
+    const bullet = "○"; // Using a circle shape as requested
+    doc.text(bullet, x, currY);
+    const lines = doc.splitTextToSize(text, width);
+    doc.text(lines, x + 4, currY);
+    return currY + (lines.length * 4.5) + 1;
+  };
+
+  // ABOUT ME (Sidebar)
+  leftY = drawSidebarHeading("About Me", leftY);
+  doc.setFontSize(8.5);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(230, 230, 230);
+  const aboutLines = doc.splitTextToSize(personalInfo.aboutMe, sidebarWidth - 2 * margin);
+  doc.text(aboutLines, margin, leftY, { lineHeightFactor: 1.3 });
+  leftY += (aboutLines.length * 4.5) + 12;
+
+  // LINKS (Sidebar)
+  leftY = drawSidebarHeading("Links", leftY);
+  personalInfo.links.forEach(link => {
+    doc.setFont("helvetica", "bold"); doc.setTextColor(255);
+    doc.text(link.label + ":", margin, leftY);
+    doc.setFont("helvetica", "normal"); doc.setTextColor(0, 160, 255);
+    doc.text(link.url, margin, leftY + 4);
+    doc.link(margin, leftY, 40, 6, { url: `https://${link.url}` });
+    leftY += 10;
+  });
+
+  // HOBBIES (Sidebar)
+  leftY = drawSidebarHeading("Hobbies", leftY + 5);
+  personalInfo.hobbies.forEach(hobby => {
+    leftY = drawBulletText(hobby.toUpperCase(), margin, leftY, sidebarWidth - 25, [230, 230, 230]);
+  });
+
+  // --- 5. MAIN CONTENT SECTIONS (Dark Text) ---
+  const drawMainHeading = (text: string, currY: number) => {
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(45, 45, 45);
+    doc.text(text.toUpperCase(), mainColX, currY);
+    doc.setLineWidth(0.3);
+    doc.setDrawColor(45, 45, 45);
+    doc.line(mainColX, currY + 2, pageWidth - margin, currY + 2);
+    return currY + 10;
+  };
 
   // WORK EXPERIENCE
-  rightY = drawHeading("Work Experience", rightColX, rightY);
-  
+  rightY = drawMainHeading("Work Experience", rightY);
   experiencesData.forEach(exp => {
-    rightY = checkPageBreak(rightY, 15);
     doc.setFont("helvetica", "bold");
-    doc.setFontSize(10.5);
-    doc.setTextColor(0);
-    doc.text(exp.company.toUpperCase(), rightColX + 5, rightY);
-    
+    doc.setFontSize(10);
+    doc.setTextColor(45);
+    doc.text(exp.company.toUpperCase(), mainColX, rightY);
     doc.setFontSize(8);
-    doc.setFont("helvetica", "normal");
     doc.setTextColor(100);
-    doc.text(exp.location, pageWidth - 15, rightY, { align: 'right' });
+    doc.text(exp.location, pageWidth - margin, rightY, { align: "right" });
     rightY += 6;
 
     exp.roles.forEach(role => {
-      rightY = checkPageBreak(rightY, 20); // Check space for a whole role block
-      
-      doc.setDrawColor(0, 102, 204);
-      doc.setLineWidth(0.5);
-      doc.circle(rightColX + 1, rightY - 1, 0.8, "F"); 
-      
+      // Role Title and Dates
       doc.setFont("helvetica", "bold");
       doc.setFontSize(9);
-      doc.setTextColor(0);
-      doc.text(role.title, rightColX + 5, rightY);
-
-      doc.setFontSize(8);
+      doc.setTextColor(60);
+      doc.text(role.title, mainColX + 5, rightY);
       doc.setFont("helvetica", "normal");
-      doc.setTextColor(80);
-      doc.text(`${role.startDate} - ${role.endDate}`, pageWidth - 15, rightY, { align: 'right' });
-      
+      doc.text(`${role.startDate} - ${role.endDate}`, pageWidth - margin, rightY, { align: "right" });
       rightY += 4;
+      
+      // Work type
       doc.setFontSize(7.5);
       doc.setTextColor(0, 102, 204);
-      doc.text(role.workType.toUpperCase(), rightColX + 5, rightY);
+      doc.text(role.workType.toUpperCase(), mainColX + 5, rightY);
       rightY += 5;
 
-      doc.setFontSize(8.5);
-      doc.setTextColor(60);
-      role.description.forEach(bullet => {
-        const bulletLines = doc.splitTextToSize(bullet, 110);
-        rightY = checkPageBreak(rightY, bulletLines.length * 4);
-        doc.text("•", rightColX + 7, rightY);
-        doc.text(bulletLines, rightColX + 11, rightY);
-        rightY += (bulletLines.length * 4.5);
+      // Description with Hanging Indent
+      role.description.forEach(desc => {
+        rightY = drawBulletText(desc, mainColX + 5, rightY, pageWidth - mainColX - 15, [80, 80, 80]);
       });
       rightY += 4;
     });
-    rightY += 3;
+    rightY += 2;
   });
 
   // EDUCATION
-  rightY = drawHeading("Education", rightColX, rightY);
+  if (rightY > 240) { doc.addPage(); rightY = 20; }
+  rightY = drawMainHeading("Education", rightY);
   personalInfo.education.forEach(edu => {
-    rightY = checkPageBreak(rightY, 15);
-    doc.circle(rightColX + 1, rightY - 1, 0.8, "F");
     doc.setFont("helvetica", "bold");
-    doc.text(`${edu.degree.toUpperCase()} | ${edu.year}`, rightColX + 5, rightY);
-    rightY += 5;
+    doc.setFontSize(9);
+    doc.text(edu.school.toUpperCase(), mainColX, rightY);
     doc.setFont("helvetica", "normal");
-    doc.text(edu.school.toUpperCase(), rightColX + 5, rightY);
+    doc.text(edu.year, pageWidth - margin, rightY, { align: "right" });
+    rightY += 4;
+    doc.setFontSize(8.5);
+    doc.setTextColor(80);
+    doc.text(edu.degree, mainColX, rightY);
     rightY += 8;
   });
 
-  // SKILLS
-  rightY = drawHeading("Skills", rightColX, rightY);
-  let skillX = rightColX + 5;
-  personalInfo.skills.forEach((skill, index) => {
-    rightY = checkPageBreak(rightY, 5);
-    doc.setFontSize(8.5);
-    doc.setTextColor(60);
-    doc.text(skill, skillX, rightY);
-    if ((index + 1) % 2 === 0) { 
-      rightY += 7; 
-      skillX = rightColX + 5; 
-    } else { 
-      skillX += 60; 
-    }
-  });
-
-  // --- SIDEBAR (Left Column) ---
-  // Resetting to Page 1 for Sidebar drawing
-  doc.setPage(1);
-  let leftY = y;
-  
-  // Links
-  leftY = drawHeading("Links", leftColX, leftY);
-  personalInfo.links.forEach(link => {
-    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(0);
-    doc.text(link.label + ":", leftColX, leftY);
-    doc.setFont("helvetica", "normal"); doc.setTextColor(0, 102, 204);
-    doc.text(link.url, leftColX, leftY + 4);
-    leftY += 12;
-  });
-
-  // Languages
-  leftY = drawHeading("Languages", leftColX, leftY);
-  personalInfo.languages.forEach(lang => {
-    doc.setFontSize(9); doc.setTextColor(60);
-    doc.text(lang.name, leftColX, leftY);
-    leftY += 6;
-  });
-
-  // HOBBIES (FIXED ALIGNMENT & INDENTATION)
-  leftY = drawHeading("Hobbies", leftColX, leftY);
-  const hobbyBulletX = leftColX;
-  const hobbyTextX = leftColX + 4; // Indent the text from the bullet
-  const hobbyWidth = 42;
-
-  personalInfo.hobbies.forEach(hobby => {
-    doc.setFontSize(9);
-    doc.setTextColor(80);
-    
-    const lines = doc.splitTextToSize(hobby, hobbyWidth);
-    doc.text("•", hobbyBulletX, leftY); // Draw bullet
-    
-    lines.forEach((line: string, index: number) => {
-      doc.text(line, hobbyTextX, leftY); // Draw text line
-      leftY += 5;
-    });
-    leftY += 1;
+  // SKILLS (Two Column)
+  rightY = drawMainHeading("Skills", rightY);
+  doc.setFontSize(8.5);
+  let skillX = mainColX;
+  personalInfo.skills.forEach((skill, i) => {
+    doc.text(skill.toUpperCase(), skillX, rightY);
+    doc.setDrawColor(200);
+    doc.line(skillX, rightY + 2, skillX + 50, rightY + 2);
+    if (i % 2 === 0) { skillX += 60; } 
+    else { skillX = mainColX; rightY += 8; }
   });
 
   doc.save(`${personalInfo.name.first}_${personalInfo.name.last}_Resume.pdf`);
