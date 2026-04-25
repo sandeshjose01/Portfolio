@@ -89,7 +89,7 @@ export const experiencesData: Experience[] = [
   {
     id: 4,
     company: "Everest Canvas",
-    logo: "https://ui-avatars.com/api/?name=EC&background=0f172a&color=fff",
+    logo: "https://everestcanvas.com/_next/image?url=%2FEverestCanvasLogo.jpg&w=32&q=75",
     location: "Chardobato Naya Thimi, Bhaktapur",
     roles: [
       {
@@ -128,7 +128,7 @@ export const experiencesData: Experience[] = [
   {
     id: 2,
     company: "Arya Digital Production",
-    logo: "https://ui-avatars.com/api/?name=AD&background=ef4444&color=fff",
+    logo: "https://media.licdn.com/dms/image/v2/D4D0BAQECm8w1yMjTOA/company-logo_200_200/company-logo_200_200/0/1688750214406?e=1778716800&v=beta&t=f9vvL-uB9w5lJy-QQbcwwGu7uCx3bFG075JgXjBskZM",
     location: "New Baneshwor, Kathmandu",
     roles: [
       {
@@ -147,7 +147,7 @@ export const experiencesData: Experience[] = [
   {
     id: 1,
     company: "Swastik Design & Printing Suppliers",
-    logo: "https://ui-avatars.com/api/?name=SD&background=10b981&color=fff",
+    logo: "https://scontent.fktm1-1.fna.fbcdn.net/v/t39.30808-6/454915606_478103318298181_1242099957231530768_n.jpg?_nc_cat=110&ccb=1-7&_nc_sid=1d70fc&_nc_ohc=JY2bPBH5fF0Q7kNvwFEKleN&_nc_oc=AdrRbzAe9pJccDBEXUlcYDY7Emp3mshBe8ZzzzWWt91ac0KJDJOwhY-X44VfTBw1G181DNdv6LaN1zegC-aBrHf-&_nc_zt=23&_nc_ht=scontent.fktm1-1.fna&_nc_gid=fCneJ1NkyvhHBANhmw-CnA&_nc_ss=7b289&oh=00_Af1eIohw3JiQp-G9LfO-x9YIO_w2LLvtPadxTbLrnQKUVg&oe=69F2EEE1",
     location: "Chardobato Naya Thimi, Bhaktapur",
     roles: [
       {
