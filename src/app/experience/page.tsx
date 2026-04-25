@@ -94,7 +94,7 @@ const ExperiencePage = () => {
         ))}
       </div>
 
-      {/* --- RECOMMENDATIONS SECTION --- */}
+      {/* --- BENTO RECOMMENDATIONS SECTION --- */}
       <div className="flex flex-col gap-3 mt-24 w-full">
         <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
           <Quote className="w-4 h-4" /> Recommendations
@@ -102,22 +102,21 @@ const ExperiencePage = () => {
         <Heading>What People Say</Heading>
       </div>
 
-      {/* Use a 2-column grid that allows heights to grow based on content */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full mt-4 items-start">
+      {/* Bento Grid Layout using CSS Columns for Masonry effect */}
+      <div className="w-full mt-4 columns-1 md:columns-2 gap-6 space-y-6">
         {recommendations && recommendations.map((rec: any, index: number) => (
           <FramerWrapper key={index} y={30} delay={0.2 + index * 0.1}>
             <motion.div 
               whileHover={{ y: -5 }}
-              className="relative p-8 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 h-full"
+              className="relative p-6 md:p-8 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 w-full break-inside-avoid inline-block"
             >
-              <Quote className="absolute top-6 right-8 w-12 h-12 text-blue-500/10" />
+              <Quote className="absolute top-6 right-8 w-10 h-10 text-blue-500/10" />
               
-              {/* No line-clamping here, text will flow naturally */}
-              <p className="text-slate-700 italic leading-relaxed z-10 text-base">
+              <p className="text-slate-700 italic leading-relaxed z-10 text-sm md:text-base">
                 &quot;{rec.text}&quot;
               </p>
 
-              <div className="flex items-center gap-4 mt-auto pt-6 border-t border-white/40">
+              <div className="flex items-center gap-4 pt-6 border-t border-white/40">
                 <div className="w-12 h-12 rounded-full bg-blue-100 border-2 border-white overflow-hidden shrink-0 flex items-center justify-center shadow-sm">
                    {rec.image ? (
                      <img src={rec.image} alt={rec.name} className="w-full h-full object-cover" />
@@ -126,8 +125,8 @@ const ExperiencePage = () => {
                    )}
                 </div>
                 <div>
-                  <h4 className="font-bold text-slate-900 leading-tight text-base">{rec.name}</h4>
-                  <p className="text-[11px] text-blue-600 font-bold uppercase tracking-wider mt-1">{rec.designation}</p>
+                  <h4 className="font-bold text-slate-900 leading-tight text-sm">{rec.name}</h4>
+                  <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mt-1">{rec.designation}</p>
                 </div>
               </div>
             </motion.div>
