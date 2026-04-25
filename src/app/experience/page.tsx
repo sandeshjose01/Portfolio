@@ -34,6 +34,10 @@ const ExperiencePage = () => {
     return result.join(" ") || "1 mo";
   };
 
+  // Logic to split recommendations into two columns for the Bento/Masonry effect
+  const leftColRecs = recommendations.filter((_, i) => i % 2 === 0);
+  const rightColRecs = recommendations.filter((_, i) => i % 2 !== 0);
+
   return (
     <div className="h-full w-full relative flex flex-col items-start gap-8 pb-32 px-4 md:px-10 max-w-6xl mx-auto">
       
@@ -50,7 +54,6 @@ const ExperiencePage = () => {
           <FramerWrapper key={exp.id} y={30} delay={index * 0.15}>
             <motion.div className="group relative flex flex-col sm:flex-row gap-6 w-full bg-white/40 rounded-3xl p-6 md:p-8 border border-white/60 shadow-sm backdrop-blur-xl hover:border-blue-300 transition-all">
               
-              {/* Company Logo */}
               <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
                 {exp.logo ? (
                   <img src={exp.logo} alt={exp.company} className="w-full h-full object-cover" />
@@ -59,7 +62,6 @@ const ExperiencePage = () => {
                 )}
               </div>
 
-              {/* Roles and Timeline */}
               <div className="flex flex-col flex-1">
                 <h3 className="text-2xl font-bold text-slate-900">{exp.company}</h3>
                 <div className="flex items-center gap-2 text-slate-500 text-sm font-medium mb-4">
@@ -102,36 +104,23 @@ const ExperiencePage = () => {
         <Heading>What People Say</Heading>
       </div>
 
-      {/* Bento Grid Layout using CSS Columns for Masonry effect */}
-      <div className="w-full mt-4 columns-1 md:columns-2 gap-6 space-y-6">
-        {recommendations && recommendations.map((rec: any, index: number) => (
-          <FramerWrapper key={index} y={30} delay={0.2 + index * 0.1}>
-            <motion.div 
-              whileHover={{ y: -5 }}
-              className="relative p-6 md:p-8 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 w-full break-inside-avoid inline-block"
-            >
-              <Quote className="absolute top-6 right-8 w-10 h-10 text-blue-500/10" />
-              
-              <p className="text-slate-700 italic leading-relaxed z-10 text-sm md:text-base">
-                &quot;{rec.text}&quot;
-              </p>
+      {/* Bento Layout: Two columns using Flex to ensure height is dynamic and detail isn't lost */}
+      <div className="flex flex-col md:flex-row gap-6 w-full mt-4 items-start">
+        
+        {/* Left Column */}
+        <div className="flex flex-col gap-6 w-full md:w-1/2">
+          {leftColRecs.map((rec, index) => (
+            <RecommendationCard key={index} rec={rec} index={index} />
+          ))}
+        </div>
 
-              <div className="flex items-center gap-4 pt-6 border-t border-white/40">
-                <div className="w-12 h-12 rounded-full bg-blue-100 border-2 border-white overflow-hidden shrink-0 flex items-center justify-center shadow-sm">
-                   {rec.image ? (
-                     <img src={rec.image} alt={rec.name} className="w-full h-full object-cover" />
-                   ) : (
-                     <span className="font-bold text-blue-600">{rec.name.charAt(0)}</span>
-                   )}
-                </div>
-                <div>
-                  <h4 className="font-bold text-slate-900 leading-tight text-sm">{rec.name}</h4>
-                  <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mt-1">{rec.designation}</p>
-                </div>
-              </div>
-            </motion.div>
-          </FramerWrapper>
-        ))}
+        {/* Right Column */}
+        <div className="flex flex-col gap-6 w-full md:w-1/2">
+          {rightColRecs.map((rec, index) => (
+            <RecommendationCard key={index} rec={rec} index={index + 1} />
+          ))}
+        </div>
+
       </div>
 
       {/* FOOTER LINK */}
@@ -150,5 +139,36 @@ const ExperiencePage = () => {
     </div>
   );
 };
+
+// Reusable Recommendation Card Component for better performance
+const RecommendationCard = ({ rec, index }: { rec: any; index: number }) => (
+  <FramerWrapper y={30} delay={0.2 + index * 0.1}>
+    <motion.div 
+      whileHover={{ y: -5 }}
+      className="relative p-6 md:p-8 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 w-full h-auto"
+    >
+      <Quote className="absolute top-6 right-8 w-10 h-10 text-blue-500/10" />
+      
+      {/* Detail: Text is allowed to expand fully */}
+      <p className="text-slate-700 italic leading-relaxed z-10 text-base">
+        &quot;{rec.text}&quot;
+      </p>
+
+      <div className="flex items-center gap-4 pt-6 border-t border-white/40">
+        <div className="w-12 h-12 rounded-full bg-blue-100 border-2 border-white overflow-hidden shrink-0 flex items-center justify-center">
+           {rec.image ? (
+             <img src={rec.image} alt={rec.name} className="w-full h-full object-cover" />
+           ) : (
+             <span className="font-bold text-blue-600">{rec.name.charAt(0)}</span>
+           )}
+        </div>
+        <div>
+          <h4 className="font-bold text-slate-900 leading-tight text-sm">{rec.name}</h4>
+          <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mt-1">{rec.designation}</p>
+        </div>
+      </div>
+    </motion.div>
+  </FramerWrapper>
+);
 
 export default ExperiencePage;
