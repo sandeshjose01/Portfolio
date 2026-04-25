@@ -15,7 +15,7 @@ import FramerWrapper from "@/components/animation/FramerWrapper";
 
 const morePage = () => {
   const morelink = [
-    /*{
+    */{
       title: "",
       description:
         "",
