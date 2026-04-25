@@ -6,7 +6,7 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.src = url;
-    img.crossOrigin = "anonymous"; // Prevents security blocks
+    img.crossOrigin = "anonymous"; 
     img.onload = () => resolve(img);
     img.onerror = (e) => reject(e);
   });
@@ -25,7 +25,6 @@ export const downloadATSResume = async () => {
     const img = await loadImage(imgUrl);
     doc.addImage(img, "PNG", 18, 13, 24, 24);
   } catch (error) {
-    console.error("Profile image failed to load, drawing fallback circle.", error);
     doc.setDrawColor(200);
     doc.circle(30, 25, 12, "S"); 
   }
@@ -101,24 +100,22 @@ export const downloadATSResume = async () => {
     leftY += 8;
   });
 
-  // Hobbies (UPDATED WITH TEXT WRAPPING)
+  // --- HOBBIES (FIXED: STRICT WIDTH TO PREVENT OVERFLOW) ---
   leftY += 5;
   leftY = drawHeading("Hobbies", leftColX, leftY);
-  const maxHobbyWidth = 45; // Matches the sidebar width
+  const hobbySidebarWidth = 48; // STRICT WIDTH limit
 
   personalInfo.hobbies.forEach(hobby => {
     doc.setFont("helvetica", "normal"); 
     doc.setTextColor(100);
-    doc.setFontSize(9);
+    doc.setFontSize(8);
 
-    // Split long hobby names into multiple lines
-    const wrappedHobby = doc.splitTextToSize("• " + hobby, maxHobbyWidth);
-    
+    const wrappedHobby = doc.splitTextToSize("• " + hobby, hobbySidebarWidth);
     wrappedHobby.forEach((line: string) => {
       doc.text(line, leftColX, leftY);
-      leftY += 5; // Move down for every line of text
+      leftY += 4.5; 
     });
-    leftY += 1; // Slight gap between different hobbies
+    leftY += 1; 
   });
 
   // --- MAIN CONTENT ---
@@ -131,21 +128,61 @@ export const downloadATSResume = async () => {
   doc.text(aboutLines, rightColX + 5, rightY);
   rightY += (aboutLines.length * 4.5) + 10;
 
-  // Work Experience
+  // --- WORK EXPERIENCE (FIXED: UPDATED FOR LINKEDIN STYLE DATA) ---
   rightY = drawHeading("Work Experience", rightColX, rightY);
+  
   experiencesData.forEach(exp => {
-    doc.setDrawColor(0); doc.circle(rightColX, rightY - 1, 1); 
-    doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(0);
-    doc.text(`${exp.role.toUpperCase()} | ${exp.duration}`, rightColX + 5, rightY);
-    rightY += 4.5;
-    doc.setFont("helvetica", "normal"); doc.setTextColor(100);
-    doc.text(exp.company.toUpperCase() + ", " + exp.location, rightColX + 5, rightY);
-    rightY += 5;
-    exp.description.forEach(bullet => {
-      doc.text("• " + bullet, rightColX + 7, rightY);
-      rightY += 4;
-    });
+    // Company Title and Location
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10);
+    doc.setTextColor(0);
+    doc.text(exp.company.toUpperCase(), rightColX + 5, rightY);
+    
+    doc.setFontSize(8);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(100);
+    doc.text(exp.location, pageWidth - 15, rightY, { align: 'right' });
+    
     rightY += 6;
+
+    // Loop through individual roles in that company
+    exp.roles.forEach(role => {
+      // Role Title
+      doc.setDrawColor(0); 
+      doc.circle(rightColX + 1, rightY - 1, 0.7, "F"); 
+      
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9);
+      doc.setTextColor(0);
+      doc.text(role.title, rightColX + 5, rightY);
+
+      // Role Dates
+      doc.setFontSize(8);
+      doc.setFont("helvetica", "normal");
+      doc.setTextColor(80);
+      const dateText = `${role.startDate} - ${role.endDate}`;
+      doc.text(dateText, pageWidth - 15, rightY, { align: 'right' });
+      
+      rightY += 4;
+
+      // Work Type (Remote/On-site)
+      doc.setFontSize(7);
+      doc.setTextColor(0, 102, 204);
+      doc.text(role.workType.toUpperCase(), rightColX + 5, rightY);
+      rightY += 5;
+
+      // Description points
+      doc.setFontSize(8);
+      doc.setTextColor(80);
+      role.description.forEach(bullet => {
+        const bulletLines = doc.splitTextToSize("• " + bullet, 115);
+        doc.text(bulletLines, rightColX + 7, rightY);
+        rightY += (bulletLines.length * 4);
+      });
+      
+      rightY += 4; // Space between roles
+    });
+    rightY += 2; // Space between companies
   });
 
   // Education
