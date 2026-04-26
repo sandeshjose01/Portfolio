@@ -81,12 +81,42 @@ const ProjectPage = () => {
 
   // 3. STATIC CATEGORY DEFINITIONS (Keeping your descriptions/images)
   const categories = [
-    { id: 1, title: "Personal Project", description: "Logo Design, Photo Manipulation, Typography Choices.", subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
-    { id: 2, title: "Brand Identity", description: "Logo Design, Typography Choices, Brand Color Palettes.", subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
-    { id: 3, title: "UI/UX Design", description: "Website landing pages, mobile app interfaces.", subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" },
-    { id: 4, title: "Social Media Post", description: "Instagram grids, ad banners, and posts.", subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" },
-    { id: 5, title: "Print Media", description: "Flex designs, Calendars, brochures, posters.", subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" },
-    { id: 6, title: "Motion", description: "Product labels, boxes and Canvas prints.", subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" },
+    { 
+        id: 1, 
+        title: "Personal Project", 
+        description: "Logo Design, Photo Manipulation, Typography Choices.", 
+        subcategories: ["Social Media Posts", "Logo Design", "Photo Manipulation", "Conceptual Rebrands", "Speculative UI/UX (Concept Apps)", "Artistic & Experimental Design"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
+    { 
+        id: 2, 
+        title: "Brand Identity", 
+        description: "Logo Design, Typography Choices, Brand Color Palettes.", 
+        subcategories: ["Logo Design", "Typography", "Brand Color Palettes", "Corporate Stationery", "Brand Guidelines (Style Guides)", "Iconography & Graphic Devices"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
+    { 
+        id: 3, 
+        title: "UI/UX Design", 
+        description: "Website landing pages, mobile app interfaces.", 
+        subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" },
+    { 
+        id: 4, 
+        title: "Social Media Post", 
+        description: "Instagram grids, ad banners, and posts.", 
+        subcategories: ["Facebook Post", "Instagram Post", "LinkedIn Post & Carousel", "Carousel Design", "Ad Banners", "Email Templates"],
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" },
+    { 
+        id: 5, 
+        title: "Print Media", 
+        description: "Flex designs, Calendars, brochures, posters.", 
+        subcategories: ["Brand Guide", "Stationery Suite", "Flex Designs", "Calendars", "Brochures", "Event Posters"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" },
+    { 
+        id: 6, 
+        title: "Motion", 
+        description: "Product Video, Documentary Video and Advertisnment Video.", 
+        subcategories: ["Brand Documentary", "Product Informational", "Micro-Storytelling"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" },
   ];
 
   // 4. FILTER LOGIC (Now using dynamic 'projects' state)
