@@ -14,7 +14,6 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
 // Fetches the raw .ttf file from Google Fonts
 const getGoogleFontTTF = async (): Promise<string | null> => {
   try {
-    // Direct Google Fonts URL for Bebas Neue Regular TTF
     const url = "https://fonts.gstatic.com/s/bebasneue/v16/JTUSjIg69CK48gW7PXooxW5rygbi49c.ttf";
     const response = await fetch(url);
     if (!response.ok) throw new Error("Network response was not ok");
@@ -38,7 +37,6 @@ export const downloadATSResume = async () => {
   const bebasBase64 = await getGoogleFontTTF();
   
   if (bebasBase64) {
-    // Add the TrueType Font (Chrome-safe)
     doc.addFileToVFS("BebasNeue.ttf", bebasBase64);
     doc.addFont("BebasNeue.ttf", "Bebas", "normal");
     titleFont = "Bebas";
@@ -57,16 +55,23 @@ export const downloadATSResume = async () => {
   let y = margin + 5;
 
   // --- 2. HEADER SECTION ---
-  // Profile Image - Safe Circular Clipping
+  // THE FIX: "White Mask" instead of doc.clip()
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
     
-    doc.saveGraphicsState();
-    doc.circle(leftColX + 20, y + 15, 20, null as any);
-    doc.clip();
+    // 1. Draw the raw square image
     doc.addImage(img, "PNG", leftColX, y - 5, 40, 40);
-    doc.restoreGraphicsState(); // Crucial for Chrome!
+    
+    // 2. Draw a very thick WHITE circle over the edges of the square image
+    // This creates a perfect circular cutout without breaking Chrome's text renderer!
+    doc.setDrawColor(255, 255, 255);
+    doc.setLineWidth(10); // Very thick border
+    doc.circle(leftColX + 20, y + 15, 24, "S"); 
+    
+    // 3. Reset standard draw colors so the rest of the PDF draws normally
+    doc.setDrawColor(0, 0, 0);
+    doc.setLineWidth(0.2);
   } catch (e) {
     doc.setDrawColor(200);
     doc.circle(leftColX + 20, y + 15, 20, "S");
@@ -77,7 +82,6 @@ export const downloadATSResume = async () => {
   doc.setTextColor(30, 30, 30);
   doc.setFontSize(36);
   
-  // If fallback is used, squeeze it. If Bebas is loaded, use natural spacing.
   const nameScale = titleFont === "Bebas" ? 1.0 : 0.85;
   doc.text(personalInfo.name.first.toUpperCase(), 60, y + 12, { horizontalScale: nameScale } as any);
   doc.text(personalInfo.name.last.toUpperCase(), 60, y + 25, { horizontalScale: nameScale } as any);
@@ -123,7 +127,7 @@ export const downloadATSResume = async () => {
 
   const drawHeading = (text: string, x: number, currY: number, w: number) => {
     doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
-    doc.setFontSize(15); // Bebas is naturally slightly smaller, so we boost size to 15
+    doc.setFontSize(15); 
     doc.setTextColor(40);
     doc.text(text.toUpperCase(), x, currY, { horizontalScale: nameScale } as any);
     doc.setDrawColor(40);
@@ -135,7 +139,7 @@ export const downloadATSResume = async () => {
   const drawBulletItem = (text: string, x: number, currY: number, w: number) => {
     doc.setDrawColor(100);
     doc.setLineWidth(0.2);
-    doc.circle(x + 1, currY - 1, 0.6, "S"); // Vector bullet (Edge/Chrome safe)
+    doc.circle(x + 1, currY - 1, 0.6, "S"); 
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
     doc.setTextColor(70);
@@ -155,7 +159,6 @@ export const downloadATSResume = async () => {
   const abt = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
   doc.text(abt, leftColX, leftY, { lineHeightFactor: 1.4 });
   
-  // Standardized gap matching exactly one line height
   leftY += (abt.length * 4.2) + sectionGap;
 
   // Links
