@@ -1,7 +1,6 @@
 import jsPDF from "jspdf";
 import { experiencesData, personalInfo } from "@/app/experience/experiences";
 
-// Helper to load image
 const loadImage = (url: string): Promise<HTMLImageElement> => {
   return new Promise((resolve, reject) => {
     const img = new Image();
@@ -12,10 +11,13 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   });
 };
 
-// Helper to fetch external font (Bebas Neue Cyrillic)
-const getFontBase64 = async (url: string): Promise<string> => {
+// Fetches the raw .ttf file from Google Fonts
+const getGoogleFontTTF = async (): Promise<string | null> => {
   try {
+    // Direct Google Fonts URL for Bebas Neue Regular TTF
+    const url = "https://fonts.gstatic.com/s/bebasneue/v14/JTUSjIg69CK48gW7PXoo9WlhyyTh89Y.ttf";
     const response = await fetch(url);
+    if (!response.ok) throw new Error("Network response was not ok");
     const blob = await response.blob();
     return new Promise((resolve) => {
       const reader = new FileReader();
@@ -23,30 +25,28 @@ const getFontBase64 = async (url: string): Promise<string> => {
       reader.readAsDataURL(blob);
     });
   } catch (e) {
-    return "";
+    console.error("Failed to load Bebas Neue, falling back to Helvetica", e);
+    return null;
   }
 };
 
 export const downloadATSResume = async () => {
   const doc = new jsPDF({ format: "a4", unit: "mm" });
   
-  // --- FONT REGISTRATION ---
+  // --- 1. FONT REGISTRATION ---
   let titleFont = "helvetica"; 
-  try {
-    const fontUrl = "https://font-public.canva.com/YACkoP2nN4w/0/Bebas_Neue_Cyrillic.a69cba0d15813f7a63ac.0a82c965900d100f33f178d4d17a5118.woff2";
-    const cleanBase64 = await getFontBase64(fontUrl);
-    if (cleanBase64) {
-      doc.addFileToVFS("BebasNeue.woff2", cleanBase64);
-      doc.addFont("BebasNeue.woff2", "Bebas", "normal");
-      titleFont = "Bebas";
-    }
-  } catch (error) {
-    titleFont = "helvetica";
+  const bebasBase64 = await getGoogleFontTTF();
+  
+  if (bebasBase64) {
+    // Add the TrueType Font (Chrome-safe)
+    doc.addFileToVFS("BebasNeue.ttf", bebasBase64);
+    doc.addFont("BebasNeue.ttf", "Bebas", "normal");
+    titleFont = "Bebas";
   }
 
   const pageWidth = 210;
   const pageHeight = 297;
-  const margin = 12; // A4 Safe Print Area
+  const margin = 12; // A4 Safe Print Margin
   const dividerX = 72; 
   const leftColX = margin;
   const rightColX = dividerX + 6;
@@ -56,40 +56,41 @@ export const downloadATSResume = async () => {
 
   let y = margin + 5;
 
-  // --- 1. HEADER SECTION ---
-  // Profile Image - CIRCULAR CLIPPING (Chrome-Safe)
+  // --- 2. HEADER SECTION ---
+  // Profile Image - Safe Circular Clipping
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
     
-    doc.saveGraphicsState(); // 1. Save current state
-    doc.circle(leftColX + 20, y + 15, 20, 'F'); // 2. Draw the circle area
-    (doc as any).clip(); // 3. Clip to that area
-    doc.addImage(img, "PNG", leftColX, y - 5, 40, 40); // 4. Add Image
-    doc.restoreGraphicsState(); // 5. Restore state (crucial for Chrome)
-    
-    // Explicitly reset graphics state to ensure text doesn't vanish
-    doc.setGState(new (doc as any).GState({ opacity: 1.0 }));
+    doc.saveGraphicsState();
+    doc.circle(leftColX + 20, y + 15, 20, null as any);
+    doc.clip();
+    doc.addImage(img, "PNG", leftColX, y - 5, 40, 40);
+    doc.restoreGraphicsState(); // Crucial for Chrome!
   } catch (e) {
     doc.setDrawColor(200);
     doc.circle(leftColX + 20, y + 15, 20, "S");
   }
 
-  // Name & Title (Bebas Neue)
-  doc.setFont(titleFont, "normal");
-  doc.setTextColor(30);
-  doc.setFontSize(32);
-  doc.text(personalInfo.name.first.toUpperCase(), 60, y + 12);
-  doc.text(personalInfo.name.last.toUpperCase(), 60, y + 24);
+  // Name (Using Bebas Neue from Google Fonts)
+  doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
+  doc.setTextColor(30, 30, 30);
+  doc.setFontSize(36);
+  
+  // If fallback is used, squeeze it. If Bebas is loaded, use natural spacing.
+  const nameScale = titleFont === "Bebas" ? 1.0 : 0.85;
+  doc.text(personalInfo.name.first.toUpperCase(), 60, y + 12, { horizontalScale: nameScale } as any);
+  doc.text(personalInfo.name.last.toUpperCase(), 60, y + 25, { horizontalScale: nameScale } as any);
 
+  doc.setFont("helvetica", "normal");
   doc.setFontSize(11);
   doc.setTextColor(100);
-  doc.text(personalInfo.role.toUpperCase(), 60, y + 31);
+  doc.text(personalInfo.role.toUpperCase(), 60, y + 33, { charSpace: 1 });
 
   // Top Right Contact
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
-  let contactY = y;
+  let contactY = y + 2;
   const addContact = (txt: string, url?: string) => {
     doc.setTextColor(80);
     doc.text(txt, pageWidth - margin, contactY, { align: "right" });
@@ -103,8 +104,10 @@ export const downloadATSResume = async () => {
   addContact(personalInfo.contact.website, `https://${personalInfo.contact.website}`);
 
   y = 65;
+  
   // Vertical Divider
   doc.setDrawColor(220);
+  doc.setLineWidth(0.2);
   doc.line(dividerX, y, dividerX, pageHeight - margin);
 
   // --- HELPERS ---
@@ -119,10 +122,10 @@ export const downloadATSResume = async () => {
   };
 
   const drawHeading = (text: string, x: number, currY: number, w: number) => {
-    doc.setFont(titleFont, "normal");
-    doc.setFontSize(13);
+    doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
+    doc.setFontSize(15); // Bebas is naturally slightly smaller, so we boost size to 15
     doc.setTextColor(40);
-    doc.text(text.toUpperCase(), x, currY);
+    doc.text(text.toUpperCase(), x, currY, { horizontalScale: nameScale } as any);
     doc.setDrawColor(40);
     doc.setLineWidth(0.4);
     doc.line(x, currY + 2, x + w, currY + 2);
@@ -130,9 +133,9 @@ export const downloadATSResume = async () => {
   };
 
   const drawBulletItem = (text: string, x: number, currY: number, w: number) => {
-    // Vector circle bullet (Prevents Edge character % bug)
     doc.setDrawColor(100);
-    doc.circle(x + 1, currY - 1, 0.6, "S"); 
+    doc.setLineWidth(0.2);
+    doc.circle(x + 1, currY - 1, 0.6, "S"); // Vector bullet (Edge/Chrome safe)
     doc.setFont("helvetica", "normal");
     doc.setFontSize(8.5);
     doc.setTextColor(70);
@@ -152,10 +155,10 @@ export const downloadATSResume = async () => {
   const abt = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
   doc.text(abt, leftColX, leftY, { lineHeightFactor: 1.4 });
   
-  // Exactly one line-height down to match Hobbies gap
+  // Standardized gap matching exactly one line height
   leftY += (abt.length * 4.2) + sectionGap;
 
-  // Links (Exactly below About Me, same size)
+  // Links
   leftY = drawHeading("Links", leftColX, leftY, colWidthLeft);
   personalInfo.links.forEach(link => {
     doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); doc.setTextColor(40);
@@ -180,10 +183,11 @@ export const downloadATSResume = async () => {
   rightY = drawHeading("Work Experience", rightColX, rightY, colWidthRight);
   experiencesData.forEach(exp => {
     rightY = checkPageBreak(rightY, 15);
-    doc.setFont(titleFont, "normal");
-    doc.setFontSize(11);
+    doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
+    doc.setFontSize(13);
     doc.setTextColor(30);
-    doc.text(exp.company.toUpperCase(), rightColX, rightY);
+    doc.text(exp.company.toUpperCase(), rightColX, rightY, { horizontalScale: nameScale } as any);
+    
     doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(120);
     doc.text(exp.location, pageWidth - margin, rightY, { align: "right" });
     rightY += 6;
@@ -192,6 +196,7 @@ export const downloadATSResume = async () => {
       rightY = checkPageBreak(rightY, 15);
       doc.setFont("helvetica", "bold"); doc.setFontSize(9.5); doc.setTextColor(60);
       doc.text(role.title, rightColX + 5, rightY);
+      
       doc.setFont("helvetica", "normal"); doc.setFontSize(8.5);
       doc.text(`${role.startDate} - ${role.endDate}`, pageWidth - margin, rightY, { align: "right" });
       rightY += 4.5;
@@ -226,7 +231,7 @@ export const downloadATSResume = async () => {
   rightY = drawHeading("Skills", rightColX, rightY, colWidthRight);
   let skillX = rightColX;
   personalInfo.skills.forEach((skill, i) => {
-    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(60);
+    doc.setFont("helvetica", "normal"); doc.setFontSize(8.5); doc.setTextColor(60);
     doc.text(skill.toUpperCase(), skillX, rightY);
     doc.setDrawColor(230);
     doc.line(skillX, rightY + 2, skillX + 52, rightY + 2);
