@@ -12,7 +12,7 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   });
 };
 
-// Helper to fetch external font
+// Helper to fetch external font (Bebas Neue Cyrillic)
 const getFontBase64 = async (url: string): Promise<string> => {
   try {
     const response = await fetch(url);
@@ -46,7 +46,7 @@ export const downloadATSResume = async () => {
 
   const pageWidth = 210;
   const pageHeight = 297;
-  const margin = 12; // A4 Safe Print Margin
+  const margin = 12; // A4 Safe Print Area
   const dividerX = 72; 
   const leftColX = margin;
   const rightColX = dividerX + 6;
@@ -57,26 +57,27 @@ export const downloadATSResume = async () => {
   let y = margin + 5;
 
   // --- 1. HEADER SECTION ---
-  // Profile Image - Using a "Safe" Clipping method for Chrome
+  // Profile Image - CIRCULAR CLIPPING (Chrome-Safe)
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
-    doc.saveGraphicsState();
-    doc.setGState(new (doc as any).GState({ opacity: 1.0 })); // Ensure full visibility
-    doc.beginPath();
-    doc.arc(leftColX + 20, y + 15, 20, 0, Math.PI * 2);
-    doc.fill();
-    doc.clip();
-    doc.addImage(img, "PNG", leftColX, y - 5, 40, 40);
-    doc.restoreGraphicsState();
+    
+    doc.saveGraphicsState(); // 1. Save current state
+    doc.circle(leftColX + 20, y + 15, 20, 'F'); // 2. Draw the circle area
+    (doc as any).clip(); // 3. Clip to that area
+    doc.addImage(img, "PNG", leftColX, y - 5, 40, 40); // 4. Add Image
+    doc.restoreGraphicsState(); // 5. Restore state (crucial for Chrome)
+    
+    // Explicitly reset graphics state to ensure text doesn't vanish
+    doc.setGState(new (doc as any).GState({ opacity: 1.0 }));
   } catch (e) {
     doc.setDrawColor(200);
     doc.circle(leftColX + 20, y + 15, 20, "S");
   }
 
-  // Name & Title
+  // Name & Title (Bebas Neue)
   doc.setFont(titleFont, "normal");
-  doc.setTextColor(30, 30, 30);
+  doc.setTextColor(30);
   doc.setFontSize(32);
   doc.text(personalInfo.name.first.toUpperCase(), 60, y + 12);
   doc.text(personalInfo.name.last.toUpperCase(), 60, y + 24);
@@ -85,7 +86,7 @@ export const downloadATSResume = async () => {
   doc.setTextColor(100);
   doc.text(personalInfo.role.toUpperCase(), 60, y + 31);
 
-  // Top Right Contact (Clickable)
+  // Top Right Contact
   doc.setFont("helvetica", "normal");
   doc.setFontSize(8);
   let contactY = y;
@@ -100,11 +101,6 @@ export const downloadATSResume = async () => {
   doc.setTextColor(0, 100, 200);
   addContact(personalInfo.contact.email, `mailto:${personalInfo.contact.email}`);
   addContact(personalInfo.contact.website, `https://${personalInfo.contact.website}`);
-
-  // RESET Graphics State for the rest of the page (Fixes Chrome "Ghosting")
-  doc.setGState(new (doc as any).GState({ opacity: 1.0 }));
-  doc.setDrawColor(0);
-  doc.setLineWidth(0.1);
 
   y = 65;
   // Vertical Divider
@@ -134,6 +130,7 @@ export const downloadATSResume = async () => {
   };
 
   const drawBulletItem = (text: string, x: number, currY: number, w: number) => {
+    // Vector circle bullet (Prevents Edge character % bug)
     doc.setDrawColor(100);
     doc.circle(x + 1, currY - 1, 0.6, "S"); 
     doc.setFont("helvetica", "normal");
@@ -155,10 +152,10 @@ export const downloadATSResume = async () => {
   const abt = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
   doc.text(abt, leftColX, leftY, { lineHeightFactor: 1.4 });
   
-  // Exactly one line-height + section gap
+  // Exactly one line-height down to match Hobbies gap
   leftY += (abt.length * 4.2) + sectionGap;
 
-  // Links (Matches About Me style)
+  // Links (Exactly below About Me, same size)
   leftY = drawHeading("Links", leftColX, leftY, colWidthLeft);
   personalInfo.links.forEach(link => {
     doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); doc.setTextColor(40);
