@@ -12,86 +12,78 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   });
 };
 
-// Helper to fetch external font and convert to Base64
+// Helper to fetch external font
 const getFontBase64 = async (url: string): Promise<string> => {
-  const response = await fetch(url);
-  const blob = await response.blob();
-  return new Promise((resolve) => {
-    const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result as string);
-    reader.readAsDataURL(blob);
-  });
+  try {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onloadend = () => resolve((reader.result as string).split(',')[1]);
+      reader.readAsDataURL(blob);
+    });
+  } catch (e) {
+    return "";
+  }
 };
 
 export const downloadATSResume = async () => {
   const doc = new jsPDF({ format: "a4", unit: "mm" });
   
   // --- FONT REGISTRATION ---
-  let titleFont = "helvetica"; // Default fallback
+  let titleFont = "helvetica"; 
   try {
     const fontUrl = "https://font-public.canva.com/YACkoP2nN4w/0/Bebas_Neue_Cyrillic.a69cba0d15813f7a63ac.0a82c965900d100f33f178d4d17a5118.woff2";
-    const base64Font = await getFontBase64(fontUrl);
-    // Strip the data:application/font-woff2;base64, part
-    const cleanBase64 = base64Font.split(',')[1];
-    
-    doc.addFileToVFS("BebasNeue.woff2", cleanBase64);
-    doc.addFont("BebasNeue.woff2", "Bebas", "normal");
-    titleFont = "Bebas";
+    const cleanBase64 = await getFontBase64(fontUrl);
+    if (cleanBase64) {
+      doc.addFileToVFS("BebasNeue.woff2", cleanBase64);
+      doc.addFont("BebasNeue.woff2", "Bebas", "normal");
+      titleFont = "Bebas";
+    }
   } catch (error) {
-    console.error("Font loading failed, using Helvetica Bold as fallback");
     titleFont = "helvetica";
   }
 
   const pageWidth = 210;
   const pageHeight = 297;
-  const margin = 12; // A4 Bleed / Safe Zone
+  const margin = 12; // A4 Safe Print Margin
   const dividerX = 72; 
   const leftColX = margin;
   const rightColX = dividerX + 6;
   const colWidthLeft = dividerX - leftColX - 5;
   const colWidthRight = pageWidth - rightColX - margin;
-  
-  // Spacing constants for even alignment
-  const sectionGap = 10; 
-  const bodyFontSize = 8.5;
+  const sectionGap = 8;
 
   let y = margin + 5;
 
-  // --- PAGE BREAK HELPER ---
-  const checkPageBreak = (currentY: number, needed: number) => {
-    if (currentY + needed > pageHeight - margin) {
-      doc.addPage();
-      doc.setDrawColor(220);
-      doc.line(dividerX, margin, dividerX, pageHeight - margin);
-      return margin + 10;
-    }
-    return currentY;
-  };
-
-  // --- HEADER: UNIFIED PROFILE & NAME ---
+  // --- 1. HEADER SECTION ---
+  // Profile Image - Using a "Safe" Clipping method for Chrome
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
     doc.saveGraphicsState();
-    doc.circle(leftColX + 20, y + 15, 20, "f");
+    doc.setGState(new (doc as any).GState({ opacity: 1.0 })); // Ensure full visibility
+    doc.beginPath();
+    doc.arc(leftColX + 20, y + 15, 20, 0, Math.PI * 2);
+    doc.fill();
     doc.clip();
     doc.addImage(img, "PNG", leftColX, y - 5, 40, 40);
     doc.restoreGraphicsState();
   } catch (e) {
-    doc.setDrawColor(220);
+    doc.setDrawColor(200);
     doc.circle(leftColX + 20, y + 15, 20, "S");
   }
 
-  // Name & Title (Using Bebas Neue)
-  doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
-  doc.setTextColor(30);
-  doc.setFontSize(36);
+  // Name & Title
+  doc.setFont(titleFont, "normal");
+  doc.setTextColor(30, 30, 30);
+  doc.setFontSize(32);
   doc.text(personalInfo.name.first.toUpperCase(), 60, y + 12);
-  doc.text(personalInfo.name.last.toUpperCase(), 60, y + 25);
+  doc.text(personalInfo.name.last.toUpperCase(), 60, y + 24);
 
   doc.setFontSize(11);
   doc.setTextColor(100);
-  doc.text(personalInfo.role.toUpperCase(), 60, y + 33);
+  doc.text(personalInfo.role.toUpperCase(), 60, y + 31);
 
   // Top Right Contact (Clickable)
   doc.setFont("helvetica", "normal");
@@ -109,15 +101,30 @@ export const downloadATSResume = async () => {
   addContact(personalInfo.contact.email, `mailto:${personalInfo.contact.email}`);
   addContact(personalInfo.contact.website, `https://${personalInfo.contact.website}`);
 
+  // RESET Graphics State for the rest of the page (Fixes Chrome "Ghosting")
+  doc.setGState(new (doc as any).GState({ opacity: 1.0 }));
+  doc.setDrawColor(0);
+  doc.setLineWidth(0.1);
+
   y = 65;
   // Vertical Divider
   doc.setDrawColor(220);
   doc.line(dividerX, y, dividerX, pageHeight - margin);
 
-  // --- DRAWING HELPERS ---
+  // --- HELPERS ---
+  const checkPageBreak = (currentY: number, needed: number) => {
+    if (currentY + needed > pageHeight - margin) {
+      doc.addPage();
+      doc.setDrawColor(220);
+      doc.line(dividerX, margin, dividerX, pageHeight - margin);
+      return margin + 10;
+    }
+    return currentY;
+  };
+
   const drawHeading = (text: string, x: number, currY: number, w: number) => {
-    doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
-    doc.setFontSize(14);
+    doc.setFont(titleFont, "normal");
+    doc.setFontSize(13);
     doc.setTextColor(40);
     doc.text(text.toUpperCase(), x, currY);
     doc.setDrawColor(40);
@@ -126,45 +133,43 @@ export const downloadATSResume = async () => {
     return currY + 10;
   };
 
-  // Fixed Bullet: Using vector circle to solve Edge character rendering bugs (%)
   const drawBulletItem = (text: string, x: number, currY: number, w: number) => {
     doc.setDrawColor(100);
     doc.circle(x + 1, currY - 1, 0.6, "S"); 
     doc.setFont("helvetica", "normal");
-    doc.setFontSize(bodyFontSize);
+    doc.setFontSize(8.5);
     doc.setTextColor(70);
     const lines = doc.splitTextToSize(text, w - 6);
-    // Indent text away from the circle bullet
     doc.text(lines, x + 6, currY, { lineHeightFactor: 1.3 });
     return currY + (lines.length * 4.5) + 2;
   };
 
-  // --- LEFT COLUMN (SIDEBAR) ---
+  // --- LEFT COLUMN ---
   let leftY = y + 5;
 
   // About Me
   leftY = drawHeading("About Me", leftColX, leftY, colWidthLeft);
   doc.setFont("helvetica", "normal");
-  doc.setFontSize(bodyFontSize);
+  doc.setFontSize(8.5);
   doc.setTextColor(80);
-  const abtLines = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
-  doc.text(abtLines, leftColX, leftY, { lineHeightFactor: 1.4 });
+  const abt = doc.splitTextToSize(personalInfo.aboutMe, colWidthLeft);
+  doc.text(abt, leftColX, leftY, { lineHeightFactor: 1.4 });
   
-  // Gap calculation: Exactly one line down + gap
-  leftY += (abtLines.length * 4.5) + sectionGap;
+  // Exactly one line-height + section gap
+  leftY += (abt.length * 4.2) + sectionGap;
 
-  // Links (Size matches About text)
+  // Links (Matches About Me style)
   leftY = drawHeading("Links", leftColX, leftY, colWidthLeft);
   personalInfo.links.forEach(link => {
-    doc.setFont("helvetica", "bold"); doc.setFontSize(bodyFontSize); doc.setTextColor(40);
+    doc.setFont("helvetica", "bold"); doc.setFontSize(8.5); doc.setTextColor(40);
     doc.text(link.label + ":", leftColX, leftY);
     doc.setFont("helvetica", "normal"); doc.setTextColor(0, 100, 200);
     doc.text(link.url, leftColX, leftY + 4);
-    doc.link(leftColX, leftY, colWidthLeft, 8, { url: `https://${link.url}` });
-    leftY += 11;
+    doc.link(leftColX, leftY, colWidthLeft, 7, { url: `https://${link.url}` });
+    leftY += 10;
   });
 
-  leftY += sectionGap - 5;
+  leftY += sectionGap - 2;
 
   // Hobbies
   leftY = drawHeading("Hobbies", leftColX, leftY, colWidthLeft);
@@ -178,8 +183,8 @@ export const downloadATSResume = async () => {
   rightY = drawHeading("Work Experience", rightColX, rightY, colWidthRight);
   experiencesData.forEach(exp => {
     rightY = checkPageBreak(rightY, 15);
-    doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
-    doc.setFontSize(12);
+    doc.setFont(titleFont, "normal");
+    doc.setFontSize(11);
     doc.setTextColor(30);
     doc.text(exp.company.toUpperCase(), rightColX, rightY);
     doc.setFont("helvetica", "normal"); doc.setFontSize(8); doc.setTextColor(120);
