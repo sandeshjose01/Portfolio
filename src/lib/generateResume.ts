@@ -11,6 +11,33 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   });
 };
 
+// --- UPDATED: 300x300 Ultra-Crisp PNG Optimizer ---
+const optimizeImage = (img: HTMLImageElement): string => {
+  const canvas = document.createElement("canvas");
+  const MAX_SIZE = 300; // 300px gives ~190 DPI on a 40mm print (Perfect balance of crispness & low file size)
+  let width = img.width;
+  let height = img.height;
+
+  // Scale down proportionately if the image is larger than 300px
+  if (width > MAX_SIZE || height > MAX_SIZE) {
+    const ratio = Math.min(MAX_SIZE / width, MAX_SIZE / height);
+    width = width * ratio;
+    height = height * ratio;
+  }
+
+  canvas.width = width;
+  canvas.height = height;
+  const ctx = canvas.getContext("2d");
+  
+  if (ctx) {
+    // Preserve PNG transparency
+    ctx.drawImage(img, 0, 0, width, height);
+  }
+  
+  // Output as PNG to keep transparency and sharp edges
+  return canvas.toDataURL("image/png");
+};
+
 // Fetches the raw .ttf file from Google Fonts
 const getGoogleFontTTF = async (): Promise<string | null> => {
   try {
@@ -30,7 +57,7 @@ const getGoogleFontTTF = async (): Promise<string | null> => {
 };
 
 export const downloadATSResume = async () => {
-  const doc = new jsPDF({ format: "a4", unit: "mm" });
+  const doc = new jsPDF({ format: "a4", unit: "mm", compress: true });
   
   // --- 1. FONT REGISTRATION ---
   let titleFont = "helvetica"; 
@@ -55,21 +82,22 @@ export const downloadATSResume = async () => {
   let y = margin + 5;
 
   // --- 2. HEADER SECTION ---
-  // THE FIX: "White Mask" instead of doc.clip()
   try {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
     
-    // 1. Draw the raw square image
-    doc.addImage(img, "PNG", leftColX, y - 5, 40, 40);
+    // Resize image to max 300x300 for crispness & tiny file size
+    const optimizedImage = optimizeImage(img);
     
-    // 2. Draw a very thick WHITE circle over the edges of the square image
-    // This creates a perfect circular cutout without breaking Chrome's text renderer!
+    // Add the optimized image (Draws as square)
+    doc.addImage(optimizedImage, "PNG", leftColX, y - 5, 40, 40);
+    
+    // Chrome-Safe Circular Mask (Draws thick white border to cut corners)
     doc.setDrawColor(255, 255, 255);
-    doc.setLineWidth(10); // Very thick border
+    doc.setLineWidth(10);
     doc.circle(leftColX + 20, y + 15, 24, "S"); 
     
-    // 3. Reset standard draw colors so the rest of the PDF draws normally
+    // Reset drawing settings
     doc.setDrawColor(0, 0, 0);
     doc.setLineWidth(0.2);
   } catch (e) {
