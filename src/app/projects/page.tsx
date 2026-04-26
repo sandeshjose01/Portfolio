@@ -38,39 +38,39 @@ const ProjectPage = () => {
       id: 1, title: "Personal Project", 
       description: "Logo Design, Photo Manipulation, Typography Choices.", 
       subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], 
-      image: "https://github.com/sandeshjose01/Portfolio/blob/master/img/Personal%20Project%20Cover.png?raw=true" },
+      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
     { 
       id: 2, 
-      title: "Brand Identity & Logo Design", 
+      title: "Brand Identity", 
       description: "Logo Design, Typography Choices, Brand Color Palettes.", 
       subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], 
-      image: "https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1000&auto=format&fit=crop" },
+      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
     { 
       id: 3, 
-      title: "UI/UX & Web Design", 
+      title: "UI/UX Design", 
       description: "Website landing pages, mobile app interfaces.", 
       subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], 
-      image: "https://images.unsplash.com/photo-1581291518062-c9a79e7df0f0?q=80&w=1000&auto=format&fit=crop" 
+      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" 
     },
     { 
       id: 4, 
-      title: "Social Media & Digital Marketing", 
+      title: "Social Media Post", 
       description: "Instagram grids, ad banners, and posts.", 
       subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"], 
-      image: "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?q=80&w=1000&auto=format&fit=crop" 
+      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" 
     },
     { 
       id: 5, 
-      title: "Print & Large Format Media", description: "Flex designs, Calendars, brochures, posters.", 
+      title: "Print Media", description: "Flex designs, Calendars, brochures, posters.", 
       subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"], 
-      image: "https://images.unsplash.com/photo-1561070791-2526d30994b5?q=80&w=1000&auto=format&fit=crop" 
+      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" 
     },
     { 
       id: 6, 
-      title: "Packaging & Canvas Printing", 
+      title: "Motion", 
       description: "Product labels, boxes and Canvas prints.", 
       subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"], 
-      image: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?q=80&w=1000&auto=format&fit=crop" 
+      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" 
     },
   ];
 
