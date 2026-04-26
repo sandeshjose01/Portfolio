@@ -47,7 +47,7 @@ export const personalInfo = {
   education: [
     {
       degree: "Bachelor of Business Studies",
-      year: "2021",
+      year: "2024 - on going",
       school: "Bhaktapur Multiple Campus, Bhaktapur",
       details: "Focused Primarily on Providing a Strong Theoretical Foundation in Business Principles while Fostering Critical Thinking, Research Skills, and a Comprehensive understanding of Business Operations."
     }
