@@ -1,5 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, getDocs, query, orderBy } from "firebase/firestore";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
@@ -7,12 +9,56 @@ import { Layers, X, ArrowLeft, ExternalLink, Inbox } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
+// --- FIREBASE CONFIG ---
+const firebaseConfig = {
+    apiKey: "AIzaSyCChQzdSuNW8EzBXtRxZyvwh4WOjj67FCs",
+    authDomain: "my-portfolio-96764.firebaseapp.com",
+    projectId: "my-portfolio-96764",
+    storageBucket: "my-portfolio-96764.firebasestorage.app",
+    messagingSenderId: "1018154031940",
+    appId: "1:1018154031940:web:937edbfb442a6dfc041511"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const ProjectPage = () => {
+  const [projects, setProjects] = useState<any[]>([]); // Dynamic projects from Firebase
+  const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [isWindowFocused, setIsWindowFocused] = useState(true);
 
+  // 1. FETCH DATA FROM FIREBASE
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+        const querySnapshot = await getDocs(q);
+        const items: any[] = [];
+        querySnapshot.forEach((doc) => {
+          const data = doc.data();
+          items.push({
+            id: doc.id,
+            ...data,
+            // Mapping Firebase names to your UI names
+            imageLink: data.imageUrl, 
+            link: data.projectLink,
+            subcategory: data.subCategory // Matching your case sensitivity
+          });
+        });
+        setProjects(items);
+      } catch (error) {
+        console.error("Firebase Error:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  // 2. SECURITY & FOCUS LOGIC (Keeping your original code)
   useEffect(() => {
     const handleBlur = () => setIsWindowFocused(false);
     const handleFocus = () => setIsWindowFocused(true);
@@ -33,68 +79,21 @@ const ProjectPage = () => {
     };
   }, []);
 
+  // 3. STATIC CATEGORY DEFINITIONS (Keeping your descriptions/images)
   const categories = [
-    {
-      id: 1, title: "Personal Project", 
-      description: "Logo Design, Photo Manipulation, Typography Choices.", 
-      subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], 
-      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
-    { 
-      id: 2, 
-      title: "Brand Identity", 
-      description: "Logo Design, Typography Choices, Brand Color Palettes.", 
-      subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], 
-      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
-    { 
-      id: 3, 
-      title: "UI/UX Design", 
-      description: "Website landing pages, mobile app interfaces.", 
-      subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], 
-      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" 
-    },
-    { 
-      id: 4, 
-      title: "Social Media Post", 
-      description: "Instagram grids, ad banners, and posts.", 
-      subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"], 
-      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" 
-    },
-    { 
-      id: 5, 
-      title: "Print Media", description: "Flex designs, Calendars, brochures, posters.", 
-      subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"], 
-      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" 
-    },
-    { 
-      id: 6, 
-      title: "Motion", 
-      description: "Product labels, boxes and Canvas prints.", 
-      subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"], 
-      image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" 
-    },
+    { id: 1, title: "Personal Project", description: "Logo Design, Photo Manipulation, Typography Choices.", subcategories: ["Cohesive Social Media Posts", "Logo Design", "Photo Manipulation", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
+    { id: 2, title: "Brand Identity", description: "Logo Design, Typography Choices, Brand Color Palettes.", subcategories: ["Logo Design", "Typography Choices", "Brand Color Palettes", "Corporate Stationery"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
+    { id: 3, title: "UI/UX Design", description: "Website landing pages, mobile app interfaces.", subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" },
+    { id: 4, title: "Social Media Post", description: "Instagram grids, ad banners, and posts.", subcategories: ["Instagram Grids", "Ad Banners", "Cohesive Social Media Posts", "Email Templates"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" },
+    { id: 5, title: "Print Media", description: "Flex designs, Calendars, brochures, posters.", subcategories: ["Flex Designs", "Calendars", "Brochures", "Event Posters"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" },
+    { id: 6, title: "Motion", description: "Product labels, boxes and Canvas prints.", subcategories: ["Product Labels", "Product Boxes", "Custom Canvas Prints", "3D Mockups"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" },
   ];
 
-  const allProjects = [
-    { 
-      title: "Republic Day", 
-      description: "An experimental, festive design.", 
-      tags: ["Social Media", "Festive"], 
-      link: "https://www.behance.net/gallery/227068231/Republic-Day", 
-      imageLink: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/4fbc15227068231.6839311180b2b.png", 
-      subcategory: "Cohesive Social Media Posts", 
-      category: "Personal Project" 
-    },
-    { 
-      title: "Buddha Jayanti", 
-      description: "An Experimental Buddha Jayanti Post.", 
-      tags: ["Festive", "Social Media"], 
-      link: "https://www.behance.net/gallery/225648851/Buddha-Jayanti", 
-      imageLink: "https://mir-s3-cdn-cf.behance.net/project_modules/1400_webp/108f27225648851.68217e11dcc90.png", 
-      subcategory: "Cohesive Social Media Posts", 
-      category: "Personal Project" },
-  ];
-
-  const filteredProjects = allProjects.filter(p => p.category === selectedCategory?.title && p.subcategory === selectedSubcategory);
+  // 4. FILTER LOGIC (Now using dynamic 'projects' state)
+  const filteredProjects = projects.filter(p => 
+    p.category === selectedCategory?.title && 
+    p.subcategory === selectedSubcategory
+  );
 
   const handleCloseAll = () => { setSelectedCategory(null); setSelectedSubcategory(null); setSelectedProject(null); };
 
@@ -107,7 +106,7 @@ const ProjectPage = () => {
         <p className="font-poppins text-lg text-muted-foreground max-w-2xl">Combine creative intuition and technical skill to build your visual legacy.</p>
       </div>
 
-      {/* CATEGORY GRID - WHITER FROSTED GLASS */}
+      {/* CATEGORY GRID */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
         {categories.map((cat, index) => (
           <FramerWrapper key={cat.id} y={20} delay={index * 0.1}>
@@ -116,9 +115,8 @@ const ProjectPage = () => {
               onClick={() => setSelectedCategory(cat)}
               className="group relative cursor-pointer aspect-[16/10] w-full bg-white/40 rounded-2xl overflow-hidden border border-white/60 shadow-sm"
             >
-              <img src={cat.image} className={`h-full w-full object-cover transition-all duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-2xl opacity-50' : ''}`} />
+              <img src={cat.image} className={`h-full w-full object-cover transition-all duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-2xl opacity-50' : ''}`} alt={cat.title} />
               <div className="absolute inset-0 bg-gradient-to-t from-white/60 via-transparent to-transparent opacity-40" />
-              
               <div className="absolute bottom-0 left-0 right-0 p-5 backdrop-blur-xl bg-white/40 border-t border-white/60">
                 <span className="text-[10px] font-bold text-blue-600 uppercase tracking-[0.3em]">Category 0{index + 1}</span>
                 <h3 className="text-xl font-bold text-slate-900 mt-0.5">{cat.title}</h3>
@@ -128,14 +126,14 @@ const ProjectPage = () => {
         ))}
       </div>
 
-      {/* MODAL SYSTEM - WHITER GLASS & SMOOTH HEIGHT */}
+      {/* MODAL SYSTEM */}
       <AnimatePresence>
         {selectedCategory && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={handleCloseAll} className="absolute inset-0 bg-white/40 backdrop-blur-xl" />
 
             <motion.div 
-              layout // Smoothly animates height/width when content changes
+              layout 
               initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.98, opacity: 0 }}
               transition={{ layout: { type: "spring", stiffness: 200, damping: 25 }, opacity: { duration: 0.2 } }}
               className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-3xl bg-white/40 border border-white/60 backdrop-blur-xl shadow-2xl flex flex-col"
@@ -155,26 +153,42 @@ const ProjectPage = () => {
                   {selectedProject ? (
                     <motion.div key="project" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex flex-col">
                       <div className="w-full bg-white/10 flex items-center justify-center overflow-hidden">
-                        <img src={selectedProject.imageLink} className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} />
+                        {selectedProject.resourceType === "video" ? (
+                             <video src={selectedProject.imageLink} controls className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl' : ''}`} />
+                        ) : (
+                             <img src={selectedProject.imageLink} className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} />
+                        )}
                       </div>
                       <div className="p-8 md:p-12 space-y-6 bg-gradient-to-b from-transparent to-white/40">
                         <div className="flex flex-col md:flex-row justify-between items-end gap-8">
                           <div className="space-y-4 flex-1">
                             <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter drop-shadow-sm">{selectedProject.title}</h2>
                             <p className="text-slate-800 text-lg leading-relaxed font-bold">{selectedProject.description}</p>
-                            <div className="flex flex-wrap gap-2 pt-2">{selectedProject.tags.map((t:any) => <span key={t} className="px-4 py-1.5 bg-white/80 rounded-lg text-xs text-slate-600 border border-white uppercase tracking-widest font-bold shadow-sm">{t}</span>)}</div>
+                            <div className="flex flex-wrap gap-2 pt-2">
+                                {selectedProject.tags.map((t:any) => (
+                                    <span key={t} className="px-4 py-1.5 bg-white/80 rounded-lg text-xs text-slate-600 border border-white uppercase tracking-widest font-bold shadow-sm">{t}</span>
+                                ))}
+                            </div>
                           </div>
-                          <Link href={selectedProject.link} target="_blank" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all hover:scale-105 flex items-center gap-3 shrink-0 shadow-lg shadow-blue-500/20">Visit Project <ExternalLink className="w-4 h-4" /></Link>
+                          {selectedProject.link && (
+                            <Link href={selectedProject.link} target="_blank" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 transition-all hover:scale-105 flex items-center gap-3 shrink-0 shadow-lg shadow-blue-500/20">
+                                Visit Project <ExternalLink className="w-4 h-4" />
+                            </Link>
+                          )}
                         </div>
                       </div>
                     </motion.div>
                   ) : selectedSubcategory ? (
                     <motion.div key="list" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} className="p-6">
-                      {filteredProjects.length > 0 ? (
+                      {loading ? <p className="text-center py-10">Loading projects...</p> : filteredProjects.length > 0 ? (
                         <div className="columns-1 md:columns-2 gap-4 space-y-4">
                           {filteredProjects.map((proj, i) => (
                             <motion.div key={i} onClick={() => setSelectedProject(proj)} className="break-inside-avoid group bg-white/40 border border-white/60 rounded-2xl overflow-hidden cursor-pointer hover:border-blue-400 transition-all shadow-sm">
-                              <img src={proj.imageLink} className={`w-full h-auto transition-transform duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-xl' : ''}`} />
+                              {proj.resourceType === "video" ? (
+                                   <video src={proj.imageLink} className={`w-full h-auto ${!isWindowFocused ? 'blur-xl' : ''}`} muted />
+                              ) : (
+                                   <img src={proj.imageLink} className={`w-full h-auto transition-transform duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-xl' : ''}`} />
+                              )}
                               <div className="p-6 bg-white/60 backdrop-blur-xl border-t border-white/60">
                                 <h3 className="text-xl font-bold text-slate-800">{proj.title}</h3>
                               </div>
@@ -216,7 +230,7 @@ const ProjectPage = () => {
       <style jsx global>{`
         .hide-scrollbar::-webkit-scrollbar { display: none; }
         .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        img { transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out; }
+        img, video { transition: filter 0.8s ease-in-out, transform 0.8s ease-in-out; }
       `}</style>
     </div>
   );
