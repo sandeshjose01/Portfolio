@@ -95,7 +95,7 @@ export const experiencesData: Experience[] = [
       {
         title: "Graphic Designer",
         workType: "On-site",
-        startDate: "Jan 2025",
+        startDate: "Jan 2024",
         endDate: "Apr 2025",
         description: [
           "Designed Multiple Types Canvas available in Market.",
