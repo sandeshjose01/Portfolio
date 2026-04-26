@@ -11,14 +11,15 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
   });
 };
 
-// --- UPDATED: 300x300 Ultra-Crisp PNG Optimizer ---
+// --- UPDATED: High Quality PNG Resizer ---
+// Keeps perfect PNG quality and transparency, but reduces massive dimensions
 const optimizeImage = (img: HTMLImageElement): string => {
   const canvas = document.createElement("canvas");
-  const MAX_SIZE = 300; // 300px gives ~190 DPI on a 40mm print (Perfect balance of crispness & low file size)
+  const MAX_SIZE = 600; // 600px provides excellent HD quality for a small PDF image
   let width = img.width;
   let height = img.height;
 
-  // Scale down proportionately if the image is larger than 300px
+  // Scale down proportionately only if the image is huge
   if (width > MAX_SIZE || height > MAX_SIZE) {
     const ratio = Math.min(MAX_SIZE / width, MAX_SIZE / height);
     width = width * ratio;
@@ -30,11 +31,11 @@ const optimizeImage = (img: HTMLImageElement): string => {
   const ctx = canvas.getContext("2d");
   
   if (ctx) {
-    // Preserve PNG transparency
+    // Note: No white background added so PNG transparency is fully preserved!
     ctx.drawImage(img, 0, 0, width, height);
   }
   
-  // Output as PNG to keep transparency and sharp edges
+  // Output as high-quality PNG
   return canvas.toDataURL("image/png");
 };
 
@@ -86,18 +87,18 @@ export const downloadATSResume = async () => {
     const imgUrl = personalInfo.profileImage || "/profile.png";
     const img = await loadImage(imgUrl);
     
-    // Resize image to max 300x300 for crispness & tiny file size
+    // Resize image dimensions to save MBs while keeping PNG quality
     const optimizedImage = optimizeImage(img);
     
-    // Add the optimized image (Draws as square)
+    // Add the optimized PNG
     doc.addImage(optimizedImage, "PNG", leftColX, y - 5, 40, 40);
     
-    // Chrome-Safe Circular Mask (Draws thick white border to cut corners)
+    // Draw a thick WHITE circle over the edges to make it beautifully round
     doc.setDrawColor(255, 255, 255);
-    doc.setLineWidth(10);
+    doc.setLineWidth(10); 
     doc.circle(leftColX + 20, y + 15, 24, "S"); 
     
-    // Reset drawing settings
+    // Reset colors for the rest of the document
     doc.setDrawColor(0, 0, 0);
     doc.setLineWidth(0.2);
   } catch (e) {
@@ -105,7 +106,7 @@ export const downloadATSResume = async () => {
     doc.circle(leftColX + 20, y + 15, 20, "S");
   }
 
-  // Name (Using Bebas Neue from Google Fonts)
+  // Name
   doc.setFont(titleFont, titleFont === "Bebas" ? "normal" : "bold");
   doc.setTextColor(30, 30, 30);
   doc.setFontSize(36);
