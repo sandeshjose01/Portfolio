@@ -15,7 +15,7 @@ const loadImage = (url: string): Promise<HTMLImageElement> => {
 const getGoogleFontTTF = async (): Promise<string | null> => {
   try {
     // Direct Google Fonts URL for Bebas Neue Regular TTF
-    const url = "https://fonts.gstatic.com/s/bebasneue/v14/JTUSjIg69CK48gW7PXoo9WlhyyTh89Y.ttf";
+    const url = "https://fonts.gstatic.com/s/bebasneue/v16/JTUSjIg69CK48gW7PXooxW5rygbi49c.ttf";
     const response = await fetch(url);
     if (!response.ok) throw new Error("Network response was not ok");
     const blob = await response.blob();
