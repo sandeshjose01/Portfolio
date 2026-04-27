@@ -23,29 +23,35 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const ProjectPage = () => {
-  const [projects, setProjects] = useState<any[]>([]); // Dynamic projects from Firebase
+  const [projects, setProjects] = useState<any[]>([]); 
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState<any>(null);
   const [selectedSubcategory, setSelectedSubcategory] = useState<string | null>(null);
   const [selectedProject, setSelectedProject] = useState<any>(null);
   const [isWindowFocused, setIsWindowFocused] = useState(true);
 
-  // 1. FETCH DATA FROM FIREBASE
+  // 1. FETCH DATA FROM FIREBASE (Synced with your Admin field names)
   useEffect(() => {
     const fetchProjects = async () => {
       try {
-        const q = query(collection(db, "projects"), orderBy("createdAt", "desc"));
+        const q = query(collection(db, "projects"), orderBy("order", "asc"));
         const querySnapshot = await getDocs(q);
         const items: any[] = [];
         querySnapshot.forEach((doc) => {
           const data = doc.data();
+          
+          // Detection: Determine if it's a video based on the URL extension
+          const isVideo = data.image?.match(/\.(mp4|webm|mov|ogg|m4v)$/i);
+
           items.push({
             id: doc.id,
             ...data,
-            // Mapping Firebase names to your UI names
-            imageLink: data.imageUrl, 
-            link: data.projectLink,
-            subcategory: data.subCategory // Matching your case sensitivity
+            // Re-mapping Firebase names from Admin save structure
+            imageLink: data.image,   // Admin uses 'image'
+            link: data.demoLink,     // Admin uses 'demoLink'
+            category: data.category,
+            subCategory: data.subCategory,
+            resourceType: isVideo ? "video" : "image"
           });
         });
         setProjects(items);
@@ -58,7 +64,7 @@ const ProjectPage = () => {
     fetchProjects();
   }, []);
 
-  // 2. SECURITY & FOCUS LOGIC (Keeping your original code)
+  // 2. SECURITY & FOCUS LOGIC
   useEffect(() => {
     const handleBlur = () => setIsWindowFocused(false);
     const handleFocus = () => setIsWindowFocused(true);
@@ -79,50 +85,43 @@ const ProjectPage = () => {
     };
   }, []);
 
-  // 3. STATIC CATEGORY DEFINITIONS (Keeping your descriptions/images)
   const categories = [
     { 
         id: 1, 
         title: "Personal Project", 
-        description: "Logo Design, Photo Manipulation, Typography Choices.", 
         subcategories: ["Social Media Posts", "Logo Design", "Photo Manipulation", "Conceptual Rebrands", "Speculative UI/UX (Concept Apps)", "Artistic & Experimental Design"], 
         image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
     { 
         id: 2, 
         title: "Brand Identity", 
-        description: "Logo Design, Typography Choices, Brand Color Palettes.", 
         subcategories: ["Logo Design", "Typography", "Brand Color Palettes", "Corporate Stationery", "Brand Guidelines (Style Guides)", "Iconography & Graphic Devices"], 
         image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
     { 
         id: 3, 
         title: "UI/UX Design", 
-        description: "Website landing pages, mobile app interfaces.", 
         subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], 
         image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" },
     { 
         id: 4, 
         title: "Social Media Post", 
-        description: "Instagram grids, ad banners, and posts.", 
         subcategories: ["Facebook Post", "Instagram Post", "LinkedIn Post & Carousel", "Carousel Design", "Ad Banners", "Email Templates"],
         image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" },
     { 
         id: 5, 
         title: "Print Media", 
-        description: "Flex designs, Calendars, brochures, posters.", 
         subcategories: ["Brand Guide", "Stationery Suite", "Flex Designs", "Calendars", "Brochures", "Event Posters"], 
         image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" },
     { 
         id: 6, 
         title: "Motion", 
-        description: "Product Video, Documentary Video and Advertisnment Video.", 
         subcategories: ["Brand Documentary", "Product Informational", "Micro-Storytelling"], 
         image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" },
   ];
 
-  // 4. FILTER LOGIC (Now using dynamic 'projects' state)
+  // 4. FILTER LOGIC
   const filteredProjects = projects.filter(p => 
     p.category === selectedCategory?.title && 
-    p.subcategory === selectedSubcategory
+    p.subCategory === selectedSubcategory
   );
 
   const handleCloseAll = () => { setSelectedCategory(null); setSelectedSubcategory(null); setSelectedProject(null); };
@@ -156,7 +155,6 @@ const ProjectPage = () => {
         ))}
       </div>
 
-      {/* MODAL SYSTEM */}
       <AnimatePresence>
         {selectedCategory && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6">
@@ -168,7 +166,6 @@ const ProjectPage = () => {
               transition={{ layout: { type: "spring", stiffness: 200, damping: 25 }, opacity: { duration: 0.2 } }}
               className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-3xl bg-white/40 border border-white/60 backdrop-blur-xl shadow-2xl flex flex-col"
             >
-              {/* STICKY NAV */}
               <div className="flex justify-between items-center p-6 sticky top-0 z-50 bg-white/40 backdrop-blur-xl border-b border-white/40">
                 {selectedSubcategory ? (
                   <button onClick={() => selectedProject ? setSelectedProject(null) : setSelectedSubcategory(null)} className="flex items-center gap-2 text-slate-800 bg-white/60 px-4 py-2 rounded-xl hover:bg-white/90 transition-all text-sm font-bold border border-white/60 shadow-sm">
@@ -184,18 +181,29 @@ const ProjectPage = () => {
                     <motion.div key="project" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex flex-col">
                       <div className="w-full bg-white/10 flex items-center justify-center overflow-hidden">
                         {selectedProject.resourceType === "video" ? (
-                             <video src={selectedProject.imageLink} controls className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl' : ''}`} />
+                             <video src={selectedProject.imageLink} controls autoPlay muted loop className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl' : ''}`} />
                         ) : (
-                             <img src={selectedProject.imageLink} className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} />
+                             <img src={selectedProject.imageLink} className={`w-full h-auto max-h-[85vh] object-contain transition-all duration-1000 ${!isWindowFocused ? 'blur-3xl scale-110' : 'scale-100'}`} alt={selectedProject.title} />
                         )}
                       </div>
                       <div className="p-8 md:p-12 space-y-6 bg-gradient-to-b from-transparent to-white/40">
-                        <div className="flex flex-col md:flex-row justify-between items-end gap-8">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-8">
                           <div className="space-y-4 flex-1">
                             <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter drop-shadow-sm">{selectedProject.title}</h2>
-                            <p className="text-slate-800 text-lg leading-relaxed font-bold">{selectedProject.description}</p>
+                            
+                            {/* Updated Bullet Point Render for Description Array */}
+                            <div className="text-slate-800 text-lg leading-relaxed font-medium space-y-2">
+                                {Array.isArray(selectedProject.description) ? (
+                                    selectedProject.description.map((line: string, i: number) => (
+                                        <p key={i}>• {line}</p>
+                                    ))
+                                ) : (
+                                    <p>{selectedProject.description}</p>
+                                )}
+                            </div>
+
                             <div className="flex flex-wrap gap-2 pt-2">
-                                {selectedProject.tags.map((t:any) => (
+                                {selectedProject.tags && selectedProject.tags.map((t:any) => (
                                     <span key={t} className="px-4 py-1.5 bg-white/80 rounded-lg text-xs text-slate-600 border border-white uppercase tracking-widest font-bold shadow-sm">{t}</span>
                                 ))}
                             </div>
@@ -211,13 +219,13 @@ const ProjectPage = () => {
                   ) : selectedSubcategory ? (
                     <motion.div key="list" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} className="p-6">
                       {loading ? <p className="text-center py-10">Loading projects...</p> : filteredProjects.length > 0 ? (
-                        <div className="columns-1 md:columns-2 gap-4 space-y-4">
+                        <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
                           {filteredProjects.map((proj, i) => (
                             <motion.div key={i} onClick={() => setSelectedProject(proj)} className="break-inside-avoid group bg-white/40 border border-white/60 rounded-2xl overflow-hidden cursor-pointer hover:border-blue-400 transition-all shadow-sm">
                               {proj.resourceType === "video" ? (
-                                   <video src={proj.imageLink} className={`w-full h-auto ${!isWindowFocused ? 'blur-xl' : ''}`} muted />
+                                   <video src={proj.imageLink} muted loop className={`w-full h-auto ${!isWindowFocused ? 'blur-xl' : ''}`} />
                               ) : (
-                                   <img src={proj.imageLink} className={`w-full h-auto transition-transform duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-xl' : ''}`} />
+                                   <img src={proj.imageLink} className={`w-full h-auto transition-transform duration-700 group-hover:scale-105 ${!isWindowFocused ? 'blur-xl' : ''}`} alt={proj.title} />
                               )}
                               <div className="p-6 bg-white/60 backdrop-blur-xl border-t border-white/60">
                                 <h3 className="text-xl font-bold text-slate-800">{proj.title}</h3>
@@ -231,8 +239,8 @@ const ProjectPage = () => {
                             <Inbox className="w-10 h-10 text-slate-400" />
                           </div>
                           <div className="space-y-2">
-                             <h3 className="text-2xl font-bold text-slate-800 tracking-tight leading-tight">No {selectedSubcategory} added yet.</h3>
-                             <p className="text-slate-500 font-bold max-w-xs mx-auto text-sm">Working on it! Check back later.</p>
+                             <h3 className="text-2xl font-bold text-slate-800 tracking-tight">No items in {selectedSubcategory} yet.</h3>
+                             <p className="text-slate-500 font-bold text-sm">Working on some fresh magic! Check back later.</p>
                           </div>
                         </div>
                       )}
