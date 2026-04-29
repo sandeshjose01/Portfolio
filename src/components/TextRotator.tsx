@@ -9,18 +9,19 @@ interface RotatorProps {
 function TextRotator({ items = [] }: RotatorProps) {
   const [index, setIndex] = useState(0);
 
+  // // text: Use a stable list for rendering
+  const displayItems = items.length > 0 ? items : ["Designer", "Developer", "Creator"];
+
   useEffect(() => {
-    // // text: Logic moved inside to satisfy Next.js build rules
-    const displayItemsCount = items.length > 0 ? items.length : 3; 
+    // // text: Use the length of the list we are actually displaying
+    const count = displayItems.length;
     
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % displayItemsCount);
+      setIndex((prev) => (prev + 1) % count);
     }, 3000);
     
     return () => clearInterval(interval);
-  }, [items.length]); // // text: Only re-run if the number of items changes
-
-  const displayItems = items.length > 0 ? items : ["Designer", "Developer", "Creator"];
+  }, [displayItems.length]); // // text: Dependency is now stable
 
   return (
     <div className="py-4 rounded-md flex flex-col justify-center items-center lg:items-start overflow-hidden">
