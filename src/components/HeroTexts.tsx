@@ -1,25 +1,26 @@
-// Project path: src/components/HeroTexts.tsx
 "use client";
+import React from "react";
 import TextRotator from "./TextRotator";
 
-// // text: Added props to receive data from the Firebase fetch in page.tsx
 interface HeroTextsProps {
   staticRole?: string;
   roles?: string[];
+  name?: string;
 }
 
-const HeroTexts = ({ staticRole, roles }: HeroTextsProps) => {
+const HeroTexts = ({ staticRole, roles, name }: HeroTextsProps) => {
   return (
     <>
       <h3 className="font-poppins text-2xl max-sm:text-xl text-white/70">
-        {/* // text: You can change "My Name is" to staticRole from Admin if you prefer */}
-        My Name is
+        {/* // text: Fallback to "My Name is" if staticRole is empty */}
+        {staticRole || "My Name is"}
       </h3>
       <h1 className="font-rubik text-8xl name_underline text-primary max-sm:text-6xl text-white">
-        Sandesh <br /> Joshi .
+        {/* // text: Dynamic Name from Admin Panel */}
+        {name || "Sandesh Joshi"} .
       </h1>
       
-      {/* // text: Passing the dynamic roles array to the rotator */}
+      {/* // text: Passing the dynamic roles array to the limitless rotator */}
       <TextRotator items={roles || []} />
     </>
   );
