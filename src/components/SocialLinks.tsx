@@ -1,32 +1,51 @@
-import { cn } from "@/lib/utils";
-import { Facebook, Linkedin, Twitter, ExternalLink } from "lucide-react";
-import { buttonVariants } from "./ui/button";
+"use client";
+import React from "react";
 import Link from "next/link";
-import FramerWrapper from "./animation/FramerWrapper";
+import { Facebook, Linkedin, Globe, Github, Twitter } from "lucide-react";
 
-const SocialLinks = () => {
-  const links = [
-    { name: "Facebook", link: "https://www.facebook.com/sandesh.josee", icon: <Facebook /> },
-    { name: "Twitter", link: "https://be.net/sandeshjose", icon: <Twitter /> },
-    { name: "Linkedin", link: "https://www.linkedin.com/in/sanjoshi1", icon: <Linkedin /> },
-    { name: "External", link: "https://www.sandeshjoshi.info.np", icon: <ExternalLink /> },
-  ];
+// // text: Define the structure of the socials prop
+interface SocialLinksProps {
+  socials?: {
+    facebook?: string;
+    linkedin?: string;
+    github?: string;
+    behance?: string;
+    website?: string;
+  };
+}
+
+const SocialLinks = ({ socials }: SocialLinksProps) => {
+  // // text: If no socials are provided, don't render anything
+  if (!socials) return null;
+
   return (
-    <>
-      {links.map((itm, indx) => {
-        const timing = 0.55 + indx * 0.125
-        
-        return (
-          <FramerWrapper key={indx} delay={timing} y={50}>
-
-          <Link  target="blank"
-            href={itm.link}
-            className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
-            >{itm.icon}</Link>
-            </FramerWrapper>
-        );
-      })}
-    </>
+    <div className="flex gap-4">
+      {socials.facebook && (
+        <Link href={socials.facebook} target="_blank" className="text-white/50 hover:text-blue-500 transition-all">
+          <Facebook size={25} />
+        </Link>
+      )}
+      {socials.linkedin && (
+        <Link href={socials.linkedin} target="_blank" className="text-white/50 hover:text-blue-700 transition-all">
+          <Linkedin size={25} />
+        </Link>
+      )}
+      {socials.github && (
+        <Link href={socials.github} target="_blank" className="text-white/50 hover:text-white transition-all">
+          <Github size={25} />
+        </Link>
+      )}
+      {socials.behance && (
+        <Link href={socials.behance} target="_blank" className="text-white/50 hover:text-blue-400 transition-all">
+          <Twitter size={25} /> 
+        </Link>
+      )}
+      {socials.website && (
+        <Link href={socials.website} target="_blank" className="text-white/50 hover:text-emerald-500 transition-all">
+          <Globe size={25} />
+        </Link>
+      )}
+    </div>
   );
 };
 
