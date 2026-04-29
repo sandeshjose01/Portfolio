@@ -8,15 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Layers, X, ArrowLeft, ExternalLink, Inbox } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCChQzdSuNW8EzBXtRxZyvwh4WOjj67FCs",
-    authDomain: "my-portfolio-96764.firebaseapp.com",
-    projectId: "my-portfolio-96764",
-    storageBucket: "my-portfolio-96764.firebasestorage.app",
-    messagingSenderId: "1018154031940",
-    appId: "1:1018154031940:web:937edbfb442a6dfc041511"
-};
+import { db } from "@/lib/firebase";
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
