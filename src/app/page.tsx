@@ -17,20 +17,21 @@ export const siteConfig = {
 };
 
 export default function Home() {
-  // // text: Default data so the site shows something even before Firebase loads
   const [homeData, setHomeData] = useState<any>({
     name: "Sandesh Joshi",
-    staticRole: "I am a Passionate Graphic Designer &",
-    roles: ["Freelancer", "Designer", "Creator"],
+    roles: ["Graphic Designer", "Freelancer"],
     heroImage: "",
     socials: {}
   });
 
   useEffect(() => {
-    // // text: Real-time listener to the EXACT path used in Admin Panel
+    // text: Listening to siteData/home (Matches Admin Panel)
     const unsub = onSnapshot(doc(db, "siteData", "home"), (docSnap) => {
       if (docSnap.exists()) {
+        console.log("Firebase Data Received:", docSnap.data());
         setHomeData(docSnap.data());
+      } else {
+        console.log("NO DATA IN FIREBASE - Check Admin Panel");
       }
     });
     return () => unsub();
@@ -38,11 +39,7 @@ export default function Home() {
 
   return (
     <>
-      <FramerWrapper
-        className="h-full w-auto flex flex-col justify-start gap-4"
-        y={0}
-        x={-100}
-      >
+      <FramerWrapper className="h-full w-auto flex flex-col justify-start gap-4" y={0} x={-100}>
         <HeroTexts 
           roles={homeData.roles} 
           name={homeData.name}
@@ -53,11 +50,7 @@ export default function Home() {
         <DownLoadResumeBtn />
       </FramerWrapper>
 
-      <FramerWrapper
-        className="h-full w-[47%] relative block max-lg:hidden"
-        y={0}
-        x={100}
-      >
+      <FramerWrapper className="h-full w-[47%] relative block max-lg:hidden" y={0} x={100}>
         <HeroImage url={homeData.heroImage} />
       </FramerWrapper>
 
