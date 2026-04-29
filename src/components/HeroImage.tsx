@@ -1,5 +1,28 @@
 "use client";
 import React from "react";
+import Image from "next/image";
+
+const HeroImage = ({ url }: { url?: string }) => {
+  return (
+    <div className="relative w-full max-w-[550px] aspect-square">
+      {url ? (
+        <Image 
+          src={url} 
+          alt="Hero" 
+          width={1000} 
+          height={1000} 
+          priority 
+          className="w-full h-full object-contain drop-shadow-2xl" 
+        />
+      ) : (
+        <div className="w-full h-full bg-gray-100 rounded-full animate-pulse" />
+      )}
+    </div>
+  );
+};
+
+export default HeroImage;"use client";
+import React from "react";
 import Image from "next/image"; // Import Next.js Image component
 
 interface HeroImageProps {
