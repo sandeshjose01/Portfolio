@@ -17,25 +17,30 @@ export const siteConfig = {
 };
 
 export default function Home() {
-  const [homeData, setHomeData] = useState<any>({
-    name: "Sandesh Joshi",
-    roles: ["Graphic Designer", "Freelancer"],
-    heroImage: "",
-    socials: {}
-  });
+  const [homeData, setHomeData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // text: Listening to siteData/home (Matches Admin Panel)
-    const unsub = onSnapshot(doc(db, "siteData", "home"), (docSnap) => {
-      if (docSnap.exists()) {
-        console.log("Firebase Data Received:", docSnap.data());
-        setHomeData(docSnap.data());
-      } else {
-        console.log("NO DATA IN FIREBASE - Check Admin Panel");
+    // text: Listening to siteData/home
+    const unsub = onSnapshot(doc(db, "siteData", "home"), 
+      (docSnap) => {
+        if (docSnap.exists()) {
+          setHomeData(docSnap.data());
+        } else {
+          setError("Database connected, but 'siteData/home' is empty. Please save data in Admin Panel.");
+        }
+      },
+      (err) => {
+        console.error("Firebase Error:", err);
+        setError("Connection failed: " + err.message);
       }
-    });
+    );
     return () => unsub();
   }, []);
+
+  // text: If there is an error or no data yet, show a clear message
+  if (error) return <div className="h-screen bg-black text-red-500 flex items-center justify-center p-10 text-center font-bold">{error}</div>;
+  if (!homeData) return <div className="h-screen bg-black text-white flex items-center justify-center animate-pulse font-black uppercase tracking-widest">Connecting to SJ.STUDIO...</div>;
 
   return (
     <>
