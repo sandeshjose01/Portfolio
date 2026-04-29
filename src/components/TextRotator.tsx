@@ -8,24 +8,20 @@ interface RotatorProps {
 
 function TextRotator({ items = [] }: RotatorProps) {
   const [index, setIndex] = useState(0);
-
-  // // text: Use a stable list for rendering
-  const displayItems = items.length > 0 ? items : ["Designer", "Developer", "Creator"];
+  const displayItems = items.length > 0 ? items : ["Freelancer", "Designer", "Creator"];
 
   useEffect(() => {
-    // // text: Use the length of the list we are actually displaying
     const count = displayItems.length;
-    
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % count);
     }, 3000);
-    
     return () => clearInterval(interval);
-  }, [displayItems.length]); // // text: Dependency is now stable
+  }, [displayItems.length]);
 
   return (
     <div className="py-4 rounded-md flex flex-col justify-center items-center lg:items-start overflow-hidden">
-      <div className="font-poppins text-base sm:text-2xl [text-wrap:balance] text-gray-400">
+      {/* // text: Changed text-gray-400 to text-white to fix opacity */}
+      <div className="font-poppins text-base sm:text-2xl [text-wrap:balance] text-white">
         I am a Graphic Designer &
         <span className="inline-flex ml-2 flex-col relative h-[35px] sm:h-[45px] overflow-hidden">
           <motion.ul
