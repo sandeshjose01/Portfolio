@@ -8,22 +8,20 @@ export default function SecurityProvider({ children }: { children: React.ReactNo
   const [isHiding, setIsHiding] = useState(false);
 
   useEffect(() => {
-    // Listen to the Admin Toggle in real-time
     const unsub = onSnapshot(doc(db, "settings", "security"), (doc) => {
       if (doc.exists()) setIsProtected(doc.data().antiScreenshot);
     });
 
     if (!isProtected) return;
 
-    // 1. Block Keyboard Shortcuts (PrintScreen, Ctrl+P, Mac Shortcuts)
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "PrintScreen" || (e.ctrlKey && e.key === "p") || (e.metaKey && e.shiftKey && (e.key === "3" || e.key === "4" || e.key === "5"))) {
+      if (e.key === "PrintScreen" || (e.ctrlKey && e.key === "p") || 
+         (e.metaKey && e.shiftKey && (e.key === "3" || e.key === "4" || e.key === "5"))) {
         e.preventDefault();
         alert("Screenshots are disabled.");
       }
     };
 
-    // 2. Hide content when window loses focus (Mobile App Switcher / Snipping Tool)
     const handleBlur = () => setIsHiding(true);
     const handleFocus = () => setIsHiding(false);
 
