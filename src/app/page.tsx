@@ -9,57 +9,51 @@ import GithubBtn from "@/components/animation/GithubBtn";
 import DownLoadResumeBtn from "@/components/DownLoadResumeBtn"; 
 import FramerWrapper from "@/components/animation/FramerWrapper";
 
-export const siteConfig = {
-  name: "Sandesh joshi",
-  description: "I am a Passionate Graphic Designer",
-  ogImage: "https://sandeshjose01.vercel.app/og-image.png",
-  url: "https://www.sandeshjoshi.info.np/",
-};
-
 export default function Home() {
   const [homeData, setHomeData] = useState<any>(null);
-  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    // text: Listening to siteData/home
-    const unsub = onSnapshot(doc(db, "siteData", "home"), 
-      (docSnap) => {
-        if (docSnap.exists()) {
-          setHomeData(docSnap.data());
-        } else {
-          setError("Database connected, but 'siteData/home' is empty. Please save data in Admin Panel.");
-        }
-      },
-      (err) => {
-        console.error("Firebase Error:", err);
-        setError("Connection failed: " + err.message);
-      }
-    );
+    const unsub = onSnapshot(doc(db, "siteData", "home"), (docSnap) => {
+      if (docSnap.exists()) setHomeData(docSnap.data());
+    });
     return () => unsub();
   }, []);
 
-  // text: If there is an error or no data yet, show a clear message
-  if (error) return <div className="h-screen bg-black text-red-500 flex items-center justify-center p-10 text-center font-bold">{error}</div>;
-  if (!homeData) return <div className="h-screen bg-black text-white flex items-center justify-center animate-pulse font-black uppercase tracking-widest">Connecting to SJ.STUDIO...</div>;
+  if (!homeData) return null;
 
   return (
-    <>
-      <FramerWrapper className="h-full w-auto flex flex-col justify-start gap-4" y={0} x={-100}>
-        <HeroTexts 
-          roles={homeData.roles} 
-          name={homeData.name}
-        />
-        <div className="h-fit w-full p-4 flex gap-4">
-          <SocialLinks socials={homeData.socials} />
-        </div>
-        <DownLoadResumeBtn />
-      </FramerWrapper>
+    <main className="relative min-h-screen w-full bg-white overflow-hidden flex items-center justify-center px-10 lg:px-20">
+      {/* BLUE DOTTED BACKGROUND PATTERN */}
+      <div className="absolute inset-0 z-0 opacity-40" 
+        style={{ 
+          backgroundImage: `radial-gradient(#2f7df4 1px, transparent 1px)`, 
+          backgroundSize: '30px 30px' 
+        }} 
+      />
 
-      <FramerWrapper className="h-full w-[47%] relative block max-lg:hidden" y={0} x={100}>
-        <HeroImage url={homeData.heroImage} />
-      </FramerWrapper>
+      <div className="relative z-10 w-full max-w-7xl flex flex-col lg:flex-row items-center justify-between gap-10">
+        
+        {/* LEFT SIDE: TEXTS & LINKS */}
+        <FramerWrapper className="flex flex-col gap-8 w-full lg:w-1/2" y={0} x={-100}>
+          <HeroTexts 
+            name={homeData.name} 
+            roles={homeData.roles} 
+          />
+          
+          <div className="flex flex-col gap-6">
+            <SocialLinks socials={homeData.socials} />
+            <DownLoadResumeBtn />
+          </div>
+        </FramerWrapper>
+
+        {/* RIGHT SIDE: IMAGE */}
+        <FramerWrapper className="relative w-full lg:w-[45%] flex justify-center" y={0} x={100}>
+          <HeroImage url={homeData.heroImage} />
+        </FramerWrapper>
+
+      </div>
 
       <GithubBtn />
-    </>
+    </main>
   );
 }
