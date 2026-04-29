@@ -9,7 +9,6 @@ import GithubBtn from "@/components/animation/GithubBtn";
 import DownLoadResumeBtn from "@/components/DownLoadResumeBtn"; 
 import FramerWrapper from "@/components/animation/FramerWrapper";
 
-// // text: Restored siteConfig to fix the layout.tsx error
 export const siteConfig = {
   name: "Sandesh joshi",
   description: "I am a Passionate Graphic Designer",
@@ -18,18 +17,24 @@ export const siteConfig = {
 };
 
 export default function Home() {
-  const [homeData, setHomeData] = useState<any>(null);
+  // // text: Default data so the site shows something even before Firebase loads
+  const [homeData, setHomeData] = useState<any>({
+    name: "Sandesh Joshi",
+    staticRole: "I am a Passionate Graphic Designer &",
+    roles: ["Freelancer", "Designer", "Creator"],
+    heroImage: "",
+    socials: {}
+  });
 
   useEffect(() => {
-    const unsub = onSnapshot(doc(db, "siteData", "home"), (doc) => {
-      if (doc.exists()) {
-        setHomeData(doc.data());
+    // // text: Real-time listener to the EXACT path used in Admin Panel
+    const unsub = onSnapshot(doc(db, "siteData", "home"), (docSnap) => {
+      if (docSnap.exists()) {
+        setHomeData(docSnap.data());
       }
     });
     return () => unsub();
   }, []);
-
-  if (!homeData) return null;
 
   return (
     <>
@@ -39,7 +44,6 @@ export default function Home() {
         x={-100}
       >
         <HeroTexts 
-          staticRole={homeData.staticRole} 
           roles={homeData.roles} 
           name={homeData.name}
         />
