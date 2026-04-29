@@ -83,13 +83,43 @@ const ProjectPage = () => {
     };
   },[]);
 
-  const categories = [
-    { id: 1, title: "Personal Project", subcategories:["Social Media Posts", "Logo Design", "Photo Manipulation", "Conceptual Rebrands", "Speculative UI/UX (Concept Apps)", "Artistic & Experimental Design"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
-    { id: 2, title: "Brand Identity", subcategories:["Logo Design", "Typography", "Brand Color Palettes", "Corporate Stationery", "Brand Guidelines (Style Guides)", "Iconography & Graphic Devices"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
-    { id: 3, title: "UI/UX Design", subcategories:["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" },
-    { id: 4, title: "Social Media Post", subcategories:["Facebook Post", "Instagram Post", "LinkedIn Post & Carousel", "Carousel Design", "Ad Banners", "Email Templates"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" },
-    { id: 5, title: "Print Media", subcategories:["Brand Guide", "Stationery Suite", "Flex Designs", "Calendars", "Brochures", "Event Posters"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" },
-    { id: 6, title: "Motion", subcategories:["Brand Documentary", "Product Informational", "Micro-Storytelling"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" },
+  const categories =[
+    { 
+        id: 1, 
+        title: "Personal Project", 
+        subcategories:["Social Media Posts", "Logo Design", "Photo Manipulation", "Conceptual Rebrands", "Speculative UI/UX (Concept Apps)", "Artistic & Experimental Design"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" 
+    },
+    { 
+        id: 2, 
+        title: "Brand Identity", 
+        subcategories:["Logo Design", "Typography", "Brand Color Palettes", "Corporate Stationery", "Brand Guidelines (Style Guides)", "Iconography & Graphic Devices"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" 
+    },
+    { 
+        id: 3, 
+        title: "UI/UX Design",
+        subcategories:["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" 
+    },
+    { 
+        id: 4, 
+        title: "Social Media Post", 
+        subcategories:["Facebook Post", "Instagram Post", "LinkedIn Post & Carousel", "Carousel Design", "Ad Banners", "Email Templates"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/social%20media%20post.png?raw=true" 
+    },
+    { 
+        id: 5, 
+        title: "Print Media", 
+        subcategories:["Brand Guide", "Stationery Suite", "Flex Designs", "Calendars", "Brochures", "Event Posters"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/print%20media.png?raw=true" 
+    },
+    { 
+        id: 6,
+        title: "Motion", 
+        subcategories:["Brand Documentary", "Product Informational", "Micro-Storytelling"], 
+        image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/motion.png?raw=true" 
+    },
   ];
 
   const filteredProjects = projects.filter(p => p.category === selectedCategory?.title && p.subCategory === selectedSubcategory);
@@ -149,7 +179,6 @@ const ProjectPage = () => {
                           <div className="space-y-6 flex-1 w-full">
                             <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter drop-shadow-sm">{selectedProject.title}</h2>
                             
-                            {/* REMOVED BULLET POINTS - NOW RENDERS AS PARAGRAPHS */}
                             <div className="text-slate-800 text-lg leading-relaxed font-medium space-y-4">
                                 {Array.isArray(selectedProject.description) 
                                     ? selectedProject.description.map((line: string, i: number) => <p key={i}>{line}</p>) 
@@ -173,11 +202,14 @@ const ProjectPage = () => {
                                 {selectedProject.tags && selectedProject.tags.map((t:any) => <span key={t} className="px-4 py-1.5 bg-white/80 rounded-lg text-xs text-slate-600 border border-white uppercase tracking-widest font-bold shadow-sm">{t}</span>)}
                             </div>
                           </div>
+                          
+                          {/* DYNAMIC VISIT BUTTON */}
                           {selectedProject.link && (
                             <Link href={selectedProject.link} target="_blank" className="bg-blue-600 text-white px-8 py-4 rounded-xl font-bold hover:bg-blue-700 hover:scale-105 flex items-center gap-3 shrink-0 shadow-lg shadow-blue-500/20 mt-4 md:mt-0">
                                 Visit Project <ExternalLink className="w-4 h-4" />
                             </Link>
                           )}
+                          
                         </div>
                       </div>
                     </motion.div>
