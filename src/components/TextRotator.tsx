@@ -8,35 +8,33 @@ interface RotatorProps {
 
 function TextRotator({ items = [] }: RotatorProps) {
   const [index, setIndex] = useState(0);
-  const displayItems = items.length > 0 ? items : ["Designer", "Freelancer", "Creator"];
+  const displayItems = items.length > 0 ? items : ["Freelancer", "Designer"];
 
   useEffect(() => {
-    const count = displayItems.length;
+    if (displayItems.length <= 1) return;
     const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % count);
+      setIndex((prev) => (prev + 1) % displayItems.length);
     }, 3000);
     return () => clearInterval(interval);
   }, [displayItems.length]);
 
   return (
-    <div className="py-4 flex flex-col justify-center items-start overflow-hidden">
-      <div className="font-poppins text-base sm:text-2xl text-white opacity-100">
+    <div className="mt-4 flex items-center overflow-hidden h-[50px]">
+      <p className="font-poppins text-xl md:text-2xl text-gray-600">
         I am a Graphic Designer &
-        <span className="inline-flex ml-2 flex-col relative h-[35px] sm:h-[45px] overflow-hidden">
-          <motion.ul
-            animate={{
-              y: -(index * (typeof window !== 'undefined' && window.innerWidth < 640 ? 32 : 40)),
-            }}
-            transition={{ type: "spring", stiffness: 100, damping: 20 }}
-            className="block text-left font-rubik text-lg sm:text-3xl leading-tight"
-          >
-            {displayItems.map((item, i) => (
-              <li key={i} className="text-[#2f7df4] h-[32px] sm:h-[40px] flex items-center font-bold">
-                {item}
-              </li>
-            ))}
-          </motion.ul>
-        </span>
+      </p>
+      <div className="ml-2 h-full overflow-hidden relative w-64">
+        <motion.ul
+          animate={{ y: -(index * 40) }}
+          transition={{ type: "spring", stiffness: 100, damping: 20 }}
+          className="block text-left font-rubik text-2xl md:text-3xl font-bold"
+        >
+          {displayItems.map((item, i) => (
+            <li key={i} className="text-[#2f7df4] h-[40px] flex items-center">
+              {item}
+            </li>
+          ))}
+        </motion.ul>
       </div>
     </div>
   );
