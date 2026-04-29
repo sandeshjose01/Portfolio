@@ -2,7 +2,6 @@
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 
-// // text: This component now accepts 'items' from the Admin Panel
 interface RotatorProps {
   items?: string[];
 }
@@ -10,13 +9,13 @@ interface RotatorProps {
 function TextRotator({ items = [] }: RotatorProps) {
   const [index, setIndex] = useState(0);
 
-  // // text: Fallback list if Admin Panel is empty
-  const displayItems = items.length > 0 ? items : ["Freelancer", "Designer", "Creator"];
+  // // text: Fallback if no roles are added in Admin
+  const displayItems = items.length > 0 ? items : ["Designer", "Developer", "Creator"];
 
   useEffect(() => {
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % displayItems.length);
-    }, 3000); // // text: Change 3000 to adjust speed (3 seconds)
+    }, 3000); // // text: Rotates every 3 seconds
     return () => clearInterval(interval);
   }, [displayItems]);
 
@@ -24,10 +23,10 @@ function TextRotator({ items = [] }: RotatorProps) {
     <div className="py-4 rounded-md flex flex-col justify-center items-center lg:items-start overflow-hidden">
       <div className="font-poppins text-base sm:text-2xl [text-wrap:balance] text-gray-400">
         I am a Graphic Designer &
-        <span className="inline-flex ml-2 flex-col relative h-[35px] sm:h-[45px] overflow-hidden border-red-500">
+        <span className="inline-flex ml-2 flex-col relative h-[35px] sm:h-[45px] overflow-hidden">
           <motion.ul
-            // // text: This is the magic part. It calculates the height 
-            // // automatically no matter if you have 6 or 60 items.
+            // // text: DYNAMIC MATH. It calculates the exact Y position 
+            // // based on the current index. This is what makes it limitless.
             animate={{
               y: -(index * (typeof window !== 'undefined' && window.innerWidth < 640 ? 32 : 40)),
             }}
