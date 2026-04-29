@@ -9,18 +9,20 @@ interface HeroTextsProps {
 
 const HeroTexts = ({ roles, name }: HeroTextsProps) => {
   return (
-    <div className="flex flex-col items-start">
-      {/* text: This is now a standard white heading, it will always show */}
-      <h3 className="font-poppins text-2xl max-sm:text-xl text-white mb-2">
+    <div className="flex flex-col items-start gap-2">
+      <h3 className="font-poppins text-xl text-gray-800 font-medium">
         My Name is
       </h3>
       
-      <h1 className="font-rubik text-8xl name_underline text-primary max-sm:text-6xl text-white leading-none">
-        {name || "Sandesh Joshi"} .
-      </h1>
+      <div className="relative inline-block">
+        <h1 className="font-rubik text-7xl md:text-8xl text-[#0f172a] font-bold leading-[1.1] tracking-tighter">
+          {name || "Sandesh"} <br /> {name ? "" : "Joshi"} .
+        </h1>
+        {/* THE BLUE UNDERLINE FROM ORIGINAL DESIGN */}
+        <div className="absolute bottom-4 left-0 w-24 h-2 bg-[#2f7df4] rounded-full" />
+      </div>
       
-      {/* text: Pass the roles array to the rotator */}
-      <TextRotator items={roles || []} />
+      <TextRotator items={roles} />
     </div>
   );
 };
