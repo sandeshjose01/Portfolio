@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Facebook, Linkedin, ExternalLink, Twitter } from "lucide-react";
 
 export default function SocialLinks({ socials }: any) {
-  const iconStyle = "w-13 h-13 flex items-center justify-center border-2 border-gray-800 rounded-lg text-gray-800 hover:bg-[#2f7df4] hover:border-[#2f7df4] hover:text-white transition-all duration-300";
+  const iconStyle = "w-13.5 h-13.5 flex items-center justify-center border-2 border-gray-800 rounded-lg text-gray-800 hover:bg-[#2f7df4] hover:border-[#2f7df4] hover:text-white transition-all duration-300";
 
   return (
     <div className="flex gap-3">
