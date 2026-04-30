@@ -1,19 +1,15 @@
-import logo from "../../public/portfolioLogo.png";
-import Image from "next/image";
+"use client";
+import React from "react";
 
-const HeroImage = () => {
+export default function HeroImage({ adminUrl }: any) {
   return (
-    <>
-      <Image
+    <div className="relative w-full max-w-[550px] aspect-square">
+      {/* OR STATEMENT: Admin Cloudinary URL OR your original local file */}
+      <img 
         src={adminUrl || "/portfolioLogo.png"} 
-        alt="Hero"
-  // ... keep your other attributes like width/height
-        loading="eager"
-        priority
-        height={1000}
-        width={1000}
+        alt="Hero" 
+        className="w-full h-full object-contain drop-shadow-2xl" 
       />
-    </>
+    </div>
   );
-};
-export default HeroImage;
+}
