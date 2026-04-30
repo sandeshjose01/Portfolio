@@ -4,11 +4,11 @@ import Image from "next/image";
 
 export default function HeroImage({ adminUrl }: any) {
   return (
-    <div className="relative w-full max-w-[550px] aspect-square">
+    <div className="relative w-full h-full flex items-center justify-center">
+      {/* // text: Using Next.js Image component to satisfy the build warnings */}
       <Image 
-        // // text: If Admin has no photo, it uses your local original photo
-        src={adminUrl || "/portfolioLogo.png"} 
-        alt="Logo" 
+        src={adminUrl || "/your-local-image.png"} 
+        alt="Sandesh Joshi" 
         width={1000}
         height={1000}
         priority 
