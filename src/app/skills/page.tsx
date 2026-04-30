@@ -1,65 +1,85 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { db } from "@/lib/firebase";
-import { collection, query, orderBy, onSnapshot } from "firebase/firestore";
+import { collection, query, orderBy, onSnapshot, doc } from "firebase/firestore";
 import FramerWrapper from "@/components/animation/FramerWrapper";
 import Heading from "@/components/Heading";
 import { Badge } from "@/components/ui/badge";
 import { Zap } from "lucide-react";
 
-// --- ORIGINAL DATA (The "OR" Fallback) ---
-const DEFAULT_SKILLS = [
-  { id: "1", name: "Adobe Photoshop", category: "Software Proficiency", icon: "https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" },
-  { id: "2", name: "Adobe Illustrator", category: "Software Proficiency", icon: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Adobe_Illustrator_CC_icon.svg" },
-  { id: "3", name: "Adobe InDesign", category: "Software Proficiency", icon: "https://upload.wikimedia.org/wikipedia/commons/4/48/Adobe_InDesign_CC_icon.svg" },
-  { id: "4", name: "After Effects", category: "Software Proficiency", icon: "https://upload.wikimedia.org/wikipedia/commons/c/cb/Adobe_After_Effects_CC_icon.svg" },
-  { id: "5", name: "Premiere Pro", category: "Software Proficiency", icon: "https://upload.wikimedia.org/wikipedia/commons/4/40/Adobe_Premiere_Pro_CC_icon.svg" },
-  { id: "6", name: "Figma", category: "Software Proficiency", icon: "https://upload.wikimedia.org/wikipedia/commons/3/33/Figma-logo.svg" },
-];
-
 export default function SkillsPage() {
   const [adminSkills, setAdminSkills] = useState<any[]>([]);
-  
-  // // text: OR logic - Use Admin data if exists, otherwise show your original list
-  const displaySkills = adminSkills.length > 0 ? adminSkills : DEFAULT_SKILLS;
+  const [pageData, setPageData] = useState({
+    heading: "My Technical Experience/Skills.",
+    description: "Currently I am a Graphic Designer with 3+ year of experience and I have a solid understanding of Adobe Photoshop, Adobe Illustrator, Adobe Indesign, Adobe Premiere Pro, Adobe After Effect, Canva & Microsoft office."
+  });
 
   useEffect(() => {
-    // // text: Real-time sync with Admin Panel
-    const unsub = onSnapshot(query(collection(db, "skills"), orderBy("order", "asc")), (snap) => {
+    // Sync Page Header
+    const unsubHeader = onSnapshot(doc(db, "siteData", "skillsPage"), (d) => {
+      if(d.exists()) setPageData({ heading: d.data().heading, description: d.data().description });
+    });
+    // Sync Skills List
+    const unsubSkills = onSnapshot(query(collection(db, "skills"), orderBy("order", "asc")), (snap) => {
       const items: any[] = [];
       snap.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
       setAdminSkills(items);
     });
-    return () => unsub();
+    return () => { unsubHeader(); unsubSkills(); };
   }, []);
 
-  const categories = Array.from(new Set(displaySkills.map(s => s.category)));
+  const categories = ["Graphic Designing Tools", "Video Editing Tools", "Microsoft Office", "Other Tools"];
 
   return (
-    <div className="h-full w-full relative flex flex-col items-start gap-8 pb-20 px-4 md:px-10">
-      <Badge variant="secondary" className="gap-1.5 py-1"><Zap className="w-4 h-4" /> My Skills</Badge>
-      <Heading>Technical Proficiencies</Heading>
+    <div className="h-full w-full relative flex flex-col items-start gap-5 pb-20 px-4 md:px-10">
+      {/* 1. BADGE */}
+      <Badge variant="secondary" className="gap-1.5 py-1 text-[10px] uppercase font-bold">
+        <Zap className="w-3.5 h-3.5" /> My Skills
+      </Badge>
 
-      <div className="w-full space-y-16">
-        {categories.map((cat: any) => (
-          <div key={cat} className="space-y-8">
-            <div className="flex items-center gap-4">
-                <h2 className="text-2xl font-black text-white uppercase tracking-tighter">{cat}</h2>
-                <div className="h-[1px] flex-1 bg-white/10" />
+      {/* 2. HEADING WITH DESIGN UNDERLINE */}
+      <div className="relative">
+        <h1 className="text-4xl md:text-5xl font-bold text-[#0f172a] tracking-tight">
+          {pageData.heading}
+        </h1>
+        {/* This matches the thick blue underline in your screenshot */}
+        <div className="absolute -bottom-2 left-0 w-20 h-1.5 bg-[#2f7df4] rounded-full" />
+      </div>
+
+      {/* 3. INTRO PARAGRAPH */}
+      <p className="max-w-4xl text-gray-600 text-lg md:text-xl font-medium leading-relaxed mt-4">
+        {pageData.description}
+      </p>
+
+      {/* 4. DYNAMIC CATEGORIES & TOOLS */}
+      <div className="w-full space-y-12 mt-8">
+        {categories.map((cat) => {
+          const filtered = adminSkills.filter(s => s.category === cat);
+          if (filtered.length === 0) return null;
+
+          return (
+            <div key={cat} className="space-y-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-[#0f172a]">{cat}</h2>
+              <div className="flex flex-wrap gap-x-12 gap-y-10">
+                {filtered.map((skill, index) => (
+                  <FramerWrapper key={skill.id} y={20} delay={index * 0.1}>
+                    <div className="flex flex-col items-center gap-3 group">
+                      {/* Exact spacing and icon size from screenshot */}
+                      <img 
+                        src={skill.icon} 
+                        alt={skill.name} 
+                        className="w-14 h-14 md:w-16 md:h-16 object-contain transition-transform duration-500 group-hover:scale-110" 
+                      />
+                      <span className="text-[11px] md:text-xs font-bold text-gray-500 uppercase tracking-widest text-center">
+                        {skill.name}
+                      </span>
+                    </div>
+                  </FramerWrapper>
+                ))}
+              </div>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
-              {displaySkills.filter(s => s.category === cat).map((skill, index) => (
-                /* // text: KEEPING YOUR ORIGINAL FRAMER ANIMATION SETTINGS */
-                <FramerWrapper key={skill.id || index} y={20} delay={index * 0.05}>
-                  <div className="group bg-white/[0.03] border border-white/5 rounded-3xl p-8 flex flex-col items-center gap-4 hover:bg-white/[0.07] transition-all hover:-translate-y-2 hover:border-blue-500/30">
-                    <img src={skill.icon} alt={skill.name} className="w-14 h-14 object-contain group-hover:scale-110 transition-transform duration-500" />
-                    <span className="text-xs font-bold text-white/70 group-hover:text-white text-center uppercase tracking-widest">{skill.name}</span>
-                  </div>
-                </FramerWrapper>
-              ))}
-            </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
