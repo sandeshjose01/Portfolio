@@ -41,14 +41,18 @@ export default function Home() {
           />
           
           <div className="flex flex-col gap-6">
-            <SocialLinks socials={homeData.socials} />
+            <SocialLinks 
+              socials={homeData?.socials} 
+            />
             <DownLoadResumeBtn />
           </div>
         </FramerWrapper>
 
         {/* RIGHT SIDE: IMAGE */}
         <FramerWrapper className="relative w-full lg:w-[45%] flex justify-center" y={0} x={100}>
-          <HeroImage url={homeData.heroImage} />
+          <HeroImage 
+            adminUrl={homeData?.heroImage} 
+          />
         </FramerWrapper>
 
       </div>
