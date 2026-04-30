@@ -49,7 +49,7 @@ export default function SkillPage() {
   const finalVideo = videoTools.length > 0 ? videoTools : defaultVideo;
 
   const marketingTools = adminSkills.filter(s => s.category === "Marketing & Ad Tools");
-  const finalMarketing = marketing&adTools.length > 0 ? marketing&adTools : defaultmarketing&ad;
+  const finalMarketing = marketingadTools.length > 0 ? marketingadTools : defaultmarketingad;
 
   const microsoftTools = adminSkills.filter(s => s.category === "Microsoft Office");
   const finalMicrosoft = microsoftTools.length > 0 ? microsoftTools : defaultmicrosoft;
