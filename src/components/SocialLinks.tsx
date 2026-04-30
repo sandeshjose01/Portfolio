@@ -5,17 +5,17 @@ import Link from "next/link";
 import { Facebook, Linkedin, ExternalLink, Twitter } from "lucide-react";
 
 export default function SocialLinks({ socials }: any) {
-  const iconStyle = "w-14 h-14 flex items-center justify-center border-2 border-gray-800 rounded-lg text-gray-800 hover:bg-[#2f7df4] hover:border-[#2f7df4] hover:text-white transition-all duration-300";
+  const iconStyle = "w-13 h-13 flex items-center justify-center border-2 border-gray-800 rounded-lg text-gray-800 hover:bg-[#2f7df4] hover:border-[#2f7df4] hover:text-white transition-all duration-300";
 
   return (
     <div className="flex gap-3">
-      {socials?.facebook && <Link href={socials.facebook} target="_blank" className={iconStyle}><Facebook size={28}/></Link>}
+      {socials?.facebook && <Link href={socials.facebook} target="_blank" className={iconStyle}><Facebook size={25}/></Link>}
       
       {/* // text: We use the Twitter icon for the Behance URL to stop the build from crashing */}
-      {socials?.behance && <Link href={socials.behance} target="_blank" className={iconStyle}><Twitter size={28}/></Link>}
+      {socials?.behance && <Link href={socials.behance} target="_blank" className={iconStyle}><Twitter size={25}/></Link>}
       
-      {socials?.linkedin && <Link href={socials.linkedin} target="_blank" className={iconStyle}><Linkedin size={28}/></Link>}
-      {socials?.website && <Link href={socials.website} target="_blank" className={iconStyle}><ExternalLink size={28}/></Link>}
+      {socials?.linkedin && <Link href={socials.linkedin} target="_blank" className={iconStyle}><Linkedin size={25}/></Link>}
+      {socials?.website && <Link href={socials.website} target="_blank" className={iconStyle}><ExternalLink size={25}/></Link>}
     </div>
   );
 }
