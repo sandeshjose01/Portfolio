@@ -16,7 +16,7 @@ const HeroTexts = ({ roles, name, staticRole }: HeroTextsProps) => {
       
       {/* // text: name_underline is your original CSS class. 
           // text: .split(" ").join("\n") forces the second name to a new line. */}
-      <h1 className="font-rubik text-8xl name_underline text-primary max-sm:text-6xl">
+      <h1 className="font-rubik text-8xl name_underline text-primary max-sm:text-6xl leading-[1.1] whitespace-pre-line">
         {name ? name.split(" ").join("\n") : "Sandesh\nJoshi"} .
       </h1>
       
