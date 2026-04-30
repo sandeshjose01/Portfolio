@@ -9,13 +9,13 @@ export default function SocialLinks({ socials }: any) {
 
   return (
     <div className="flex gap-3">
-      {socials?.facebook && <Link href={socials.facebook} target="_blank" className={iconStyle}><Facebook size={25}/></Link>}
+      {socials?.facebook && <Link href={socials.facebook} target="_blank" className={iconStyle}><Facebook size={26}/></Link>}
       
       {/* // text: We use the Twitter icon for the Behance URL to stop the build from crashing */}
-      {socials?.behance && <Link href={socials.behance} target="_blank" className={iconStyle}><Twitter size={25}/></Link>}
+      {socials?.behance && <Link href={socials.behance} target="_blank" className={iconStyle}><Twitter size={26}/></Link>}
       
-      {socials?.linkedin && <Link href={socials.linkedin} target="_blank" className={iconStyle}><Linkedin size={25}/></Link>}
-      {socials?.website && <Link href={socials.website} target="_blank" className={iconStyle}><Globe size={25}/></Link>}
+      {socials?.linkedin && <Link href={socials.linkedin} target="_blank" className={iconStyle}><Linkedin size={26}/></Link>}
+      {socials?.website && <Link href={socials.website} target="_blank" className={iconStyle}><Globe size={26}/></Link>}
     </div>
   );
 }
