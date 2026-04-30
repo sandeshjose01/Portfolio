@@ -1,45 +1,17 @@
-import { cn } from "@/lib/utils";
-import { Facebook, Linkedin, Twitter, ExternalLink } from "lucide-react";
-import { buttonVariants } from "./ui/button";
+"use client";
+import React from "react";
 import Link from "next/link";
-import FramerWrapper from "./animation/FramerWrapper";
+import { Facebook, Linkedin, Globe, Twitter } from "lucide-react";
 
-const SocialLinks = () => {
-  const links = [
-    { name: "Facebook", 
-     link: href={socials?.facebook || "https://www.facebook.com/sandesh.josee",
-     icon: <Facebook /> 
-    },
-    { name: "Behance", 
-     link: href={socials?.behance || "https://be.net/sandeshjose", 
-     icon: <Twitter /> 
-    },
-    { name: "Linkedin", 
-     link: href={socials?.linkedin || "https://www.linkedin.com/in/sanjoshi1", 
-     icon: <Linkedin /> 
-    },
-    { name: "External", 
-     link: href={socials?.external || "https://www.sandeshjoshi.info.np", 
-     icon: <ExternalLink /> 
-    },
-  ];
+export default function SocialLinks({ socials }: any) {
+  const iconStyle = "w-10 h-10 flex items-center justify-center border-2 border-gray-800 rounded-lg text-gray-800 hover:bg-[#2f7df4] hover:border-[#2f7df4] hover:text-white transition-all duration-300";
+
   return (
-    <>
-      {links.map((itm, indx) => {
-        const timing = 0.55 + indx * 0.125
-        
-        return (
-          <FramerWrapper key={indx} delay={timing} y={50}>
-
-          <Link  target="blank"
-            href={itm.link}
-            className={cn(buttonVariants({ variant: "outline", size: "icon" }))}
-            >{itm.icon}</Link>
-            </FramerWrapper>
-        );
-      })}
-    </>
+    <div className="flex gap-3">
+      <Link href={socials?.facebook || "#"} target="_blank" className={iconStyle}><Facebook size={18}/></Link>
+      <Link href={socials?.behance || "#"} target="_blank" className={iconStyle}><Behance size={18}/></Link>
+      <Link href={socials?.linkedin || "#"} target="_blank" className={iconStyle}><Linkedin size={18}/></Link>
+      <Link href={socials?.website || "#"} target="_blank" className={iconStyle}><Globe size={18}/></Link>
+    </div>
   );
-};
-
-export default SocialLinks;
+}
