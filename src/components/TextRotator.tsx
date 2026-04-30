@@ -15,19 +15,19 @@ function TextRotator({ items = [], staticRole }: any) {
 
   return (
     <div className="py-4 flex items-center gap-2 overflow-hidden">
-      <div className="font-poppins text-base sm:text-2xl text-white whitespace-nowrap">
+      <div className="font-poppins text-base sm:text-2xl [text-wrap:balance] text-gray-700">
         {staticRole || "I am a Graphic Designer &"}
       </div>
 
       {/* // text: This container prevents the "upper part" of other words from showing */}
-      <div className="relative h-[30px] sm:h-[40px] overflow-hidden min-w-[150px]">
+      <div className="relative h-[30px] sm:h-[40px] overflow-hidden min-w-[200px]">
         <AnimatePresence mode="wait">
           <motion.div
             key={displayItems[index]}
             // // text: Enters from bottom, exits through top for an infinite feel
-            initial={{ y: 20, opacity: 0 }}
+            initial={{ y: 20, opacity: 0.5 }}
             animate={{ y: 0, opacity: 1 }}
-            exit={{ y: -20, opacity: 0 }}
+            exit={{ y: -20, opacity: 0.5 }}
             transition={{ duration: 0.4, ease: "easeInOut" }}
             className="text-[#2f7df4] font-rubik text-lg sm:text-3xl font-bold absolute inset-0 flex items-center"
           >
