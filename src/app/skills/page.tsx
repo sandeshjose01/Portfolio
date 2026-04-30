@@ -12,7 +12,7 @@ export default function SkillPage() {
   const [adminSkills, setAdminSkills] = useState<any[]>([]);
   const [pageData, setPageData] = useState({
     heading: "My Technical Experience/Skills.",
-    description: "Currently I am a Graphic Designer with 3+ year of experience and I have a solid understanding of Adobe Photoshop, Adobe Illustrator, Adobe Indesign, Adobe Premiere Pro, Adobe After Effect, Canva & Microsoft office."
+    description: "Currently I am a Graphic Designer with 5+ year of experience and I have a solid understanding of Adobe Photoshop, Adobe Illustrator, Adobe Indesign, Adobe Premiere Pro, Adobe After Effect, Canva, Microsoft office & Other Tools."
   });
 
   // --- ORIGINAL DATA FOR FALLBACK ---
