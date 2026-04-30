@@ -9,6 +9,14 @@ import GithubBtn from "@/components/animation/GithubBtn";
 import DownLoadResumeBtn from "@/components/DownLoadResumeBtn"; 
 import FramerWrapper from "@/components/animation/FramerWrapper";
 
+// // text: ADDING THIS BACK FIXES YOUR LAYOUT.TSX ERROR
+export const siteConfig = {
+  name: "Sandesh joshi",
+  description: "I am a Passionate Graphic Designer",
+  ogImage: "https://sandeshjose01.vercel.app/og-image.png",
+  url: "https://www.sandeshjoshi.info.np/",
+};
+
 export default function Home() {
   const [homeData, setHomeData] = useState<any>(null);
 
@@ -21,7 +29,7 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen w-full bg-white overflow-hidden flex items-center justify-center px-10 lg:px-20">
-      {/* THE BLUE DOT BACKGROUND PATTERN */}
+      {/* BLUE DOT BACKGROUND */}
       <div className="absolute inset-0 z-0 opacity-40" 
         style={{ backgroundImage: `radial-gradient(#2f7df4 1px, transparent 1px)`, backgroundSize: '30px 30px' }} 
       />
@@ -40,6 +48,7 @@ export default function Home() {
         </FramerWrapper>
 
         <FramerWrapper className="relative w-full lg:w-[45%] flex justify-center" y={0} x={100}>
+          {/* // text: Passing the image URL to the fixed HeroImage component */}
           <HeroImage adminUrl={homeData?.heroImage} />
         </FramerWrapper>
       </div>
