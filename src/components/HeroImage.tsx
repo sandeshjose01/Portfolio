@@ -5,10 +5,10 @@ import Image from "next/image";
 export default function HeroImage({ adminUrl }: any) {
   return (
     <div className="relative w-full h-full flex items-center justify-center">
-      {/* // text: Using Next.js Image component to satisfy the build warnings */}
       <Image 
-        src={adminUrl || "/your-local-image.png"} 
-        alt="Sandesh Joshi" 
+        // // text: Updated fallback name to portfolioLogo.png
+        src={adminUrl || "/portfolioLogo.png"} 
+        alt="Portfolio Logo" 
         width={1000}
         height={1000}
         priority 
