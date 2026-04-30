@@ -5,8 +5,9 @@ const HeroImage = () => {
   return (
     <>
       <Image
-        src={logo}
-        alt="logo"
+        src={adminUrl || "/my-photo.png"} 
+        alt="Hero"
+  // ... keep your other attributes like width/height
         loading="eager"
         priority
         height={1000}
