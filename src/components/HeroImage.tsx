@@ -5,13 +5,13 @@ import Image from "next/image";
 export default function HeroImage({ adminUrl }: any) {
   return (
     <div className="relative w-full max-w-[550px] aspect-square">
-      {/* // text: Using Next.js Image component to fix the LCP warnings in your build log */}
       <Image 
+        // // text: If Admin has no photo, it uses your local original photo
         src={adminUrl || "/portfolioLogo.png"} 
-        alt="Sandesh Joshi Hero" 
+        alt="Logo" 
         width={1000}
         height={1000}
-        priority // // text: This ensures the image loads instantly
+        priority 
         className="w-full h-full object-contain drop-shadow-2xl" 
       />
     </div>
