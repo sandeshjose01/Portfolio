@@ -1,3 +1,4 @@
+// Path: src/lib/firebase.ts
 import { initializeApp, getApps, getApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
@@ -10,5 +11,8 @@ const firebaseConfig = {
     appId: "1:1018154031940:web:937edbfb442a6dfc041511"
 };
 
+// This line stops the crash! It checks if Firebase is already running before starting it.
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+const db = getFirestore(app);
+
+export { db };
