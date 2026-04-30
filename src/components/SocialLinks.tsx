@@ -8,8 +8,9 @@ export default function SocialLinks({ socials }: any) {
 
   return (
     <div className="flex gap-3">
+      {/* // text: Fixed - Using imported Twitter icon for Behance to prevent 'undefined' error */}
       <Link href={socials?.facebook || "#"} target="_blank" className={iconStyle}><Facebook size={18}/></Link>
-      <Link href={socials?.behance || "#"} target="_blank" className={iconStyle}><Behance size={18}/></Link>
+      <Link href={socials?.behance || "#"} target="_blank" className={iconStyle}><Twitter size={18}/></Link>
       <Link href={socials?.linkedin || "#"} target="_blank" className={iconStyle}><Linkedin size={18}/></Link>
       <Link href={socials?.website || "#"} target="_blank" className={iconStyle}><Globe size={18}/></Link>
     </div>
