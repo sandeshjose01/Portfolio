@@ -49,13 +49,11 @@ export default function SkillPage() {
   const finalVideo = videoTools.length > 0 ? videoTools : defaultVideo;
 
   const marketingTools = adminSkills.filter(s => s.category === "Marketing & Ad Tools");
-  const finalMarketing = marketingadTools.length > 0 ? marketingadTools : defaultmarketingad;
-
+  
   const microsoftTools = adminSkills.filter(s => s.category === "Microsoft Office");
-  const finalMicrosoft = microsoftTools.length > 0 ? microsoftTools : defaultmicrosoft;
-
+  
   const otherTools = adminSkills.filter(s => s.category === "Other Tools");
-  const finalother = otherTools.length > 0 ? otherTools : defaultother;
+  
 
   return (
     <div className="h-full w-full relative flex flex-col items-start gap-5 overflow-hidden">
