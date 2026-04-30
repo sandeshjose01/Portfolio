@@ -2,18 +2,28 @@
 import React from "react";
 import TextRotator from "./TextRotator";
 
-export default function HeroTexts({ name, staticRole, roles }: any) {
+interface HeroTextsProps {
+  roles?: string[];
+  name?: string;
+  staticRole?: string;
+}
+
+const HeroTexts = ({ roles, name, staticRole }: HeroTextsProps) => {
   return (
     <div className="flex flex-col items-start gap-2">
-      <h3 className="font-poppins text-xl max-sm:text-xl" >My Name is</h3>
-      <div className="relative inline-block">
-        <h1 className="font-rubik text-8xl name_underline text-primary max-sm:text-6xl">
-          {/* OR STATEMENT: Admin Name OR Original Hardcoded Name */}
-          {name ? name.replace(" ", "\n") : "Sandesh \n Joshi"} .
-        </h1>
-        <div className="absolute bottom-4 left-0 w-24 h-2 bg-[#2f7df4] rounded-full" />
-      </div>
-      <TextRotator staticRole={staticRole} items={roles} />
+      <h3 className="font-poppins text-2xl max-sm:text-xl text-white">
+        My Name is
+      </h3>
+      
+      {/* // text: name_underline is your original CSS class. 
+          // text: .split(" ").join("\n") forces the second name to a new line. */}
+      <h1 className="font-rubik text-8xl name_underline text-primary max-sm:text-6xl text-white leading-[1.1] whitespace-pre-line">
+        {name ? name.split(" ").join("\n") : "Sandesh\nJoshi"} .
+      </h1>
+      
+      <TextRotator items={roles} staticRole={staticRole} />
     </div>
   );
-}
+};
+
+export default HeroTexts;
