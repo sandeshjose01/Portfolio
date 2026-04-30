@@ -15,7 +15,7 @@ function TextRotator({ items = [], staticRole }: any) {
 
   return (
     <div className="py-4 flex items-center gap-2 overflow-hidden">
-      <div className="font-poppins text-base sm:text-2xl text-white whitespace-nowrap">
+      <div className="font-poppins text-base sm:text-2xl [text-wrap:balance] text-gray-700">
         {staticRole || "I am a Graphic Designer &"}
       </div>
 
