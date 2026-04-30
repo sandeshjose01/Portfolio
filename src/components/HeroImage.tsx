@@ -12,7 +12,7 @@ export default function HeroImage({ adminUrl }: any) {
         width={1000}
         height={1000}
         priority 
-        className="w-full h-full object-contain drop-shadow-2xl" 
+        className="w-full h-full object-contain" 
       />
     </div>
   );
