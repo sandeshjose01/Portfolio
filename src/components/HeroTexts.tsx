@@ -1,5 +1,7 @@
 import TextRotator from "./TextRotator";
 
+// Your original H1
+<h1 className="..."> {name || "Sandesh \n Joshi ."} </h1>
  
 const HeroTexts = () => {
  
