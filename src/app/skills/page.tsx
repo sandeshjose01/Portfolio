@@ -15,7 +15,19 @@ export default function SkillPage() {
     description: "Currently I am a Graphic Designer with 5+ year of experience and I have a solid understanding of Adobe Photoshop, Adobe Illustrator, Adobe Indesign, Adobe Premiere Pro, Adobe After Effect, Canva, Microsoft office & Other Tools."
   });
 
-  // --- ORIGINAL DATA FOR FALLBACK ---
+  // --- CATEGORY LIST (Matches Admin Panel) ---
+  const CATEGORY_LIST = [
+    "Brand & Visual Identity",
+    "UI/UX & Web Solutions",
+    "Video & Motion Graphics",
+    "Digital Marketing",
+    "Business & Productivity",
+    "Creative Assets",
+    "Generative AI Art & Creative Direction",
+    "Others"
+  ];
+
+  // --- ORIGINAL DATA FOR FALLBACK (Safety Net) ---
   const defaultGraphic = [
     { name: "Adobe Creative Suite", icon: "https://upload.wikimedia.org/wikipedia/commons/4/4c/Adobe_Creative_Cloud_rainbow_icon.svg" },
     { name: "Adobe Photoshop", icon: "https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg" },
@@ -30,65 +42,66 @@ export default function SkillPage() {
   ];
 
   useEffect(() => {
+    // 1. Sync Page Header (Heading & Paragraph)
     const unsubHeader = onSnapshot(doc(db, "siteData", "skillsPage"), (d) => {
       if(d.exists()) setPageData({ heading: d.data().heading, description: d.data().description });
     });
+
+    // 2. Sync Skills List
     const unsubSkills = onSnapshot(query(collection(db, "skills"), orderBy("order", "asc")), (snap) => {
       const items: any[] = [];
       snap.forEach((doc) => items.push({ id: doc.id, ...doc.data() }));
       setAdminSkills(items);
     });
+
     return () => { unsubHeader(); unsubSkills(); };
   }, []);
 
-  // Filter skills or use original data if admin is empty
-  const graphicTools = adminSkills.filter(s => s.category === "Graphic Designing Tools");
-  const finalGraphic = graphicTools.length > 0 ? graphicTools : defaultGraphic;
-
-  const videoTools = adminSkills.filter(s => s.category === "Video Editing Tools");
-  const finalVideo = videoTools.length > 0 ? videoTools : defaultVideo;
-
-  const marketingTools = adminSkills.filter(s => s.category === "Marketing & Ad Tools");
-  
-  const microsoftTools = adminSkills.filter(s => s.category === "Microsoft Office");
-  
-  const otherTools = adminSkills.filter(s => s.category === "Other Tools");
-  
-
   return (
-    <div className="h-full w-full relative flex flex-col items-start gap-5 overflow-hidden">
+    <div className="h-full w-full relative flex flex-col items-start gap-5 overflow-hidden pb-20">
       <Badge variant="secondary" className="gap-1.5 py-1">
-        <LightbulbIcon className="w-4 h-4" /> My Skills
+        <LightbulbIcon className="w-4 h-4" />
+        My Skills
       </Badge>
 
       <div className="flex flex-col gap-3 w-full">
         <Heading>{pageData.heading}</Heading>
         
         <FramerWrapper y={0} x={200}>
-          <p className="font-poppins text-xl w-full text-primary max-sm:text-lg">
+          <p className="font-poppins text-xl w-full text-primary max-sm:text-lg whitespace-pre-line">
             {pageData.description}
           </p>
         </FramerWrapper>
 
-        {/* Section 1: Graphic Designing Tools */}
-        <FramerWrapper y={100} delay={0.3} className="block w-full">
-          <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
-            Graphic Designing Tools
-          </h1>
-          <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
-            <SkillsFooter items={finalGraphic} />
-          </div>
-        </FramerWrapper>
+        {/* --- DYNAMIC CATEGORY RENDERING --- */}
+        {CATEGORY_LIST.map((catName, categoryIndex) => {
+          // Filter items belonging to this category
+          const itemsFromAdmin = adminSkills.filter(s => s.category === catName);
+          
+          // Determine what to show (Admin Data OR Fallback for specific categories)
+          let finalItems = itemsFromAdmin;
+          
+          // Fallback logic if Admin is empty
+          if (itemsFromAdmin.length === 0) {
+            if (catName === "Brand & Visual Identity") finalItems = defaultGraphic;
+            if (catName === "Video & Motion Graphics") finalItems = defaultVideo;
+          }
 
-        {/* Section 2: Video Editing Tools */}
-        <FramerWrapper y={100} delay={0.3} className="block w-full">
-          <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
-            Video Editing Tools
-          </h1>
-          <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
-            <SkillsFooter items={finalVideo} />
-          </div>
-        </FramerWrapper>
+          // If no items in Admin and no fallbacks, don't show the section
+          if (finalItems.length === 0) return null;
+
+          return (
+            <FramerWrapper key={catName} y={100} delay={0.3 + (categoryIndex * 0.1)} className="block w-full mt-8">
+              <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-6 uppercase tracking-wider">
+                {catName}
+              </h1>
+              <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
+                <SkillsFooter items={finalItems} />
+              </div>
+            </FramerWrapper>
+          );
+        })}
+        
       </div>
     </div>
   );
