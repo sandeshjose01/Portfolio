@@ -17,14 +17,15 @@ export default function SkillPage() {
 
   // --- CATEGORY LIST (Matches Admin Panel) ---
   const CATEGORY_LIST = [
-    "Brand & Visual Identity",
-    "UI/UX & Web Solutions",
-    "Video & Motion Graphics",
-    "Digital Marketing",
-    "Business & Productivity",
-    "Creative Assets",
-    "Generative AI Art & Creative Direction",
-    "Others"
+      "Brand & Visual Identity",
+      "UI/UX & Web Solutions",
+      "Video & Motion Graphics",
+      "Digital Marketing",
+      "Business & Productivity",
+      "Creative Assets",
+      "Generative AI Art & Creative Direction",
+      "3D Creation Tool",
+      "Others"
   ];
 
   // --- ORIGINAL DATA FOR FALLBACK (Safety Net) ---
@@ -58,7 +59,7 @@ export default function SkillPage() {
   }, []);
 
   return (
-    <div className="h-full w-full relative flex flex-col items-start gap-5 overflow-hidden pb-20">
+    <div className="h-full w-full relative flex flex-col items-start gap-5 overflow-hidden">
       <Badge variant="secondary" className="gap-1.5 py-1">
         <LightbulbIcon className="w-4 h-4" />
         My Skills
@@ -68,7 +69,7 @@ export default function SkillPage() {
         <Heading>{pageData.heading}</Heading>
         
         <FramerWrapper y={0} x={200}>
-          <p className="font-poppins text-xl w-full text-primary max-sm:text-lg whitespace-pre-line">
+          <p className="font-poppins text-xl w-full text-primary max-sm:text-lg">
             {pageData.description}
           </p>
         </FramerWrapper>
@@ -91,8 +92,8 @@ export default function SkillPage() {
           if (finalItems.length === 0) return null;
 
           return (
-            <FramerWrapper key={catName} y={100} delay={0.3 + (categoryIndex * 0.1)} className="block w-full mt-8">
-              <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-6 uppercase tracking-wider">
+            <FramerWrapper key={catName} y={100} delay={0.3 + (categoryIndex * 0.1)} className="block w-full">
+              <h1 className="gap-2 text-2xl font-poppins text-primary font-semibold flex text_underline relative max-sm:text-xl mb-4">
                 {catName}
               </h1>
               <div className="w-full grid grid-cols-7 max-lg:grid-cols-4 max-md:grid-cols-3 max-sm:grid-cols-2 gap-4">
