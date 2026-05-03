@@ -10,9 +10,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 // ==========================================================
-// SECTION 1: SMART LINK CONFIGURATION (Icons & Colors)
+// SECTION 1: SMART LINK CONFIGURATION (Custom SVGs)
 // ==========================================================
-// Edit these if you want to change button colors or add new brands.
 
 const ArtStationIcon = () => (
     <svg viewBox="0 0 512 512" className="w-4 h-4" fill="currentColor">
@@ -23,6 +22,12 @@ const ArtStationIcon = () => (
 const BehanceIcon = () => (
     <svg fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
         <path d="M22 7h-7v-2h7v2zm1.726 10c-.442 1.297-2.029 3-5.101 3-3.074 0-5.564-1.729-5.564-5.675 0-3.91 2.325-5.92 5.466-5.92 3.082 0 4.964 1.782 5.375 4.806l.041.629h-8c.073 2.283 1.061 3.3 2.717 3.3 1.206 0 2.11-.481 2.59-1.06l1.824 1.082v-.162zm-5.442-4.633c-.084-1.154-1.109-1.84-2.127-1.811-1.284.052-1.922.911-2.119 1.811h4.246zM11.82 10.34C11 8.995 9.5 8 7.414 8H0v12h7.336c2.626 0 4.646-1.115 4.646-3.765 0-2.138-1.583-3.411-3.238-3.851 1.082-.26 2.476-1.134 2.476-3.336zm-1.576 2.185c0 1.284-1.055 1.737-2.322 1.737H2.822v-3.32h4.544c1.284 0 2.322.473 2.322 1.634v-.051zm.557 5.02c0 1.437-1.144 2.052-2.776 2.052H2.822v-3.784h4.896c1.543 0 2.677.615 2.677 2.083v-.351z"/>
+    </svg>
+);
+
+const PinterestIcon = () => (
+    <svg fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
+        <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.168 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.367 18.592 0 12.017 0z"/>
     </svg>
 );
 
@@ -59,11 +64,9 @@ const ProjectPage = () => {
   const [selectedProject, setSelectedProject] = useState<any>(null);
 
   useEffect(() => {
-    // 1. Instant Load from Cache
     const cached = localStorage.getItem("sj_projects_cache");
     if (cached) setProjects(JSON.parse(cached));
 
-    // 2. Real-time Subscription to Firebase
     const q = query(collection(db, "projects"), orderBy("order", "asc"));
     const unsub = onSnapshot(q, (snap) => {
         const items = snap.docs.map(doc => ({
@@ -83,21 +86,44 @@ const ProjectPage = () => {
   const handleCloseAll = () => { setSelectedCategory(null); setSelectedSubcategory(null); setSelectedProject(null); };
 
   // ==========================================================
-  // SECTION 3: SMART URL RENDERER
+  // SECTION 3: SMART URL RENDERER (Aggressive Detection)
   // ==========================================================
 
   const renderSmartButtons = (proj: any) => {
-    const detectedButtons = (proj.smartLinks || []).filter((u: string) => u.trim() !== "").map((url: string) => {
+    // 1. Combine all possible link sources (The new smartLinks array + any legacy direct fields)
+    const allUrls = [
+        ...(proj.smartLinks || []),
+        proj.githubLink,
+        proj.youtubeLink,
+        proj.linkedinLink,
+        proj.facebookLink,
+        proj.instagramLink,
+        proj.tiktokLink,
+        proj.pinterestLink,
+        proj.behanceLink,
+        proj.artstationLink
+    ].filter(url => url && url.trim() !== "");
+
+    // 2. Remove duplicates
+    const uniqueUrls = Array.from(new Set(allUrls));
+
+    const detectedButtons = uniqueUrls.map((url: string) => {
       const u = url.toLowerCase();
       
-      // Detection Rules
-      if (u.includes('behance.net') || u.includes('behance.com')) return { url, label: "Visit Behance", color: "bg-[#1769ff]", icon: <BehanceIcon /> };
-      if (u.includes('facebook.com') || u.includes('fb.com')) return { url, label: "Visit Facebook", color: "bg-[#1877F2]", icon: <Facebook className="w-4 h-4" /> };
-      if (u.includes('artstation.com')) return { url, label: "Visit ArtStation", color: "bg-[#13aff0]", icon: <ArtStationIcon /> };
-      if (u.includes('github.com')) return { url, label: "Visit GitHub", color: "bg-black", icon: <Github className="w-4 h-4" /> };
-      if (u.includes('youtube.com') || u.includes('youtu.be')) return { url, label: "Watch on YouTube", color: "bg-[#FF0000]", icon: <Youtube className="w-4 h-4" /> };
-      if (u.includes('instagram.com')) return { url, label: "Visit Instagram", color: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCB045]", icon: <Instagram className="w-4 h-4" /> };
-      if (u.includes('tiktok.com')) return { url, label: "Visit TikTok", color: "bg-black", icon: <TikTokIcon /> };
+      // linkedin.com OR np.linkedin.com OR linkedin.com/in/
+      if (u.includes('linkedin')) return { url, label: "Visit LinkedIn", color: "bg-[#0A66C2]", icon: <Linkedin className="w-4 h-4" /> };
+      
+      // pinterest.com OR pin.it
+      if (u.includes('pinterest') || u.includes('pin.it')) return { url, label: "Visit Pinterest", color: "bg-[#E60023]", icon: <PinterestIcon /> };
+      
+      if (u.includes('behance')) return { url, label: "Visit Behance", color: "bg-[#1769ff]", icon: <BehanceIcon /> };
+      if (u.includes('facebook') || u.includes('fb.com')) return { url, label: "Visit Facebook", color: "bg-[#1877F2]", icon: <Facebook className="w-4 h-4" /> };
+      if (u.includes('artstation')) return { url, label: "Visit ArtStation", color: "bg-[#13aff0]", icon: <ArtStationIcon /> };
+      if (u.includes('github')) return { url, label: "Visit GitHub", color: "bg-black", icon: <Github className="w-4 h-4" /> };
+      if (u.includes('youtube') || u.includes('youtu.be')) return { url, label: "Watch on YouTube", color: "bg-[#FF0000]", icon: <Youtube className="w-4 h-4" /> };
+      if (u.includes('instagram')) return { url, label: "Visit Instagram", color: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCB045]", icon: <Instagram className="w-4 h-4" /> };
+      if (u.includes('tiktok')) return { url, label: "Visit TikTok", color: "bg-black", icon: <TikTokIcon /> };
+      if (u.includes('figma')) return { url, label: "Visit Figma", color: "bg-[#F24E1E]", icon: <Figma className="w-4 h-4" /> };
       
       return { url, label: "Visit Link", color: "bg-slate-700", icon: <LinkIcon className="w-4 h-4" /> };
     });
@@ -128,14 +154,11 @@ const ProjectPage = () => {
 
   return (
     <div className="h-full w-full relative flex flex-col items-start gap-8 pb-20 px-4 md:px-10 select-none">
-      
-      {/* Page Header */}
       <Badge variant="secondary" className="gap-1.5 py-1"><Layers className="w-4 h-4" /> My Projects</Badge>
       <div className="flex flex-col gap-3"><Heading>My Projects</Heading><p className="font-poppins text-lg text-muted-foreground max-w-2xl">Combine creative intuition and technical skill to build your visual legacy.</p></div>
 
-      {/* STEP 1: CATEGORY GRID */}
       <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-4">
-        {CATEGORY_DEFINITIONS.map((cat, index) => (
+        {categories.map((cat, index) => (
           <FramerWrapper key={cat.id} y={20} delay={index * 0.1}>
             <motion.div whileHover={{ scale: 1.01 }} onClick={() => setSelectedCategory(cat)} className="group relative cursor-pointer aspect-[16/10] w-full bg-white/40 rounded-2xl overflow-hidden border border-white/60 shadow-sm">
               <img src={cat.image} className="h-full w-full object-cover transition-all duration-700 group-hover:scale-105" alt={cat.title} />
@@ -149,14 +172,11 @@ const ProjectPage = () => {
         ))}
       </div>
 
-      {/* STEP 2-4: MODAL SYSTEM */}
       <AnimatePresence>
         {selectedCategory && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-6">
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={handleCloseAll} className="absolute inset-0 bg-white/40 backdrop-blur-xl" />
             <motion.div layout initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.98, opacity: 0 }} className="relative w-full max-w-6xl max-h-[90vh] overflow-hidden rounded-3xl bg-white/40 border border-white/60 backdrop-blur-xl shadow-2xl flex flex-col">
-              
-              {/* Internal Modal Nav */}
               <div className="flex justify-between items-center p-6 sticky top-0 z-50 bg-white/40 backdrop-blur-xl border-b border-white/40">
                 {selectedSubcategory ? (
                   <button onClick={() => selectedProject ? setSelectedProject(null) : setSelectedSubcategory(null)} className="flex items-center gap-2 text-slate-800 bg-white/60 px-4 py-2 rounded-xl hover:bg-white/90 transition-all font-bold border border-white/60 shadow-sm"><ArrowLeft className="w-4 h-4" /> Back</button>
@@ -166,8 +186,6 @@ const ProjectPage = () => {
 
               <div className="overflow-y-auto flex-1 hide-scrollbar">
                 <AnimatePresence mode="wait">
-                  
-                  {/* STEP 4: PROJECT DETAIL VIEW */}
                   {selectedProject ? (
                     <motion.div key="project" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="flex flex-col">
                       <div className="w-full bg-white/10 flex items-center justify-center overflow-hidden">
@@ -186,7 +204,6 @@ const ProjectPage = () => {
                                     ? selectedProject.description.map((line: string, i: number) => <p key={i}>{line}</p>) 
                                     : <p className="whitespace-pre-wrap">{selectedProject.description}</p>}
                             </div>
-                            {/* Software Icons List */}
                             {selectedProject.softwareUsed && selectedProject.softwareUsed.length > 0 && (
                                 <div className="space-y-3 pt-2">
                                   <h4 className="text-[10px] uppercase font-bold text-slate-500 tracking-[0.2em]">Crafted Using</h4>
@@ -199,7 +216,6 @@ const ProjectPage = () => {
                                   </div>
                                 </div>
                             )}
-                            {/* Project Tags */}
                             <div className="flex flex-wrap gap-2 pt-2">
                                 {selectedProject.tags && selectedProject.tags.map((t:any) => <span key={t} className="px-4 py-1.5 bg-white/80 rounded-lg text-xs text-slate-600 border border-white uppercase tracking-widest font-bold shadow-sm">{t}</span>)}
                             </div>
@@ -208,10 +224,7 @@ const ProjectPage = () => {
                         </div>
                       </div>
                     </motion.div>
-                  ) 
-                  
-                  /* STEP 3: SUBCATEGORY PROJECT GRID */
-                  : selectedSubcategory ? (
+                  ) : selectedSubcategory ? (
                     <motion.div key="list" initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 0.98 }} className="p-6">
                       {filteredProjects.length > 0 ? (
                         <div className="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
@@ -229,10 +242,7 @@ const ProjectPage = () => {
                         </div>
                       )}
                     </motion.div>
-                  ) 
-                  
-                  /* STEP 2: SUBCATEGORY SELECTOR VIEW */
-                  : (
+                  ) : (
                     <motion.div key="subs" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="p-8 md:p-12 space-y-10">
                       <h2 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tighter leading-none">Explore {selectedCategory.title}</h2>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
