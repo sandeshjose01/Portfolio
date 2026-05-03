@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 
 // ==========================================================
-// SECTION 1: SMART LINK CONFIGURATION (Custom SVGs)
+// SECTION 1: ICONS & BRANDING (Edit Icons here)
 // ==========================================================
 
 const ArtStationIcon = () => (
@@ -25,13 +25,8 @@ const BehanceIcon = () => (
     </svg>
 );
 
-const PinterestIcon = () => (
-    <svg fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4">
-        <path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.168 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.367 18.592 0 12.017 0z"/>
-    </svg>
-);
-
 const TikTokIcon = () => <svg fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>;
+const PinterestIcon = () => <svg fill="currentColor" viewBox="0 0 24 24" className="w-4 h-4"><path d="M12.017 0C5.396 0 .029 5.367.029 11.987c0 5.079 3.158 9.417 7.618 11.162-.105-.949-.199-2.403.041-3.439.219-.937 1.406-5.957 1.406-5.957s-.359-.72-.359-1.781c0-1.663.967-2.911 2.168-2.911 1.024 0 1.518.769 1.518 1.688 0 1.029-.653 2.567-.992 3.992-.285 1.193.6 2.165 1.775 2.165 2.128 0 3.768-2.245 3.768-5.487 0-2.861-2.063-4.869-5.008-4.869-3.41 0-5.409 2.562-5.409 5.199 0 1.033.394 2.143.889 2.741.099.12.112.225.085.345-.09.375-.293 1.199-.334 1.363-.053.225-.172.271-.401.165-1.495-.69-2.433-2.878-2.433-4.646 0-3.776 2.748-7.252 7.951-7.252 4.168 0 7.392 2.967 7.392 6.923 0 4.135-2.607 7.462-6.233 7.462-1.214 0-2.354-.629-2.758-1.379l-.749 2.848c-.269 1.045-1.004 2.352-1.498 3.146 1.123.345 2.306.535 3.55.535 6.607 0 11.985-5.365 11.985-11.987C23.97 5.367 18.592 0 12.017 0z"/></svg>;
 
 const SOFTWARE_ICONS: Record<string, string> = {
   "Adobe Photoshop": "https://upload.wikimedia.org/wikipedia/commons/a/af/Adobe_Photoshop_CC_icon.svg",
@@ -43,7 +38,11 @@ const SOFTWARE_ICONS: Record<string, string> = {
   "CapCut": "https://upload.wikimedia.org/wikipedia/en/2/23/CapCut_logo.png",
 };
 
-const CATEGORY_DEFINITIONS = [
+// ==========================================================
+// SECTION 2: STATIC DEFINITIONS
+// ==========================================================
+
+const categories = [
   { id: 1, title: "Personal Project", subcategories: ["Social Media Posts", "Logo Design", "Photo Manipulation", "Conceptual Rebrands", "Speculative UI/UX (Concept Apps)", "Artistic & Experimental Design"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/personal%20project.png?raw=true" },
   { id: 2, title: "Brand Identity", subcategories: ["Logo Design", "Typography", "Brand Color Palettes", "Corporate Stationery", "Brand Guidelines (Style Guides)", "Iconography & Graphic Devices"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/brand%20identity.png?raw=true" },
   { id: 3, title: "UI/UX Design", subcategories: ["Website Landing Pages", "Mobile App Interfaces", "Portfolio Designs", "Wireframing"], image: "https://github.com/sandeshjose01/Portfolio/blob/master/Personal%20Project/ui_ux%20design.png?raw=true" },
@@ -53,7 +52,7 @@ const CATEGORY_DEFINITIONS = [
 ];
 
 // ==========================================================
-// SECTION 2: COMPONENT LOGIC (State & Data Fetching)
+// SECTION 3: COMPONENT LOGIC (State & Sync)
 // ==========================================================
 
 const ProjectPage = () => {
@@ -64,9 +63,11 @@ const ProjectPage = () => {
   const [selectedProject, setSelectedProject] = useState<any>(null);
 
   useEffect(() => {
+    // text: Caching Logic for 0ms delay
     const cached = localStorage.getItem("sj_projects_cache");
     if (cached) setProjects(JSON.parse(cached));
 
+    // text: Real-time listener for instant Admin updates
     const q = query(collection(db, "projects"), orderBy("order", "asc"));
     const unsub = onSnapshot(q, (snap) => {
         const items = snap.docs.map(doc => ({
@@ -86,46 +87,26 @@ const ProjectPage = () => {
   const handleCloseAll = () => { setSelectedCategory(null); setSelectedSubcategory(null); setSelectedProject(null); };
 
   // ==========================================================
-  // SECTION 3: SMART URL RENDERER (Aggressive Detection)
+  // SECTION 4: SMART LINK ENGINE (Fixed Recognition)
   // ==========================================================
 
   const renderSmartButtons = (proj: any) => {
-    // 1. Combine all possible link sources (The new smartLinks array + any legacy direct fields)
-    const allUrls = [
-        ...(proj.smartLinks || []),
-        proj.githubLink,
-        proj.youtubeLink,
-        proj.linkedinLink,
-        proj.facebookLink,
-        proj.instagramLink,
-        proj.tiktokLink,
-        proj.pinterestLink,
-        proj.behanceLink,
-        proj.artstationLink
-    ].filter(url => url && url.trim() !== "");
-
-    // 2. Remove duplicates
-    const uniqueUrls = Array.from(new Set(allUrls));
-
-    const detectedButtons = uniqueUrls.map((url: string) => {
+    const detectedButtons = (proj.smartLinks || []).filter((u: string) => u.trim() !== "").map((url: string) => {
       const u = url.toLowerCase();
       
-      // linkedin.com OR np.linkedin.com OR linkedin.com/in/
-      if (u.includes('linkedin')) return { url, label: "Visit LinkedIn", color: "bg-[#0A66C2]", icon: <Linkedin className="w-4 h-4" /> };
+      // text: Fixed recognition keywords for Facebook and Behance
+      if (u.includes('behance')) return { url, label: "Visit Behance", color: "bg-[#1769ff] text-white", icon: <BehanceIcon /> };
+      if (u.includes('facebook') || u.includes('fb.com')) return { url, label: "Visit Facebook", color: "bg-[#1877F2] text-white", icon: <Facebook className="w-4 h-4" /> };
+      if (u.includes('artstation')) return { url, label: "Visit ArtStation", color: "bg-[#13aff0] text-white", icon: <ArtStationIcon /> };
+      if (u.includes('pinterest') || u.includes('pin.it')) return { url, label: "Visit Pinterest", color: "bg-[#E60023] text-white", icon: <PinterestIcon /> };
       
-      // pinterest.com OR pin.it
-      if (u.includes('pinterest') || u.includes('pin.it')) return { url, label: "Visit Pinterest", color: "bg-[#E60023]", icon: <PinterestIcon /> };
+      if (u.includes('github')) return { url, label: "Visit GitHub", color: "bg-black text-white", icon: <Github className="w-4 h-4" /> };
+      if (u.includes('youtube') || u.includes('youtu.be')) return { url, label: "Watch on YouTube", color: "bg-[#FF0000] text-white", icon: <Youtube className="w-4 h-4" /> };
+      if (u.includes('linkedin')) return { url, label: "Visit LinkedIn", color: "bg-[#0A66C2] text-white", icon: <Linkedin className="w-4 h-4" /> };
+      if (u.includes('instagram')) return { url, label: "Visit Instagram", color: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCB045] text-white", icon: <Instagram className="w-4 h-4" /> };
+      if (u.includes('tiktok')) return { url, label: "Visit TikTok", color: "bg-black text-white", icon: <TikTokIcon /> };
       
-      if (u.includes('behance')) return { url, label: "Visit Behance", color: "bg-[#1769ff]", icon: <BehanceIcon /> };
-      if (u.includes('facebook') || u.includes('fb.com')) return { url, label: "Visit Facebook", color: "bg-[#1877F2]", icon: <Facebook className="w-4 h-4" /> };
-      if (u.includes('artstation')) return { url, label: "Visit ArtStation", color: "bg-[#13aff0]", icon: <ArtStationIcon /> };
-      if (u.includes('github')) return { url, label: "Visit GitHub", color: "bg-black", icon: <Github className="w-4 h-4" /> };
-      if (u.includes('youtube') || u.includes('youtu.be')) return { url, label: "Watch on YouTube", color: "bg-[#FF0000]", icon: <Youtube className="w-4 h-4" /> };
-      if (u.includes('instagram')) return { url, label: "Visit Instagram", color: "bg-gradient-to-r from-[#833AB4] via-[#FD1D1D] to-[#FCB045]", icon: <Instagram className="w-4 h-4" /> };
-      if (u.includes('tiktok')) return { url, label: "Visit TikTok", color: "bg-black", icon: <TikTokIcon /> };
-      if (u.includes('figma')) return { url, label: "Visit Figma", color: "bg-[#F24E1E]", icon: <Figma className="w-4 h-4" /> };
-      
-      return { url, label: "Visit Link", color: "bg-slate-700", icon: <LinkIcon className="w-4 h-4" /> };
+      return { url, label: "Visit Link", color: "bg-slate-700 text-white", icon: <LinkIcon className="w-4 h-4" /> };
     });
 
     return (
@@ -136,7 +117,7 @@ const ProjectPage = () => {
           </Link>
         )}
         {detectedButtons.map((btn: any, i: number) => (
-          <Link key={i} href={btn.url} target="_blank" className={`${btn.color} text-white px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 flex items-center gap-2 shrink-0 shadow-lg shadow-black/10`}>
+          <Link key={i} href={btn.url} target="_blank" className={`${btn.color} px-6 py-3 rounded-xl font-bold transition-all hover:scale-105 flex items-center gap-2 shrink-0 shadow-lg shadow-black/10`}>
             {btn.icon} {btn.label}
           </Link>
         ))}
@@ -145,7 +126,7 @@ const ProjectPage = () => {
   };
 
   // ==========================================================
-  // SECTION 4: MAIN UI LAYOUT
+  // SECTION 5: UI RENDER
   // ==========================================================
 
   const filteredProjects = projects.filter(p => 
