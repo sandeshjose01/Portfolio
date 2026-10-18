@@ -1,174 +1,184 @@
 "use client";
-import React from "react";
-import FramerWrapper from "@/components/animation/FramerWrapper";
-import Heading from "@/components/Heading";
-import { Badge } from "@/components/ui/badge";
-import { Briefcase, Building2, Quote, MapPin } from "lucide-react";
-import { motion } from "framer-motion";
-import { experiencesData, recommendations } from "./experiences";
+import React, { useState, useEffect } from "react";
+import { db } from "@/lib/firebase";
+import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
 
-const ExperiencePage = () => {
-  // Helper to calculate months/years automatically
-  const calculateDuration = (start: string, end: string) => {
-    const parseDate = (str: string) => {
-      const normalized = str.toLowerCase();
-      if (normalized === "present") return new Date();
-      return new Date(str);
+interface Role {
+  title: string;
+  workType: string;
+  startDate: string;
+  endDate: string;
+  isCurrent: boolean;
+  description: string[];
+}
+
+interface ExperienceItem {
+  id: string;
+  company: string;
+  location: string;
+  logo: string;
+  roles: Role[];
+}
+
+interface RecommendationItem {
+  id: string;
+  name: string;
+  role: string;
+  image: string;
+  description: string[];
+}
+
+export default function PortfolioExperiencePage() {
+  const [experiences, setExperiences] = useState<ExperienceItem[]>([]);
+  const [recommendations, setRecommendations] = useState<RecommendationItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    // Fetch Experiences in real-time
+    const unsubExp = onSnapshot(
+      collection(db, "experience"),
+      (snapshot) => {
+        const list = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as ExperienceItem[];
+        
+        // Optional sorting if createdAt exists
+        list.sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        setExperiences(list);
+        setLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching experiences:", error);
+        setLoading(false);
+      }
+    );
+
+    // Fetch Recommendations in real-time
+    const unsubRec = onSnapshot(
+      collection(db, "recommendations"),
+      (snapshot) => {
+        const list = snapshot.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data(),
+        })) as RecommendationItem[];
+        
+        list.sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+        setRecommendations(list);
+      },
+      (error) => {
+        console.error("Error fetching recommendations:", error);
+      }
+    );
+
+    return () => {
+      unsubExp();
+      unsubRec();
     };
+  }, []);
 
-    const startDate = parseDate(start);
-    const endDate = parseDate(end);
-
-    const totalMonths =
-      (endDate.getFullYear() - startDate.getFullYear()) * 12 +
-      (endDate.getMonth() - startDate.getMonth()) +
-      1;
-
-    const years = Math.floor(totalMonths / 12);
-    const months = totalMonths % 12;
-
-    const result = [];
-    if (years > 0) result.push(`${years} yr${years > 1 ? "s" : ""}`);
-    if (months > 0) result.push(`${months} mo${months > 1 ? "s" : ""}`);
-
-    return result.join(" ") || "1 mo";
-  };
-
-  // Logic to split recommendations into two columns for the Bento/Masonry effect
-  const leftColRecs = recommendations.filter((_, i) => i % 2 === 0);
-  const rightColRecs = recommendations.filter((_, i) => i % 2 !== 0);
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-white flex items-center justify-center">
+        <p className="text-sm uppercase tracking-widest text-white/50 animate-pulse">Loading Experience...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="h-full w-full relative flex flex-col items-start gap-8 pb-32 px-4 md:px-10 max-w-6xl mx-auto">
-      
-      {/* --- EXPERIENCE SECTION --- */}
-      <div className="flex flex-col gap-3 mt-10 w-full">
-        <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
-          <Briefcase className="w-4 h-4" /> Professional Experience
-        </Badge>
-        <Heading>My Experience</Heading>
-      </div>
-
-      <div className="w-full flex flex-col gap-8 mt-4">
-        {experiencesData.map((exp, index) => (
-          <FramerWrapper key={exp.id} y={30} delay={index * 0.15}>
-            <motion.div className="group relative flex flex-col sm:flex-row gap-6 w-full bg-white/40 rounded-3xl p-6 md:p-8 border border-white/60 shadow-sm backdrop-blur-xl hover:border-blue-300 transition-all">
-              
-              <div className="flex shrink-0 items-center justify-center w-16 h-16 rounded-2xl bg-white border border-slate-100 shadow-sm overflow-hidden">
-                {exp.logo ? (
-                  <img src={exp.logo} alt={exp.company} className="w-full h-full object-cover" />
-                ) : (
-                  <Building2 className="w-8 h-8 text-blue-600" />
-                )}
-              </div>
-
-              <div className="flex flex-col flex-1">
-                <h3 className="text-2xl font-bold text-slate-900">{exp.company}</h3>
-                <div className="flex items-center gap-2 text-slate-500 text-sm font-medium mb-4">
-                  <MapPin className="w-3.5 h-3.5" /> {exp.location}
+    <div className="max-w-5xl mx-auto py-24 px-6 space-y-24 text-white">
+      {/* Experience Section */}
+      <div className="space-y-12">
+        <h1 className="text-6xl md:text-8xl font-black tracking-tighter">Experience</h1>
+        
+        {experiences.length === 0 ? (
+          <p className="text-white/40 text-sm">No experience records found.</p>
+        ) : (
+          <div className="space-y-12">
+            {experiences.map((exp) => (
+              <div key={exp.id} className="p-8 md:p-10 rounded-[3rem] bg-white/[0.03] border border-white/10 space-y-8">
+                {/* Company Header */}
+                <div className="flex items-center gap-6">
+                  {exp.logo ? (
+                    <img src={exp.logo} alt={exp.company} className="w-16 h-16 rounded-2xl object-cover border border-white/10" />
+                  ) : (
+                    <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white/40">
+                      LOGO
+                    </div>
+                  )}
+                  <div>
+                    <h2 className="text-2xl md:text-3xl font-black">{exp.company}</h2>
+                    <p className="text-xs uppercase tracking-widest text-white/40 font-bold">{exp.location}</p>
+                  </div>
                 </div>
 
-                <div className="flex flex-col gap-8 relative border-l-2 border-slate-200 ml-2 pl-6">
-                  {exp.roles.map((role, idx) => (
-                    <div key={idx} className="relative">
-                      <span className="absolute -left-[31px] top-1.5 w-[14px] h-[14px] rounded-full bg-slate-300 group-hover:bg-blue-500 transition-colors border-2 border-white shadow-sm"></span>
-                      
-                      <h4 className="text-xl font-bold text-slate-800">{role.title}</h4>
-                      <p className="text-sm font-semibold text-slate-500">
-                        {role.startDate} - {role.endDate} · {calculateDuration(role.startDate, role.endDate)}
+                {/* Roles / Promotions Breakdown */}
+                <div className="space-y-6 pl-2 md:pl-6 border-l-2 border-white/10">
+                  {exp.roles?.map((role, rIdx) => (
+                    <div key={rIdx} className="space-y-3">
+                      <div className="flex flex-wrap items-center justify-between gap-2">
+                        <h3 className="text-xl font-bold">{role.title}</h3>
+                        <span className="text-[10px] uppercase font-black tracking-widest text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
+                          {role.workType}
+                        </span>
+                      </div>
+                      <p className="text-xs text-white/40 font-bold uppercase tracking-wider">
+                        {role.startDate} — {role.isCurrent ? "Present" : role.endDate}
                       </p>
-                      <p className="text-xs font-bold text-blue-600 uppercase tracking-wider mt-0.5">{role.workType}</p>
-
-                      <ul className="space-y-3 mt-4">
-                        {role.description.map((point, i) => (
-                          <li key={i} className="flex items-start gap-3 text-slate-700 font-medium text-base">
-                            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2.5 shrink-0"></span>
-                            {point}
-                          </li>
-                        ))}
-                      </ul>
+                      {role.description && role.description.length > 0 && (
+                        <ul className="list-disc list-inside space-y-2 text-sm text-white/70 pt-2">
+                          {role.description.map((bullet, bIdx) => (
+                            <li key={bIdx} className="leading-relaxed">{bullet}</li>
+                          ))}
+                        </ul>
+                      )}
                     </div>
                   ))}
                 </div>
               </div>
-            </motion.div>
-          </FramerWrapper>
-        ))}
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* --- BENTO RECOMMENDATIONS SECTION --- */}
-      <div className="flex flex-col gap-3 mt-24 w-full">
-        <Badge variant="secondary" className="gap-1.5 py-1 w-fit">
-          <Quote className="w-4 h-4" /> Recommendations
-        </Badge>
-        <Heading>What People Say</Heading>
+      {/* Recommendations Section */}
+      <div className="space-y-12 pt-12 border-t border-white/10">
+        <h2 className="text-6xl md:text-8xl font-black tracking-tighter italic opacity-90">Recommendations</h2>
+
+        {recommendations.length === 0 ? (
+          <p className="text-white/40 text-sm">No recommendations found.</p>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-6">
+            {recommendations.map((rec) => (
+              <div key={rec.id} className="p-8 rounded-[3rem] bg-white/[0.03] border border-white/10 space-y-6 flex flex-col justify-between">
+                <div className="space-y-4">
+                  {rec.description && rec.description.length > 0 && (
+                    <div className="space-y-2 text-sm text-white/80 leading-relaxed italic">
+                      {rec.description.map((p, pIdx) => (
+                        <p key={pIdx}>&ldquo;{p}&rdquo;</p>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-4 pt-4 border-t border-white/5">
+                  {rec.image ? (
+                    <img src={rec.image} alt={rec.name} className="w-12 h-12 rounded-2xl object-cover border border-white/10" />
+                  ) : (
+                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white/40">
+                      IMG
+                    </div>
+                  )}
+                  <div>
+                    <h3 className="text-base font-black">{rec.name}</h3>
+                    <p className="text-xs text-white/40">{rec.role}</p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
-
-      {/* Bento Layout: Two columns using Flex to ensure height is dynamic and detail isn't lost */}
-      <div className="flex flex-col md:flex-row gap-6 w-full mt-4 items-start">
-        
-        {/* Left Column */}
-        <div className="flex flex-col gap-6 w-full md:w-1/2">
-          {leftColRecs.map((rec, index) => (
-            <RecommendationCard key={index} rec={rec} index={index} />
-          ))}
-        </div>
-
-        {/* Right Column */}
-        <div className="flex flex-col gap-6 w-full md:w-1/2">
-          {rightColRecs.map((rec, index) => (
-            <RecommendationCard key={index} rec={rec} index={index + 1} />
-          ))}
-        </div>
-
-      </div>
-
-      {/* FOOTER LINK */}
-      <div className="w-full flex justify-center mt-16">
-        <a 
-          href="https://www.linkedin.com/in/sanjoshi1/details/recommendations/" 
-          target="_blank" 
-          rel="noopener noreferrer"
-          className="group flex items-center gap-2 text-sm font-bold text-slate-500 hover:text-blue-600 transition-all"
-        >
-          View more recommendations on LinkedIn
-          <span className="group-hover:translate-x-1 transition-transform">→</span>
-        </a>
-      </div>
-
     </div>
   );
-};
-
-// Reusable Recommendation Card Component for better performance
-const RecommendationCard = ({ rec, index }: { rec: any; index: number }) => (
-  <FramerWrapper y={30} delay={0.2 + index * 0.1}>
-    <motion.div 
-      whileHover={{ y: -5 }}
-      className="relative p-6 md:p-8 rounded-[2rem] bg-white/40 border border-white/60 shadow-sm backdrop-blur-xl flex flex-col gap-6 w-full h-auto"
-    >
-      <Quote className="absolute top-6 right-8 w-10 h-10 text-blue-500/10" />
-      
-      {/* Detail: Text is allowed to expand fully */}
-      <p className="text-slate-700 italic leading-relaxed z-10 text-base">
-        &quot;{rec.text}&quot;
-      </p>
-
-      <div className="flex items-center gap-4 pt-6 border-t border-white/40">
-        <div className="w-12 h-12 rounded-full bg-blue-100 border-2 border-white overflow-hidden shrink-0 flex items-center justify-center">
-           {rec.image ? (
-             <img src={rec.image} alt={rec.name} className="w-full h-full object-cover" />
-           ) : (
-             <span className="font-bold text-blue-600">{rec.name.charAt(0)}</span>
-           )}
-        </div>
-        <div>
-          <h4 className="font-bold text-slate-900 leading-tight text-sm">{rec.name}</h4>
-          <p className="text-[10px] text-blue-600 font-bold uppercase tracking-wider mt-1">{rec.designation}</p>
-        </div>
-      </div>
-    </motion.div>
-  </FramerWrapper>
-);
-
-export default ExperiencePage;
+}
