@@ -1,184 +1,210 @@
 "use client";
-import React, { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
-import { collection, onSnapshot, query, orderBy } from "firebase/firestore";
+import React, { useState } from "react";
+import { db, CLOUDINARY_URL, CLOUDINARY_PRESET } from "@/lib/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
-interface Role {
-  title: string;
-  workType: string;
-  startDate: string;
-  endDate: string;
-  isCurrent: boolean;
-  description: string[];
-}
+// --- Square Image Uploader (Shared for Logo and Recommender) ---
+const ImageSquareUploader = ({ image, setImage, label }) => {
+  const [isDragging, setIsDragging] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-interface ExperienceItem {
-  id: string;
-  company: string;
-  location: string;
-  logo: string;
-  roles: Role[];
-}
-
-interface RecommendationItem {
-  id: string;
-  name: string;
-  role: string;
-  image: string;
-  description: string[];
-}
-
-export default function PortfolioExperiencePage() {
-  const [experiences, setExperiences] = useState<ExperienceItem[]>([]);
-  const [recommendations, setRecommendations] = useState<RecommendationItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Fetch Experiences in real-time
-    const unsubExp = onSnapshot(
-      collection(db, "experience"),
-      (snapshot) => {
-        const list = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as ExperienceItem[];
-        
-        // Optional sorting if createdAt exists
-        list.sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-        setExperiences(list);
-        setLoading(false);
-      },
-      (error) => {
-        console.error("Error fetching experiences:", error);
-        setLoading(false);
-      }
-    );
-
-    // Fetch Recommendations in real-time
-    const unsubRec = onSnapshot(
-      collection(db, "recommendations"),
-      (snapshot) => {
-        const list = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        })) as RecommendationItem[];
-        
-        list.sort((a: any, b: any) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-        setRecommendations(list);
-      },
-      (error) => {
-        console.error("Error fetching recommendations:", error);
-      }
-    );
-
-    return () => {
-      unsubExp();
-      unsubRec();
-    };
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-black text-white flex items-center justify-center">
-        <p className="text-sm uppercase tracking-widest text-white/50 animate-pulse">Loading Experience...</p>
-      </div>
-    );
-  }
+  const handleFile = async (file) => {
+    if (!file) return;
+    setLoading(true);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_PRESET);
+    try {
+      const res = await fetch(CLOUDINARY_URL, { method: "POST", body: formData });
+      const data = await res.json();
+      setImage(data.secure_url);
+    } catch (err) {
+      console.error("Upload failed", err);
+      alert("Image upload failed.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="max-w-5xl mx-auto py-24 px-6 space-y-24 text-white">
-      {/* Experience Section */}
-      <div className="space-y-12">
-        <h1 className="text-6xl md:text-8xl font-black tracking-tighter">Experience</h1>
-        
-        {experiences.length === 0 ? (
-          <p className="text-white/40 text-sm">No experience records found.</p>
-        ) : (
-          <div className="space-y-12">
-            {experiences.map((exp) => (
-              <div key={exp.id} className="p-8 md:p-10 rounded-[3rem] bg-white/[0.03] border border-white/10 space-y-8">
-                {/* Company Header */}
-                <div className="flex items-center gap-6">
-                  {exp.logo ? (
-                    <img src={exp.logo} alt={exp.company} className="w-16 h-16 rounded-2xl object-cover border border-white/10" />
-                  ) : (
-                    <div className="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-xs font-bold text-white/40">
-                      LOGO
-                    </div>
-                  )}
-                  <div>
-                    <h2 className="text-2xl md:text-3xl font-black">{exp.company}</h2>
-                    <p className="text-xs uppercase tracking-widest text-white/40 font-bold">{exp.location}</p>
-                  </div>
-                </div>
+    <div className="flex flex-col gap-3">
+      <label className="text-[12px] uppercase font-bold tracking-widest text-white ml-1 opacity-100">{label}</label>
+      <div className="flex flex-col md:flex-row gap-4 items-start">
+        {/* Square Preview / Drop Zone */}
+        <div 
+          onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+          onDragLeave={() => setIsDragging(false)}
+          onDrop={(e) => { e.preventDefault(); setIsDragging(false); handleFile(e.dataTransfer.files[0]); }}
+          className={`relative group w-32 h-32 md:w-40 md:h-40 rounded-3xl border-2 border-dashed flex-shrink-0 transition-all flex items-center justify-center overflow-hidden
+            ${isDragging ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 bg-white/5 hover:border-white/20'}`}
+        >
+          {image ? (
+            <img src={image} alt="Preview" className="w-full h-full object-cover" />
+          ) : (
+            <div className="text-[12px] text-center px-4 text-white opacity-50 uppercase font-bold">
+              {loading ? "Uploading..." : "Drag Image Here"}
+            </div>
+          )}
+          <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" onChange={(e) => handleFile(e.target.files?.[0])} />
+        </div>
 
-                {/* Roles / Promotions Breakdown */}
-                <div className="space-y-6 pl-2 md:pl-6 border-l-2 border-white/10">
-                  {exp.roles?.map((role, rIdx) => (
-                    <div key={rIdx} className="space-y-3">
-                      <div className="flex flex-wrap items-center justify-between gap-2">
-                        <h3 className="text-xl font-bold">{role.title}</h3>
-                        <span className="text-[10px] uppercase font-black tracking-widest text-blue-400 bg-blue-500/10 px-3 py-1 rounded-full">
-                          {role.workType}
-                        </span>
-                      </div>
-                      <p className="text-xs text-white/40 font-bold uppercase tracking-wider">
-                        {role.startDate} — {role.isCurrent ? "Present" : role.endDate}
-                      </p>
-                      {role.description && role.description.length > 0 && (
-                        <ul className="list-disc list-inside space-y-2 text-sm text-white/70 pt-2">
-                          {role.description.map((bullet, bIdx) => (
-                            <li key={bIdx} className="leading-relaxed">{bullet}</li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* URL Input Area */}
+        <div className="flex-1 w-full space-y-2">
+          <p className="text-[12px] text-white/40 font-bold uppercase">Or Import via URL</p>
+          <input 
+            type="text" 
+            placeholder="Paste image address or embedded link..." 
+            value={image} 
+            onChange={(e) => setImage(e.target.value)} 
+            className="w-full bg-white/5 border border-white/10 p-4 rounded-2xl outline-none text-white text-sm placeholder:text-white/20 focus:border-blue-500/50 transition-all"
+          />
+          <p className="text-[9px] text-white/30 italic">Supports Direct URLs, Cloudinary, Imgur, or Google Image Links.</p>
+        </div>
       </div>
+    </div>
+  );
+};
 
-      {/* Recommendations Section */}
-      <div className="space-y-12 pt-12 border-t border-white/10">
-        <h2 className="text-6xl md:text-8xl font-black tracking-tighter italic opacity-90">Recommendations</h2>
+// --- LinkedIn Style Date Picker ---
+const MonthYearPicker = ({ label, value, onChange, disabled }) => {
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const years = Array.from({ length: 50 }, (_, i) => new Date().getFullYear() - i);
+  const [m, y] = value && value !== "Present" ? value.split(" ") : ["", ""];
 
-        {recommendations.length === 0 ? (
-          <p className="text-white/40 text-sm">No recommendations found.</p>
-        ) : (
+  if (disabled) return (
+    <div className="w-full space-y-1">
+      <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">{label}</label>
+      <div className="w-full bg-white/5 border border-white/5 p-4 rounded-xl text-white/30 font-bold">Present</div>
+    </div>
+  );
+
+  return (
+    <div className="w-full space-y-1">
+      <label className="text-[12x] uppercase font-bold text-white opacity-100 ml-4">{label}</label>
+      <div className="grid grid-cols-2 gap-2">
+        <select value={m} onChange={(e) => onChange(`${e.target.value} ${y || years[0]}`)} className="bg-[#1a1a1a] text-white p-4 rounded-xl outline-none border border-white/10 appearance-none cursor-pointer">
+          <option value="">Month</option>
+          {months.map(mon => <option key={mon} value={mon}>{mon}</option>)}
+        </select>
+        <select value={y} onChange={(e) => onChange(`${m || "January"} ${e.target.value}`)} className="bg-[#1a1a1a] text-white p-4 rounded-xl outline-none border border-white/10 appearance-none cursor-pointer">
+          <option value="">Year</option>
+          {years.map(yr => <option key={yr} value={yr}>{yr}</option>)}
+        </select>
+      </div>
+    </div>
+  );
+};
+
+export default function ExperiencePage() {
+  const [company, setCompany] = useState("");
+  const [location, setLocation] = useState("");
+  const [logo, setLogo] = useState("");
+  const [roles, setRoles] = useState([{ title: "", workType: "On-site", startDate: "", endDate: "", isCurrent: false, description: "" }]);
+
+  const [recName, setRecName] = useState("");
+  const [recRole, setRecRole] = useState("");
+  const [recImage, setRecImage] = useState("");
+  const [recText, setRecText] = useState("");
+
+  const addPromotion = () => setRoles([...roles, { title: "", workType: "On-site", startDate: "", endDate: "", isCurrent: false, description: "" }]);
+
+  const saveExperience = async () => {
+    const formattedRoles = roles.map(r => ({ ...r, description: r.description.split("\n").filter(l => l.trim() !== "") }));
+    await addDoc(collection(db, "experience"), { company, location, logo, roles: formattedRoles, createdAt: new Date() });
+    alert("Experience Saved!"); window.location.reload();
+  };
+
+  const saveRecommendation = async () => {
+    const desc = recText.split("\n").filter(l => l.trim() !== "");
+    await addDoc(collection(db, "recommendations"), { name: recName, role: recRole, image: recImage, description: desc, createdAt: new Date() });
+    alert("Recommendation Saved!"); window.location.reload();
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto py-20 px-6 space-y-24">
+
+      {/* EXPERIENCE SECTION */}
+      <div className="space-y-10">
+        <h1 className="text-7xl font-black tracking-tighter text-white">Experience</h1>
+        <div className="bg-white/[0.03] border border-white/10 rounded-[3rem] p-10 space-y-10">
+          <ImageSquareUploader label="Company Logo (Square)" image={logo} setImage={setLogo} />
+
           <div className="grid md:grid-cols-2 gap-6">
-            {recommendations.map((rec) => (
-              <div key={rec.id} className="p-8 rounded-[3rem] bg-white/[0.03] border border-white/10 space-y-6 flex flex-col justify-between">
-                <div className="space-y-4">
-                  {rec.description && rec.description.length > 0 && (
-                    <div className="space-y-2 text-sm text-white/80 leading-relaxed italic">
-                      {rec.description.map((p, pIdx) => (
-                        <p key={pIdx}>&ldquo;{p}&rdquo;</p>
-                      ))}
-                    </div>
-                  )}
+            <div className="space-y-1">
+              <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">Company Name</label>
+              <input value={company} onChange={e => setCompany(e.target.value)} className="w-full bg-white/5 p-4 rounded-2xl outline-none text-white border border-white/5 focus:border-blue-500/50" placeholder="e.g. Meta" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">Location</label>
+              <input value={location} onChange={e => setLocation(e.target.value)} className="w-full bg-white/5 p-4 rounded-2xl outline-none text-white border border-white/5 focus:border-blue-500/50" placeholder="e.g. New York, NY" />
+            </div>
+          </div>
+
+          <div className="space-y-8">
+            {roles.map((r, i) => (
+              <div key={i} className="p-8 bg-white/5 rounded-[2.5rem] border border-white/5 space-y-6">
+                <div className="flex justify-between items-center">
+                  <span className="text-blue-500 font-black text-xs uppercase tracking-[0.2em]">Role Level {i+1}</span>
+                  <label className="flex items-center gap-2 text-[10px] uppercase font-bold text-white/40 cursor-pointer">
+                    <input type="checkbox" checked={r.isCurrent} onChange={e => { const n = [...roles]; n[i].isCurrent = e.target.checked; n[i].endDate = e.target.checked ? "Present" : ""; setRoles(n); }} className="w-4 h-4 accent-blue-600" />
+                    Currently Working Here
+                  </label>
                 </div>
 
-                <div className="flex items-center gap-4 pt-4 border-t border-white/5">
-                  {rec.image ? (
-                    <img src={rec.image} alt={rec.name} className="w-12 h-12 rounded-2xl object-cover border border-white/10" />
-                  ) : (
-                    <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-[10px] font-bold text-white/40">
-                      IMG
-                    </div>
-                  )}
-                  <div>
-                    <h3 className="text-base font-black">{rec.name}</h3>
-                    <p className="text-xs text-white/40">{rec.role}</p>
+                <div className="space-y-1">
+                  <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">Job Title</label>
+                  <input value={r.title} onChange={e => { const n = [...roles]; n[i].title = e.target.value; setRoles(n); }} className="w-full bg-white/10 p-4 rounded-xl outline-none text-white" placeholder="Product Designer" />
+                </div>
+
+                <div className="grid md:grid-cols-3 gap-4">
+                  <MonthYearPicker label="Start Date" value={r.startDate} onChange={val => { const n = [...roles]; n[i].startDate = val; setRoles(n); }} />
+                  <MonthYearPicker label="End Date" value={r.endDate} disabled={r.isCurrent} onChange={val => { const n = [...roles]; n[i].endDate = val; setRoles(n); }} />
+                  <div className="space-y-1">
+                    <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">Work Type</label>
+                    <select value={r.workType} onChange={e => { const n = [...roles]; n[i].workType = e.target.value; setRoles(n); }} className="w-full bg-[#1a1a1a] border border-white/10 text-white p-4 rounded-xl outline-none appearance-none">
+                      <option>On-site</option><option>Remote</option><option>Hybrid</option>
+                    </select>
                   </div>
+                </div>
+
+                <div className="space-y-1">
+                  <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">Role Description</label>
+                  <textarea value={r.description} onChange={e => { const n = [...roles]; n[i].description = e.target.value; setRoles(n); }} className="w-full bg-white/5 p-4 rounded-xl outline-none text-white h-32 resize-none" placeholder="Use new lines for bullet points..." />
                 </div>
               </div>
             ))}
           </div>
-        )}
+          <button onClick={addPromotion} className="w-full py-4 border-2 border-dashed border-white/10 rounded-2xl text-white/40 font-bold uppercase text-[10px] hover:bg-white/5 transition-all">+ Add Promotion / Previous Role at this Company</button>
+          <button onClick={saveExperience} className="w-full bg-blue-600 py-6 rounded-[2rem] font-black uppercase text-white text-xs tracking-widest hover:scale-[0.98] transition-transform">Deploy Experience</button>
+        </div>
       </div>
+
+      {/* RECOMMENDATIONS SECTION */}
+      <div className="space-y-10 pt-10 border-t border-white/10">
+        <h2 className="text-7xl font-black tracking-tighter text-white opacity-100 italic">Recommendations</h2>
+        <div className="bg-white/[0.03] border border-white/10 rounded-[3rem] p-10 space-y-8">
+          <ImageSquareUploader label="Recommender Image (Square)" image={recImage} setImage={setRecImage} />
+
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="space-y-1">
+              <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">Recommender Name</label>
+              <input value={recName} onChange={e => setRecName(e.target.value)} className="w-full bg-white/5 p-4 rounded-2xl outline-none text-white border border-white/5" placeholder="John Smith" />
+            </div>
+            <div className="space-y-1">
+              <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">Position / Relationship</label>
+              <input value={recRole} onChange={e => setRecRole(e.target.value)} className="w-full bg-white/5 p-4 rounded-2xl outline-none text-white border border-white/5" placeholder="Engineering Manager at Google" />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-[12px] uppercase font-bold text-white opacity-100 ml-4">What they said about you</label>
+            <textarea value={recText} onChange={e => setRecText(e.target.value)} className="w-full bg-white/5 p-6 rounded-[2rem] outline-none text-white h-48 border border-white/5 resize-none leading-relaxed" placeholder="Write the recommendation here..." />
+          </div>
+
+          <button onClick={saveRecommendation} className="w-full bg-white text-black py-6 rounded-[2rem] font-black uppercase text-xs tracking-widest hover:scale-[0.98] transition-transform">Save Recommendation</button>
+        </div>
+      </div>
+
     </div>
   );
 }
